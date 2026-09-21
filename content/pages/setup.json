@@ -1,6 +1,6 @@
 {
   "page": "setup",
-  "title": "Setup &amp; configuration",
+  "title": "Setup & configuration",
   "source": "src/pages/setup.html",
   "sections": [
     {

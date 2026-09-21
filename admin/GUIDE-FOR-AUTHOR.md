@@ -9,11 +9,18 @@ site owner's side rather than something you did — tell him rather than fight i
 
 ## What you need
 
-1. A free **GitHub account** — <https://github.com/signup>. It is needed because
-   every change you save is stored as a commit, which is what keeps a full
-   history of who changed what.
-2. An **invitation** from the site owner, who adds you to the site's repository
-   with write access. It arrives as an email from GitHub; click accept.
+1. **Accept the invitation.** The site owner adds your GitHub account to the
+   site's repository, and GitHub emails you. Open that email and accept, or use
+   <https://github.com/bascurtiz/msst-guide/invitations>. Two things go wrong if
+   you skip this: the editor may sign you in and then fail — on the first save, or
+   earlier, when it reads the content — and the invitation quietly **expires after
+   seven days**. If no email arrives (check your spam folder), ask him to send you
+   the invitation link instead; he can copy it from the repository's
+   *Collaborators* page.
+2. A **GitHub account** — which the invitation needs and which you may already
+   have. If you do not, creating one is free: <https://github.com/signup>. It is
+   needed because each change you save is stored as a commit, which is what keeps
+   a full history of who changed what.
 3. A **browser** (Chrome, Edge, Firefox or Safari). The editor works on a phone
    but it is far easier on a computer.
 
@@ -54,7 +61,7 @@ expires, the editor stops saving and you repeat this step with a new one.
 ## 3. Find the text you want to change
 
 The left-hand list holds five chapters: the home page, **Before you train**,
-**Setup & configuration**, **Training**, and **Reference**.
+**Setup & configuration**, **Training runs**, and **Reference**.
 
 Open one and you get its **sections** — the headings you see on the page, in
 order. Inside a section is the list of **text blocks**: every paragraph, list
@@ -119,11 +126,17 @@ Matching it makes an edit look native:
 
 ## If something goes wrong
 
-- **Save refused, mentioning a missing file**: an image path points at something
-  that is not there — usually a picture that was not uploaded, or a filename
-  that was typed rather than inserted. Re-insert it with the image button.
-- **Your change is not on the site after a few minutes**: the site owner may
-  still be wiring up publishing. Tell him rather than re-saving.
+- **You saved, but the page still shows the old text.** The editor accepts a save
+  because a save is only text; the checking happens afterwards, when the site
+  rebuilds. Two causes, and the site owner can tell which one from the rebuild
+  that failed:
+  - **An image path pointing at nothing** — usually a picture that was not
+    uploaded, or a filename that was typed rather than inserted. Re-insert the
+    picture with the image button, save again, and reload the page.
+  - **Publishing not wired up yet** — his side, not yours.
+- **Save refused with a permissions error**: your invitation has not been
+  accepted yet, or it was sent as *read* rather than *write*. Tell the site
+  owner — nothing you can do in the editor fixes that one.
 - **The token stopped working**: it expired. Repeat step 2.
 
 Your credit as the original author is on the site's **Reference** page, under

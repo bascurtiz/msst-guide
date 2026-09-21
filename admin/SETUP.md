@@ -164,7 +164,12 @@ A checklist for you beforehand:
 2. **Add him as a collaborator with write access**: the repository page →
    *Settings* → *Collaborators and teams* → *Add people* → his GitHub username or
    email → role **Write**. A public repository grants read, not write, so this is
-   required for a save to be accepted.
+   required for a save to be accepted — check the role reads *Write*, because the
+   form's default on a public repository is not necessarily it.
+
+   He still has to **accept** the invitation before it takes effect, and it
+   expires after seven days. If the email does not reach him, the *Pending
+   invite* row has a copy button that gives you a link to send him directly.
 3. **Send the editor URL**, <https://msst-guide.pages.dev/admin/>, and tell him to
    use *Sign in with a token* — that is step 2 of his guide, and it needs nothing
    from you. Do the OAuth worker in §3 only if you want him on the button instead.
