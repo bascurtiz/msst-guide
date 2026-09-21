@@ -13,10 +13,14 @@
  *   inline  an element that owns its styling and only holds text (a heading, a
  *           list item, a card title, a label). Its inner text is replaced by a
  *           marker; the element and its attributes stay in the template.
+ *   code    a whole <pre> element — a command, a config block, a stack trace.
+ *           The element, the spans that colour it and its own indentation all
+ *           move into the content file as one string, because those colours come
+ *           from markup that no highlighter could rebuild from plain text.
  *
- * Everything else — SVG diagrams, code samples, tables, the calculator, the
- * table of contents, navigation and page chrome — is left in the template and
- * is not editable from the CMS.
+ * Everything else — SVG diagrams, tables, the calculator, the table of contents,
+ * navigation and page chrome — is left in the template and is not editable from
+ * the CMS.
  *
  * This runs once. Re-running would overwrite content, so it refuses unless
  * --force is given. After it has run, edit the templates by hand and use
@@ -45,9 +49,13 @@ const PAGES = ["index", "data", "setup", "training", "reference"];
 /** Subtrees that are navigation, decoration or a widget, never prose. */
 const SKIP_TAGS = new Set([
   "script", "style", "svg", "head", "title", "meta", "nav", "header", "footer",
-  "button", "select", "option", "input", "textarea", "noscript", "pre", "code",
+  "button", "select", "option", "input", "textarea", "noscript", "code",
   "table", "iframe", "video", "audio",
 ]);
+
+// `<pre>` is deliberately absent above: it is a `code` slot of its own, and it
+// has to be handled explicitly, because a <pre> full of <span> would otherwise
+// be walked into and each coloured word would become an inline slot.
 
 /** Same idea, by class — matches what the search index treats as chrome. */
 const SKIP_CLASSES = new Set([
@@ -70,6 +78,7 @@ const PROSE_TAGS = new Set(["p", "blockquote", "figcaption"]);
 const FORCED_DESCEND = new Set([...BLOCK_TAGS, "button", "select", "input", "textarea"]);
 
 const KIND_LABEL = {
+  code: "Code sample",
   h1: "Page title", h2: "Chapter heading", h3: "Subheading", h4: "Heading",
   h5: "Card title", h6: "Label", p: "Paragraph", quote: "Quote",
   caption: "Caption", figcaption: "Caption", li: "List item", dt: "Glossary term",
@@ -132,11 +141,11 @@ function extractPage(page, fromDir) {
   if (!main) throw new Error(`${page}.html has no <main>`);
 
   const sections = [];
-  let section = { id: "head", label: "Page head", heading: null, blocks: [] };
+  let section = { id: "head", label: "Page head", heading: null, blocks: [], codes: [] };
   sections.push(section);
   const usedSectionIds = new Set(["head"]);
   const splices = [];
-  const report = { unhandled: [], skipped: [], raw: [], notes: [], sections: 0, prose: 0, inline: 0 };
+  const report = { unhandled: [], skipped: [], raw: [], notes: [], sections: 0, prose: 0, inline: 0, code: 0 };
   const ctx = { raw: report.raw, notes: report.notes };
   let seq = 0;
 
@@ -157,7 +166,7 @@ function extractPage(page, fromDir) {
     while (usedSectionIds.has(candidate)) candidate = `${id}-${n++}`;
     usedSectionIds.add(candidate);
     id = candidate;
-    section = { id, label: text || id, heading: null, blocks: [] };
+    section = { id, label: text || id, heading: null, blocks: [], codes: [] };
     sections.push(section);
     report.sections += 1;
     return id;
@@ -203,6 +212,16 @@ function extractPage(page, fromDir) {
     return key;
   }
 
+  /** A whole <pre> becomes one code slot: markup, indentation and all. */
+  function makeCodeSlot(node) {
+    const key = nextKey("code");
+    const markup = source.slice(node.start, node.end);
+    splices.push({ start: node.start, end: node.end, text: `<!--c:${key}:code-->` });
+    section.codes.push({ key, label: `${KIND_LABEL.code} · ${snippet(plainText(node))}`, code: markup });
+    report.code += 1;
+    return key;
+  }
+
   function makeInlineSlot(node) {
     const key = nextKey(node.tag);
     const md = inlineToMd(node.children, ctx, source).trim();
@@ -234,6 +253,12 @@ function extractPage(page, fromDir) {
       if (isSkipped(node)) {
         const text = textOf(node);
         report.skipped.push({ tag: node.tag, cls: classList(node).join("."), text: snippet(text, 70) });
+        // A widget can still hold a code sample (`<div class="code"><pre>…`), and
+        // a sample is a code slot, so descend a level to pick up a <pre> child
+        // while the rest of the widget stays out of the CMS.
+        for (const child of node.children) {
+          if (child.type === "element" && child.tag === "pre" && !attr(child, "id")) makeCodeSlot(child);
+        }
         i += 1;
         continue;
       }
@@ -242,6 +267,13 @@ function extractPage(page, fromDir) {
         const { run, next } = takeRun(kids, i);
         makeProseSlot(run, node.tag, node.attrsRaw);
         i = next;
+        continue;
+      }
+
+      if (node.tag === "pre") {
+        // An `id` marks output a widget's script writes into, not a sample.
+        if (!attr(node, "id")) makeCodeSlot(node);
+        i += 1;
         continue;
       }
 
@@ -332,7 +364,7 @@ function main() {
   fs.mkdirSync(SRC_DIR, { recursive: true });
   fs.mkdirSync(CONTENT_DIR, { recursive: true });
 
-  const totals = { prose: 0, inline: 0, sections: 0, raw: 0, unhandled: 0, skipped: 0 };
+  const totals = { prose: 0, inline: 0, code: 0, sections: 0, raw: 0, unhandled: 0, skipped: 0 };
   for (const page of PAGES) {
     const result = extractPage(page, fromDir);
     fs.writeFileSync(path.join(SRC_DIR, `${page}.html`), result.template, "utf8");
@@ -345,6 +377,7 @@ function main() {
     const { report: r } = result;
     totals.prose += r.prose;
     totals.inline += r.inline;
+    totals.code += r.code;
     totals.sections += r.sections;
     totals.raw += r.raw.length;
     totals.unhandled += r.unhandled.length;
@@ -352,6 +385,7 @@ function main() {
 
     console.log(`  ${page.padEnd(10)} ${String(r.sections + 1).padStart(2)} sections · `
       + `${String(r.prose).padStart(3)} prose · ${String(r.inline).padStart(3)} inline · `
+      + `${String(r.code).padStart(2)} code · `
       + `${String(r.raw.length).padStart(2)} raw HTML · ${r.unhandled.length} unhandled`);
 
     if (report) {
@@ -362,7 +396,7 @@ function main() {
   }
 
   console.log(`\n  ${totals.sections + PAGES.length} sections, ${totals.prose} prose slots, `
-    + `${totals.inline} inline slots, ${totals.raw} raw-HTML passthroughs`);
+    + `${totals.inline} inline slots, ${totals.code} code slots, ${totals.raw} raw-HTML passthroughs`);
   console.log(`  templates -> src/pages/   content -> content/pages/`);
   if (totals.unhandled) {
     console.log(`  ${totals.unhandled} text node(s) were not picked up — rerun with --report to see them.`);

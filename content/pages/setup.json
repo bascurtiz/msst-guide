@@ -158,6 +158,13 @@
           "label": "Paragraph · Mel-Band and BS Roformers train with an additional spectrogram…",
           "md": "Mel-Band and BS Roformers train with an additional spectrogram loss rather than a pure waveform loss. That is why you never need to add one manually unless you are deliberately training for fullness — see [Chapter 10](training.html#fullness)."
         }
+      ],
+      "codes": [
+        {
+          "key": "setup.repo.code.01",
+          "label": "Code sample · Music-Source-Separation-Training/ ├── train.py ├── vali…",
+          "code": "<pre><span class=\"d\">Music-Source-Separation-Training/</span>\r\n├── train.py\r\n├── valid.py\r\n├── inference.py\r\n├── requirements.txt\r\n├── <span class=\"hl\">config_vocals_mel_band_roformer.yaml</span>   <span class=\"c\">← the config, at the root</span>\r\n└── <span class=\"d\">results/</span>\r\n    └── <span class=\"hl\">model_mel_band_roformer.ckpt</span>          <span class=\"c\">← the weights</span></pre>"
+        }
       ]
     },
     {
@@ -253,6 +260,28 @@
           "key": "setup.commands.h3.47",
           "label": "Subheading · Argument reference — inference",
           "md": "Argument reference — inference"
+        }
+      ],
+      "codes": [
+        {
+          "key": "setup.commands.code.02",
+          "label": "Code sample · # 1. Install PyTorch — pick the command for your CUDA v…",
+          "code": "<pre><span class=\"c\"># 1. Install PyTorch — pick the command for your CUDA version</span>\r\n<span class=\"c\">#    https://pytorch.org/get-started/locally/</span>\r\n<span class=\"cmd\">pip install</span> torch torchvision torchaudio <span class=\"f\">--index-url</span> <span class=\"ph\">https://download.pytorch.org/whl/cu124</span>\r\n\r\n<span class=\"c\"># 2. Install the repository requirements (from the repo folder)</span>\r\n<span class=\"cmd\">cd</span> <span class=\"ph\">C:\\path\\to\\Music-Source-Separation-Training</span>\r\n<span class=\"cmd\">pip install</span> <span class=\"f\">-r</span> requirements.txt\r\n\r\n<span class=\"c\"># 3. Install anything the previous step skipped</span>\r\n<span class=\"cmd\">pip install</span> <span class=\"ph\">name-of-missing-package</span></pre>"
+        },
+        {
+          "key": "setup.commands.code.03",
+          "label": "Code sample · python train.py --model_type mel_band_roformer --config…",
+          "code": "<pre><span class=\"cmd\">python</span> train.py\r\n  <span class=\"f\">--model_type</span> <span class=\"ph\">mel_band_roformer</span>\r\n  <span class=\"f\">--config_path</span> <span class=\"ph\">config_vocals.yaml</span>\r\n  <span class=\"f\">--results_path</span> results/\r\n  <span class=\"f\">--data_path</span> <span class=\"ph\">C:\\path\\to\\dataset</span>\r\n  <span class=\"f\">--dataset_type</span> <span class=\"ph\">2</span>\r\n  <span class=\"f\">--num_workers</span> 4\r\n  <span class=\"f\">--device_ids</span> 0\r\n  <span class=\"f\">--start_check_point</span> results/<span class=\"ph\">model.ckpt</span>\r\n  <span class=\"f\">--valid_path</span> <span class=\"ph\">C:\\path\\to\\validation</span>\r\n  <span class=\"f\">--metric_for_scheduler</span> <span class=\"ph\">sdr</span>\r\n  <span class=\"f\">--metrics</span> <span class=\"ph\">sdr fullness bleedless</span></pre>"
+        },
+        {
+          "key": "setup.commands.code.04",
+          "label": "Code sample · python inference.py --model_type mel_band_roformer --co…",
+          "code": "<pre><span class=\"cmd\">python</span> inference.py\r\n  <span class=\"f\">--model_type</span> <span class=\"ph\">mel_band_roformer</span>\r\n  <span class=\"f\">--config_path</span> <span class=\"ph\">config_vocals.yaml</span>\r\n  <span class=\"f\">--start_check_point</span> results/<span class=\"ph\">model.ckpt</span>\r\n  <span class=\"f\">--input_folder</span> input\r\n  <span class=\"f\">--store_dir</span> separation_results</pre>"
+        },
+        {
+          "key": "setup.commands.code.05",
+          "label": "Code sample · export OPENBLAS_NUM_THREADS=1",
+          "code": "<pre><span class=\"cmd\">export</span> OPENBLAS_NUM_THREADS=1</pre>"
         }
       ]
     },
@@ -444,6 +473,13 @@
           "key": "setup.yaml.p.84",
           "label": "Paragraph · There is no magic config. Expect to find your numbers by iterat…",
           "md": "There is no magic config. Expect to find your numbers by iterating: change one thing, train, listen, compare metrics. Add `use_torch_checkpoint` if you genuinely need the VRAM saving — that is, when you are seeing `CUDA_OutOfMemory` errors."
+        }
+      ],
+      "codes": [
+        {
+          "key": "setup.yaml.code.06",
+          "label": "Code sample · training : batch_size : 1 gradient_accumulation_steps…",
+          "code": "<pre><span class=\"f\">training</span><span class=\"eq\">:</span>\r\n  <span class=\"f\">batch_size</span><span class=\"eq\">:</span> 1\r\n  <span class=\"f\">gradient_accumulation_steps</span><span class=\"eq\">:</span> 1\r\n  <span class=\"f\">grad_clip</span><span class=\"eq\">:</span> 0\r\n  <span class=\"f\">instruments</span><span class=\"eq\">:</span>\r\n    - vocals\r\n    - other\r\n  <span class=\"f\">lr</span><span class=\"eq\">:</span> 1.0e-05\r\n  <span class=\"f\">patience</span><span class=\"eq\">:</span> 2\r\n  <span class=\"f\">reduce_factor</span><span class=\"eq\">:</span> 0.95\r\n  <span class=\"f\">target_instrument</span><span class=\"eq\">:</span> vocals\r\n  <span class=\"f\">num_epochs</span><span class=\"eq\">:</span> 1000\r\n  <span class=\"f\">num_steps</span><span class=\"eq\">:</span> 1000\r\n  <span class=\"f\">optimizer</span><span class=\"eq\">:</span> adam\r\n  <span class=\"f\">ema_momentum</span><span class=\"eq\">:</span> 0.999\r\n  <span class=\"f\">q</span><span class=\"eq\">:</span> 0.95\r\n  <span class=\"f\">coarse_loss_clip</span><span class=\"eq\">:</span> false\r\n  <span class=\"f\">other_fix</span><span class=\"eq\">:</span> true\r\n  <span class=\"f\">use_amp</span><span class=\"eq\">:</span> true\r\n  <span class=\"f\">use_torch_checkpoint</span><span class=\"eq\">:</span> true\r\n  <span class=\"f\">augmentation</span><span class=\"eq\">:</span> false\r\n  <span class=\"f\">augmentation_type</span><span class=\"eq\">:</span> null\r\n  <span class=\"f\">use_mp3_compress</span><span class=\"eq\">:</span> false\r\n  <span class=\"f\">augmentation_mix</span><span class=\"eq\">:</span> false\r\n  <span class=\"f\">augmentation_loudness</span><span class=\"eq\">:</span> false\r\n  <span class=\"f\">augmentation_loudness_type</span><span class=\"eq\">:</span> 1\r\n  <span class=\"f\">augmentation_loudness_min</span><span class=\"eq\">:</span> 0\r\n  <span class=\"f\">augmentation_loudness_max</span><span class=\"eq\">:</span> 0</pre>"
         }
       ]
     }

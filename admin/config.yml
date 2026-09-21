@@ -21,7 +21,7 @@ backend:
   # instead: an unconfigured button falls back to Netlify's OAuth client, which
   # knows nothing about this site, so it is the comment that keeps the sign-in
   # screen honest.
-  # base_url: https://sveltia-cms-auth.YOUR-SUBDOMAIN.workers.dev
+  base_url: https://sveltia-cms-auth.multimedia.workers.dev
 
   # How much the sign-in asks GitHub for on the author's behalf. The Worker's own
   # default is `repo,user`, which GitHub presents to the signer as *full control of
@@ -94,7 +94,10 @@ collections:
                 widget: richtext
                 modes: [rich_text, raw]
                 buttons: [bold, italic, code]
-                hint: The chapter heading. Inline formatting only — **bold**, *italic*, `code`.
+                hint: >-
+                  The chapter heading. Inline formatting only — **bold**,
+                  *italic*, `code`. Lists, tables and code blocks belong in the
+                  Text fields below, which have room to render them.
           - name: blocks
             label: Text
             label_singular: Block
@@ -116,5 +119,34 @@ collections:
                 modes: [rich_text, raw]
                 hint: >-
                   **bold**, *italic*, `code`, [links](https://example.com).
-                  Leave the occasional raw HTML tag (like <i>+</i>) alone — or
-                  switch to the raw mode to edit it.
+                  The raw mode (the `M↓` button) takes more than the toolbar
+                  shows: `- item` and `1. item` for lists, `> quote`, a row of
+                  ``` for a code block, and `| a | b |` under a `|---|---|`
+                  row for a table. Leave the occasional raw HTML tag (like
+                  <i>+</i>) alone — or switch to raw mode to edit it.
+          - name: codes
+            label: Code
+            label_singular: Code block
+            widget: list
+            collapsed: true
+            summary: "{{fields.label}}"
+            hint: >-
+              The command, config and error blocks in this section, in the order
+              they appear. Each one holds its own markup: the coloured <span>
+              wrappers are what give it its syntax highlighting, so change the
+              words and leave the tags alone.
+            fields:
+              - { name: key, widget: hidden }
+              - name: label
+                label: Where this is on the page
+                widget: string
+                hint: For your orientation in this list — not shown on the site.
+              - name: code
+                label: Code
+                widget: code
+                output_code_only: true
+                allow_language_selection: false
+                hint: >-
+                  The whole block, its <pre> tag included — everything between
+                  the tags reaches the page exactly as typed, indentation and
+                  all.

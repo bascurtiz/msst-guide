@@ -48,6 +48,13 @@
           "label": "Paragraph · Modules reported missing on a clean cloud instance, in the orde…",
           "md": "Modules reported missing on a clean cloud instance, in the order they were encountered: `wandb`, `soundfile`, `auraloss`, `audiomentations`, `pedalboard`, `ml_collections`, `omegaconf`, `einops`, `beartype`, `rotary_embedding_torch`."
         }
+      ],
+      "codes": [
+        {
+          "key": "reference.errors.code.01",
+          "label": "Code sample · pip install wandb soundfile auraloss audiomentations pe…",
+          "code": "<pre><span class=\"cmd\">pip install</span> wandb soundfile auraloss audiomentations pedalboard \\\r\n  ml_collections omegaconf einops beartype rotary_embedding_torch</pre>"
+        }
       ]
     },
     {

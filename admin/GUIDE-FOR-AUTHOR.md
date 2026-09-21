@@ -100,13 +100,13 @@ and easier to undo when it stands alone.
 ## What you can change, and what you cannot
 
 **Yours:** every paragraph, bullet, small sub-heading, card title, figure caption
-and label, on all five pages — plus images you want to add.
+and label, on all five pages — plus the command, config and error blocks, and
+images you want to add.
 
-**Not editable here, on purpose:** the diagrams, the code and command blocks, the
-tables, the chunk-size calculator, the sidebar, the on-page contents, the
-“next chapter” links and the footer. Those carry layout and data that a text
-editor cannot safely express, so they live in the site's template files. Ask the
-site owner for a change there.
+**Not editable here, on purpose:** the diagrams, the tables, the chunk-size
+calculator, the sidebar, the on-page contents, the “next chapter” links and the
+footer. Those carry layout and data that a text editor cannot safely express, so
+they live in the site's template files. Ask the site owner for a change there.
 
 Two consequences worth knowing:
 
@@ -116,6 +116,13 @@ Two consequences worth knowing:
 - **A paragraph keeps its styling.** Each block is tied to a styled place on the
   page, so an intro line stays an intro line. You cannot invent new styling from
   the editor.
+- **A code block comes with its colouring markup still in it.** You edit the
+  whole block — the `<pre>` tag, the words, and the little `<span>` wrappers in
+  between. Those wrappers are what colour it: `<span class="cmd">` is a command,
+  `<span class="f">` a flag, `<span class="ph">` a placeholder to replace, and a
+  line starting with `#` is a comment. So change the words and leave the tags
+  alone. If you want a block with no colour in it, paste the plain text and ask
+  the site owner to run it through the highlighter.
 
 ## House style
 

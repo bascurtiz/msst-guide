@@ -74,10 +74,64 @@ Sveltia publishes a small Cloudflare Worker that performs the exchange:
 
 <https://deploy.workers.cloudflare.com/?url=https://github.com/sveltia/sveltia-cms-auth>
 
-That creates a Worker in your Cloudflare account named `sveltia-cms-auth`. Open it
-in the dashboard and note its URL —
-`https://sveltia-cms-auth.<your-workers-subdomain>.workers.dev`. You need it in
-steps 2 and 4.
+The button opens a three-phase flow, none of which needs a terminal:
+
+1. **Connect GitHub.** The setup page opens on a *Git account* step: click **New
+   GitHub connection** and authorise Cloudflare's GitHub App. It needs permission
+   to *create a repository* — the flow clones Sveltia's repo into your account,
+   which is then yours to keep. Until this step is done there is no repository to
+   deploy from, and *Deploy* will not have anything to publish.
+
+   The wizard may then ask you to **select a repository**, and it will list the
+   ones you already have (`msst-guide`, `MSST-GUI`, …) — none of which is the one
+   you want. **Do not pick `msst-guide`:** that is the guide site, and pointing a
+   Worker at it would build a website as if it were a Worker. Use **Clone a public
+   repository via Git URL** and enter
+   `https://github.com/sveltia/sveltia-cms-auth`; that is the step which creates
+   your copy.
+2. **A setup page**, with only these fields:
+
+   | Field | What to put |
+   | --- | --- |
+   | Create private Git repository | your choice; the upstream repo is public, so either is fine |
+   | Project name | `sveltia-cms-auth` — **leave it**, this becomes the first half of the URL |
+   | Build command | leave **blank**; the project has no build step |
+   | Deploy command | leave the pre-filled `pnpm run deploy` — the repo ships a lockfile and a `deploy` script, and both are correct |
+   | Builds for non-production branches | harmless either way; uncheck it if you would rather not see a build per branch |
+   | Protect with Cloudflare Access | **leave off.** Turning it on puts an identity prompt in front of the Worker, which the CMS cannot satisfy |
+   | Variables / secrets | **nothing here** — see step 3; the repo declares none, so the flow will not ask |
+
+3. **Deploy**, which runs Workers Builds once and publishes the Worker.
+
+Two things that surprise people here. The new repository is a *copy* — from now on
+that Worker is Git-connected, so a push to `you/sveltia-cms-auth` redeploys it
+automatically, and it is entirely separate from `msst-guide`. And the copy carries
+a leftover `deploy.yml` from the button's older implementation, which can show a
+failed Action run; it fires only on `repository_dispatch`, which nothing sends, so
+ignore it — Workers Builds is what actually deploys.
+
+That creates a Worker in your Cloudflare account. Its URL is:
+
+```
+https://<worker-name>.<your-workers-subdomain>.workers.dev
+```
+
+You need it in steps 2 and 4, so find it before you go on. Three places, most
+reliable first:
+
+1. **The success screen at the end of the deploy**, which shows the deployment
+   and a link to the Worker.
+2. **The Worker's own page** — Workers & Pages → `sveltia-cms-auth` → the
+   `…workers.dev` address is at the top, and under **Settings → Domains &
+   Routes**. This is where Sveltia's own README sends you, and it is the place
+   that is always right.
+3. **The build log** of that first deploy, where `wrangler deploy` prints the URL
+   it published to.
+
+`<your-workers-subdomain>` is your *account's* subdomain, not the Worker's name —
+Workers & Pages → **Your subdomain** → **Change** shows it. And if you'd rather
+not hunt at all: guess the URL, then run the checker in step 5. A wrong hostname
+fails loudly there, so trying the obvious one costs nothing.
 
 ### Step 2 — register the Worker as an OAuth app
 
@@ -136,6 +190,53 @@ not answer — then delete the leading `#`:
 
 The line is already in the file, commented, with that same instruction next to it.
 Commit it, and the button works from then on.
+
+### Step 5 — verify the Worker before the author sees it
+
+A misconfigured Worker fails in a way that looks like the author's fault — a
+redirect-URI error, or *your domain is not allowed*, on a screen he has never seen
+before. So check it yourself first:
+
+```bash
+node tools/check-auth-worker.mjs https://sveltia-cms-auth.<your-subdomain>.workers.dev
+```
+
+It impersonates the editor, asking the Worker the same two questions the CMS asks
+and nothing more: does `/auth?provider=github&site_id=msst-guide.pages.dev` answer
+with a redirect to GitHub carrying your client id, and does `/callback` reject a
+request with no `code` rather than 500. It then asks a third question as a
+stranger, to see whether `ALLOWED_DOMAINS` is enforced.
+
+Add `--domain` to check a hostname other than `msst-guide.pages.dev`, and
+`--client-id <id>` from the OAuth app to confirm the Worker holds *that* app's
+client id rather than one that merely exists. Exit code 0 means the button will
+work.
+
+The checks are specific on purpose, so each failure names your mistake rather than
+the symptom:
+
+| What it prints | What it means |
+| --- | --- |
+| `FAIL /auth could not be reached` | wrong URL, or the Worker isn't deployed yet |
+| `FAIL /auth answered 404, expected a 302 to GitHub` | the path is wrong — usually a URL pasted with `/auth` on the end, or the one-click deploy's URL one path too deep |
+| `FAIL /auth does not redirect to GitHub` | the Worker answers, but as a misconfigured authenticator: the detail line names the code — `MISCONFIGURED_CLIENT` (no client id or secret), `UNSUPPORTED_DOMAIN` (`ALLOWED_DOMAINS` doesn't cover this host), `UNSUPPORTED_BACKEND` (wrong provider) |
+| `FAIL no client_id in the redirect` | `GITHUB_CLIENT_ID` isn't set on the Worker |
+| `FAIL the redirect's client_id does not match the OAuth app` | pass `--client-id` to see this; the Worker holds a different app's id, so GitHub will reject the sign-in |
+| `FAIL /callback answered 5xx` | the Worker crashes on the callback; usually the OAuth app's callback URL doesn't match `<worker>/callback` |
+| `WARN state is missing or not a 32-character hex string` | the Worker isn't generating its CSRF token as expected; redeploy it |
+| `WARN no csrf-token cookie alongside the state` | same cause — the cookie is what ties the redirect to the callback |
+| `WARN the sign-in will ask for "repo"` | reading and writing every private repository — `auth_scope` is missing from `admin/config.yml` |
+| `WARN ALLOWED_DOMAINS is not set` | the button works, but anyone may use your Worker at your expense |
+| `WARN the URL ended in /auth, which the editor appends itself` | you pasted the endpoint rather than the origin. The check still ran against the origin it stripped back to, but `base_url` must carry **no path** |
+| `WARN the foreign-domain probe could not be made` | inconclusive, not a failure — check `ALLOWED_DOMAINS` by hand |
+
+Every `WARN` except the last two is about *what the Worker lets through*, not
+whether it works: a `WARN` still exits 0, and the sign-in button will function.
+
+When it passes, the last thing to confirm is that `base_url` in `admin/config.yml`
+is the *same* URL you just checked and has no trailing slash. That is the step
+where the value and the check can silently disagree — the checker tests the Worker
+in isolation, not what the CMS is pointed at.
 
 ### What permissions GitHub will show the author
 

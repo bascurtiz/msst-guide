@@ -274,6 +274,33 @@
           "label": "Paragraph · Expect the dataset to be the slowest stage of the whole project…",
           "md": "Expect the dataset to be the slowest stage of the whole project — not because of processing power, but because you are scouring the internet for clean, official stems. Budget weeks, not evenings."
         }
+      ],
+      "codes": [
+        {
+          "key": "data.dataset.code.01",
+          "label": "Code sample · MAIN_DATASET/ ├── song name 1/ │ ├── bass.flac │ ├── dr…",
+          "code": "<pre><span class=\"d\">MAIN_DATASET/</span>\r\n├── <span class=\"d\">song name 1/</span>\r\n│   ├── bass.flac\r\n│   ├── drums.flac\r\n│   ├── other.flac\r\n│   └── vocals.flac\r\n└── <span class=\"d\">song name 2/</span>\r\n    ├── bass.flac\r\n    ├── drums.flac\r\n    ├── other.flac\r\n    └── vocals.flac</pre>"
+        },
+        {
+          "key": "data.dataset.code.02",
+          "label": "Code sample · Warning: lengths of stems are different for path: [C:\\P…",
+          "code": "<pre>Warning: lengths of stems are different for path:\r\n  [C:\\PATH_TO_DATASET\\SONG_FOLDER].  (25666810 != 28057480)</pre>"
+        },
+        {
+          "key": "data.dataset.code.03",
+          "label": "Code sample · MAIN_DATASET/ ├── other/ │ ├── song 1 (Instrumental).fl…",
+          "code": "<pre><span class=\"d\">MAIN_DATASET/</span>\r\n├── <span class=\"d\">other/</span>\r\n│   ├── song 1 (Instrumental).flac\r\n│   ├── song 2 (Instrumental).flac\r\n│   ├── song 3 (Instrumental).flac\r\n│   └── song 4 (Instrumental).flac\r\n└── <span class=\"d\">vocals/</span>\r\n    ├── song 1 (Vocals).flac\r\n    ├── song 2 (Vocals).flac\r\n    ├── song 3 (Vocals).flac\r\n    └── song 4 (Vocals).flac</pre>"
+        },
+        {
+          "key": "data.dataset.code.04",
+          "label": "Code sample · target_instrument : null instruments : - vocals - other",
+          "code": "<pre><span class=\"f\">target_instrument</span><span class=\"eq\">:</span> <span class=\"k\">null</span>\r\n<span class=\"f\">instruments</span><span class=\"eq\">:</span>\r\n  - vocals\r\n  - other</pre>"
+        },
+        {
+          "key": "data.dataset.code.05",
+          "label": "Code sample · output with shape [1, 2, {chunk size}] doesn't match wi…",
+          "code": "<pre>output with shape [1, 2, {chunk size}] doesn't match with\r\n  the broadcast shape [2, 2, {chunk size}]</pre>"
+        }
       ]
     },
     {
@@ -384,6 +411,18 @@
           "key": "data.validation.li.72",
           "label": "List item · At least a few hundred tracks; the validation set is a small, r…",
           "md": "At least a few hundred tracks; the validation set is a small, representative subset."
+        }
+      ],
+      "codes": [
+        {
+          "key": "data.validation.code.06",
+          "label": "Code sample · validation_dataset/ ├── song name 1/ │ ├── mixture.wav…",
+          "code": "<pre><span class=\"d\">validation_dataset/</span>\r\n├── <span class=\"d\">song name 1/</span>\r\n│   ├── mixture.wav   <span class=\"c\">← stem 1 + stem 2 summed</span>\r\n│   ├── other.wav\r\n│   └── vocals.wav\r\n└── <span class=\"d\">song name 2/</span>\r\n    ├── mixture.wav\r\n    ├── other.wav\r\n    └── vocals.wav</pre>"
+        },
+        {
+          "key": "data.validation.code.07",
+          "label": "Code sample · ValueError: operands could not be broadcast together wi…",
+          "code": "<pre>ValueError: operands could not be broadcast together with shapes</pre>"
         }
       ]
     }

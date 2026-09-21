@@ -289,6 +289,18 @@
           "label": "Caption · What you are aiming for. The same material once the target has…",
           "md": "<b>What you are aiming for.</b> The same material once the target has settled: dense, continuous instrumental structure, and a vocal region that behaves. Use this as your visual reference point when judging a checkpoint."
         }
+      ],
+      "codes": [
+        {
+          "key": "training.focus.code.01",
+          "label": "Code sample · for param in model.parameters(): param.requires_grad =…",
+          "code": "<pre><span class=\"k\">for</span> param <span class=\"k\">in</span> model.parameters():\r\n    param.requires_grad <span class=\"eq\">=</span> <span class=\"k\">False</span>\r\n\r\n<span class=\"k\">for</span> param <span class=\"k\">in</span> model.mask_estimators.parameters():\r\n    param.requires_grad <span class=\"eq\">=</span> <span class=\"k\">True</span></pre>"
+        },
+        {
+          "key": "training.focus.code.02",
+          "label": "Code sample · optim_params = dict()",
+          "code": "<pre>optim_params <span class=\"eq\">=</span> dict()</pre>"
+        }
       ]
     },
     {
@@ -380,6 +392,13 @@
           "label": "Paragraph · Replace the placeholder checkpoint names in the script with the…",
           "md": "Replace the placeholder checkpoint names in the script with the actual YAML names of the checkpoints you want to combine."
         }
+      ],
+      "codes": [
+        {
+          "key": "training.fullness.code.03",
+          "label": "Code sample · loss_multistft : fft_sizes : - 1024 - 2048 - 4096 hop_s…",
+          "code": "<pre><span class=\"f\">loss_multistft</span><span class=\"eq\">:</span>\r\n  <span class=\"f\">fft_sizes</span><span class=\"eq\">:</span>\r\n    - 1024\r\n    - 2048\r\n    - 4096\r\n  <span class=\"f\">hop_sizes</span><span class=\"eq\">:</span>\r\n    - 512\r\n    - 1024\r\n    - 2048\r\n  <span class=\"f\">win_lengths</span><span class=\"eq\">:</span>\r\n    - 1024\r\n    - 2048\r\n    - 4096\r\n  <span class=\"f\">window</span><span class=\"eq\">:</span> <span class=\"s\">\"hann_window\"</span>\r\n  <span class=\"f\">scale</span><span class=\"eq\">:</span> <span class=\"s\">\"mel\"</span>\r\n  <span class=\"f\">n_bins</span><span class=\"eq\">:</span> 128\r\n  <span class=\"f\">sample_rate</span><span class=\"eq\">:</span> 44100\r\n  <span class=\"f\">perceptual_weighting</span><span class=\"eq\">:</span> false\r\n  <span class=\"f\">w_sc</span><span class=\"eq\">:</span> 0.0\r\n  <span class=\"f\">w_log_mag</span><span class=\"eq\">:</span> 1.0\r\n  <span class=\"f\">w_lin_mag</span><span class=\"eq\">:</span> 0.0\r\n  <span class=\"f\">w_phs</span><span class=\"eq\">:</span> 0.0\r\n  <span class=\"f\">mag_distance</span><span class=\"eq\">:</span> <span class=\"s\">\"L1\"</span></pre>"
+        }
       ]
     },
     {
@@ -465,6 +484,13 @@
           "key": "training.local.p.87",
           "label": "Paragraph · Training is a waiting game. Locally you cannot do anything GPU…",
           "md": "Training is a waiting game. Locally you cannot do anything GPU-heavy alongside it — no games, no renders, no video export — so plan something else for the hours. That changes on cloud hardware, where you are paying for the privilege of not caring about the machine."
+        }
+      ],
+      "codes": [
+        {
+          "key": "training.local.code.04",
+          "label": "Code sample · cd C:\\path\\to\\Music-Source-Separation-Training python t…",
+          "code": "<pre><span class=\"cmd\">cd</span> <span class=\"ph\">C:\\path\\to\\Music-Source-Separation-Training</span>\r\n<span class=\"cmd\">python</span> train.py <span class=\"f\">--model_type</span> <span class=\"ph\">mel_band_roformer</span> <span class=\"f\">--config_path</span> <span class=\"ph\">config.yaml</span> <span class=\"f\">--results_path</span> results/ <span class=\"f\">--data_path</span> <span class=\"ph\">C:\\data\\dataset</span> <span class=\"f\">--dataset_type</span> <span class=\"ph\">2</span> <span class=\"f\">--num_workers</span> 4 <span class=\"f\">--device_ids</span> 0 <span class=\"f\">--start_check_point</span> results/<span class=\"ph\">model.ckpt</span> <span class=\"f\">--valid_path</span> <span class=\"ph\">C:\\data\\validation</span> <span class=\"f\">--metric_for_scheduler</span> <span class=\"ph\">sdr</span> <span class=\"f\">--metrics</span> <span class=\"ph\">sdr fullness bleedless</span></pre>"
         }
       ]
     },
@@ -711,6 +737,18 @@
           "key": "training.cloud.p.135",
           "label": "Paragraph · Run the same command on your own machine for a handful of steps…",
           "md": "Run the same command on your own machine for a handful of steps. It proves the config, the dataset type and the paths before any cloud money is spent."
+        }
+      ],
+      "codes": [
+        {
+          "key": "training.cloud.code.05",
+          "label": "Code sample · --data_path /TRAINING_STUFF/DATA/2stem_metal_dataset/…",
+          "code": "<pre><span class=\"f\">--data_path</span> <span class=\"ph\">/TRAINING_STUFF/DATA/2stem_metal_dataset/</span>\r\n<span class=\"f\">--valid_path</span> <span class=\"ph\">/TRAINING_STUFF/DATA/validation/</span></pre>"
+        },
+        {
+          "key": "training.cloud.code.06",
+          "label": "Code sample · ERROR: Failed to build installable wheels for some pypr…",
+          "code": "<pre>ERROR: Failed to build installable wheels for some pyproject.toml\r\nbased projects (wxpython, diffq, pesq)</pre>"
         }
       ]
     }

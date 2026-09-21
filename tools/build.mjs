@@ -35,9 +35,12 @@ const CONTENT_DIR = path.join(ROOT, "content", "pages");
 const INDEX_FILE = path.join(ROOT, "assets", "js", "search-index.js");
 const STAMPED = ["assets/css/site.css", "assets/js/site.js", "assets/js/search-index.js"];
 
-// the attribute group must not be able to cross "<" or ">", or a single
-// marker would swallow every following one
-const MARKER = /<!--c:([A-Za-z0-9._-]+):(prose|inline)(?::([a-zA-Z0-9]+))?(?:\|([^|<>]*))?-->/g;
+// Three slot kinds: `prose` (a run of blocks the renderer rebuilds from
+// markdown), `inline` (text inside an element the template keeps) and `code` (a
+// whole block of markup the content file owns outright). The attribute group
+// must not be able to cross "<" or ">", or a single marker would swallow every
+// following one.
+const MARKER = /<!--c:([A-Za-z0-9._-]+):(prose|inline|code)(?::([a-zA-Z0-9]+))?(?:\|([^|<>]*))?-->/g;
 
 const escapeRegExp = (text) => text.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 
@@ -51,7 +54,8 @@ function readContent(page) {
   const content = JSON.parse(fs.readFileSync(file, "utf8"));
   const blocks = new Map();
   for (const section of content.sections || []) {
-    for (const block of [section.heading, ...(section.blocks || [])].filter(Boolean)) {
+    const entries = [section.heading, ...(section.blocks || []), ...(section.codes || [])];
+    for (const block of entries.filter(Boolean)) {
       if (blocks.has(block.key)) throw new Error(`${page}.json: duplicate block key ${block.key}`);
       blocks.set(block.key, block);
     }
@@ -74,6 +78,21 @@ function renderPage(page, problems) {
       return whole;
     }
     used.add(key);
+    // A code slot is markup the content file owns wholesale — the <pre>, the
+    // syntax-colouring spans inside it and all — so it goes back in byte for
+    // byte: no markdown pass, and no re-indenting that would strip the leading
+    // spaces a code sample may be showing.
+    if (mode === "code") {
+      // A code field stores a string. Anything else — an editor that wrote
+      // `{code, lang}` because a CMS option did not take — would otherwise
+      // render as "[object Object]" and ship a broken sample, so fail the build
+      // and name the entry instead.
+      if (typeof block.code !== "string") {
+        throw new Error(`${page}.json: ${key} is a code slot but its \`code\` is`
+          + ` ${Array.isArray(block.code) ? "an array" : typeof block.code}, not a string`);
+      }
+      return block.code;
+    }
     const markdown = String(block.md ?? "");
     if (mode !== "prose") return mdToHtmlInlineBlock(markdown);
 

@@ -78,6 +78,8 @@ node tools/package-site.mjs      # render, stage dist/, zip the upload bundle (a
 node tools/extract-content.mjs   # one-time: split hand-written pages into templates + content
 node --test tools/lib/*.test.mjs # unit tests: the renderer, and the reference check
                                  # (bash expands the glob; list the files if yours will not)
+node tools/check-auth-worker.mjs <worker-url>
+                                 # check a deployed OAuth Worker before the author meets it; see SETUP.md §3
 
 python tools/seo.py              # regenerate sitemap.xml + robots.txt
 python tools/make-og-image.py    # re-render the social cards (needs Pillow)
@@ -384,9 +386,17 @@ Prose lives behind a marker comment:
   the marker carries the element's own attributes so styling survives.
 - `inline` markers sit *inside* an element that owns its look — a heading, list
   item, card title, `<b>`, `<span>` — and receive inline text only.
+- `code` markers replace a whole `<pre>` element, so the sample, the spans that
+  colour it and its own indentation all arrive from the content file. Those spans
+  are the reason the markup is stored rather than the plain text: the palette is
+  `cmd`, `f`, `ph`, `c` in the shell blocks, `k`, `eq`, `p` in the Python ones
+  and `d`/`hl` in the directory trees, and no highlighter could rebuild that from
+  text. `tools/migrate-code-slots.mjs` is the one-off that moved the existing
+  samples into place, and it refuses to run twice.
 
 To add a prose block, put a marker in the template **and** add the matching
 `{ key, label, md }` to that section's `blocks` in `content/pages/<page>.json`.
+A `code` marker takes `{ key, label, code }` in that section's `codes` instead.
 Key format is `<page>.<section>.<tag>.<nn>`, and any unique, stable key works.
 Do one without the other and the build tells you which one is missing.
 

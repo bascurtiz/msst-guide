@@ -197,6 +197,13 @@
           "label": "Paragraph · Not the training itself — the two stages either side of it. A d…",
           "md": "Not the training itself — the two stages either side of it. A dataset whose stems do not match in length, or a validation folder exported as FLAC, will stop a run before a single epoch completes. [Part one](data.html) exists to prevent exactly that."
         }
+      ],
+      "codes": [
+        {
+          "key": "index.head.code.01",
+          "label": "Code sample · > python train.py --model_type mel_band_roformer --conf…",
+          "code": "<pre><span class=\"p\">&gt;</span> python train.py\r\n  <span class=\"c\">--model_type</span> mel_band_roformer\r\n  <span class=\"c\">--config_path</span> config_vocals.yaml\r\n  <span class=\"c\">--results_path</span> results/\r\n  <span class=\"c\">--data_path</span> /data/2stem_dataset/\r\n  <span class=\"c\">--dataset_type</span> 2\r\n  <span class=\"c\">--num_workers</span> 4\r\n  <span class=\"c\">--device_ids</span> 0\r\n  <span class=\"c\">--start_check_point</span> results/model.ckpt\r\n  <span class=\"c\">--valid_path</span> /data/validation/\r\n  <span class=\"c\">--metric_for_scheduler</span> sdr\r\n  <span class=\"c\">--metrics</span> sdr fullness bleedless</pre>"
+        }
       ]
     },
     {

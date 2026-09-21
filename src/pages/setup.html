@@ -124,14 +124,7 @@
 
       <div class="tree">
         <div class="tree-bar">Repository layout after step 3</div>
-<pre><span class="d">Music-Source-Separation-Training/</span>
-├── train.py
-├── valid.py
-├── inference.py
-├── requirements.txt
-├── <span class="hl">config_vocals_mel_band_roformer.yaml</span>   <span class="c">← the config, at the root</span>
-└── <span class="d">results/</span>
-    └── <span class="hl">model_mel_band_roformer.ckpt</span>          <span class="c">← the weights</span></pre>
+<!--c:setup.repo.code.01:code-->
       </div>
 
       <h3 id="config-vs-checkpoint"><!--c:setup.repo.h3.13:inline--></h3>
@@ -201,34 +194,14 @@
       <h3 id="installation"><!--c:setup.commands.h3.34:inline--></h3>
       <div class="code">
         <div class="code-bar"><span class="tag">powershell · one-time setup</span><button class="copy" type="button">Copy</button></div>
-<pre><span class="c"># 1. Install PyTorch — pick the command for your CUDA version</span>
-<span class="c">#    https://pytorch.org/get-started/locally/</span>
-<span class="cmd">pip install</span> torch torchvision torchaudio <span class="f">--index-url</span> <span class="ph">https://download.pytorch.org/whl/cu124</span>
-
-<span class="c"># 2. Install the repository requirements (from the repo folder)</span>
-<span class="cmd">cd</span> <span class="ph">C:\path\to\Music-Source-Separation-Training</span>
-<span class="cmd">pip install</span> <span class="f">-r</span> requirements.txt
-
-<span class="c"># 3. Install anything the previous step skipped</span>
-<span class="cmd">pip install</span> <span class="ph">name-of-missing-package</span></pre>
+<!--c:setup.commands.code.02:code-->
       </div>
 
       <h3 id="the-training-command"><!--c:setup.commands.h3.35:inline--></h3>
       <!--c:setup.commands.p.36:prose:p|-->
       <div class="code">
         <div class="code-bar"><span class="tag">powershell · start training</span><button class="copy" type="button">Copy</button></div>
-<pre><span class="cmd">python</span> train.py
-  <span class="f">--model_type</span> <span class="ph">mel_band_roformer</span>
-  <span class="f">--config_path</span> <span class="ph">config_vocals.yaml</span>
-  <span class="f">--results_path</span> results/
-  <span class="f">--data_path</span> <span class="ph">C:\path\to\dataset</span>
-  <span class="f">--dataset_type</span> <span class="ph">2</span>
-  <span class="f">--num_workers</span> 4
-  <span class="f">--device_ids</span> 0
-  <span class="f">--start_check_point</span> results/<span class="ph">model.ckpt</span>
-  <span class="f">--valid_path</span> <span class="ph">C:\path\to\validation</span>
-  <span class="f">--metric_for_scheduler</span> <span class="ph">sdr</span>
-  <span class="f">--metrics</span> <span class="ph">sdr fullness bleedless</span></pre>
+<!--c:setup.commands.code.03:code-->
       </div>
       <!--c:setup.commands.p.37:prose:p| class="note-small"-->
 
@@ -244,12 +217,7 @@
       <!--c:setup.commands.p.41:prose:p|-->
       <div class="code">
         <div class="code-bar"><span class="tag">powershell · inference</span><button class="copy" type="button">Copy</button></div>
-<pre><span class="cmd">python</span> inference.py
-  <span class="f">--model_type</span> <span class="ph">mel_band_roformer</span>
-  <span class="f">--config_path</span> <span class="ph">config_vocals.yaml</span>
-  <span class="f">--start_check_point</span> results/<span class="ph">model.ckpt</span>
-  <span class="f">--input_folder</span> input
-  <span class="f">--store_dir</span> separation_results</pre>
+<!--c:setup.commands.code.04:code-->
       </div>
       <!--c:setup.commands.p.42:prose:p|-->
 
@@ -260,7 +228,7 @@
           <!--c:setup.commands.p.44:prose:p|-->
           <div class="code" style="margin-bottom:0">
             <div class="code-bar"><span class="tag">bash · cloud</span><button class="copy" type="button">Copy</button></div>
-<pre><span class="cmd">export</span> OPENBLAS_NUM_THREADS=1</pre>
+<!--c:setup.commands.code.05:code-->
           </div>
           <!--c:setup.commands.p.45:prose:p| style="margin-top:12px"-->
         </div>
@@ -589,34 +557,7 @@
       <h3 id="the-training-block"><!--c:setup.yaml.h3.74:inline--></h3>
       <div class="code">
         <div class="code-bar"><span class="tag">config.yaml · training section</span><button class="copy" type="button">Copy</button></div>
-<pre><span class="f">training</span><span class="eq">:</span>
-  <span class="f">batch_size</span><span class="eq">:</span> 1
-  <span class="f">gradient_accumulation_steps</span><span class="eq">:</span> 1
-  <span class="f">grad_clip</span><span class="eq">:</span> 0
-  <span class="f">instruments</span><span class="eq">:</span>
-    - vocals
-    - other
-  <span class="f">lr</span><span class="eq">:</span> 1.0e-05
-  <span class="f">patience</span><span class="eq">:</span> 2
-  <span class="f">reduce_factor</span><span class="eq">:</span> 0.95
-  <span class="f">target_instrument</span><span class="eq">:</span> vocals
-  <span class="f">num_epochs</span><span class="eq">:</span> 1000
-  <span class="f">num_steps</span><span class="eq">:</span> 1000
-  <span class="f">optimizer</span><span class="eq">:</span> adam
-  <span class="f">ema_momentum</span><span class="eq">:</span> 0.999
-  <span class="f">q</span><span class="eq">:</span> 0.95
-  <span class="f">coarse_loss_clip</span><span class="eq">:</span> false
-  <span class="f">other_fix</span><span class="eq">:</span> true
-  <span class="f">use_amp</span><span class="eq">:</span> true
-  <span class="f">use_torch_checkpoint</span><span class="eq">:</span> true
-  <span class="f">augmentation</span><span class="eq">:</span> false
-  <span class="f">augmentation_type</span><span class="eq">:</span> null
-  <span class="f">use_mp3_compress</span><span class="eq">:</span> false
-  <span class="f">augmentation_mix</span><span class="eq">:</span> false
-  <span class="f">augmentation_loudness</span><span class="eq">:</span> false
-  <span class="f">augmentation_loudness_type</span><span class="eq">:</span> 1
-  <span class="f">augmentation_loudness_min</span><span class="eq">:</span> 0
-  <span class="f">augmentation_loudness_max</span><span class="eq">:</span> 0</pre>
+<!--c:setup.yaml.code.06:code-->
       </div>
 
       <div class="table-scroll">

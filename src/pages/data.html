@@ -189,17 +189,7 @@
       <h3 id="type-1-one-folder-per-song-one-file-per-stem"><!--c:data.dataset.h3.28:inline--></h3>
       <div class="tree">
         <div class="tree-bar">Type 1 layout · modelled on MUSDB18 · 4-stem models</div>
-<pre><span class="d">MAIN_DATASET/</span>
-├── <span class="d">song name 1/</span>
-│   ├── bass.flac
-│   ├── drums.flac
-│   ├── other.flac
-│   └── vocals.flac
-└── <span class="d">song name 2/</span>
-    ├── bass.flac
-    ├── drums.flac
-    ├── other.flac
-    └── vocals.flac</pre>
+<!--c:data.dataset.code.01:code-->
       </div>
       <!--c:data.dataset.p.29:prose:p|-->
 
@@ -210,8 +200,7 @@
           <!--c:data.dataset.p.31:prose:p|-->
           <div class="code" style="margin-bottom:0">
             <div class="code-bar"><span class="tag">Error · dataset_type 1</span></div>
-<pre>Warning: lengths of stems are different for path:
-  [C:\PATH_TO_DATASET\SONG_FOLDER].  (25666810 != 28057480)</pre>
+<!--c:data.dataset.code.02:code-->
           </div>
           <!--c:data.dataset.p.32:prose:p| style="margin-top:12px"-->
         </div>
@@ -220,17 +209,7 @@
       <h3 id="type-2-one-folder-per-stem-all-songs-inside"><!--c:data.dataset.h3.33:inline--></h3>
       <div class="tree">
         <div class="tree-bar">Type 2 layout · 2-stem models · drums/bass merged into “other”</div>
-<pre><span class="d">MAIN_DATASET/</span>
-├── <span class="d">other/</span>
-│   ├── song 1 (Instrumental).flac
-│   ├── song 2 (Instrumental).flac
-│   ├── song 3 (Instrumental).flac
-│   └── song 4 (Instrumental).flac
-└── <span class="d">vocals/</span>
-    ├── song 1 (Vocals).flac
-    ├── song 2 (Vocals).flac
-    ├── song 3 (Vocals).flac
-    └── song 4 (Vocals).flac</pre>
+<!--c:data.dataset.code.03:code-->
       </div>
       <!--c:data.dataset.p.34:prose:p|-->
 
@@ -289,16 +268,12 @@
           <!--c:data.dataset.p.48:prose:p|-->
           <div class="code" style="margin-bottom:0">
             <div class="code-bar"><span class="tag">config.yaml</span></div>
-<pre><span class="f">target_instrument</span><span class="eq">:</span> <span class="k">null</span>
-<span class="f">instruments</span><span class="eq">:</span>
-  - vocals
-  - other</pre>
+<!--c:data.dataset.code.04:code-->
           </div>
           <!--c:data.dataset.p.49:prose:p| style="margin-top:12px"-->
           <div class="code" style="margin-bottom:0">
             <div class="code-bar"><span class="tag">RuntimeError</span></div>
-<pre>output with shape [1, 2, {chunk size}] doesn't match with
-  the broadcast shape [2, 2, {chunk size}]</pre>
+<!--c:data.dataset.code.05:code-->
           </div>
         </div>
       </div>
@@ -317,15 +292,7 @@
 
       <div class="tree">
         <div class="tree-bar">Validation layout · 2-stem example</div>
-<pre><span class="d">validation_dataset/</span>
-├── <span class="d">song name 1/</span>
-│   ├── mixture.wav   <span class="c">← stem 1 + stem 2 summed</span>
-│   ├── other.wav
-│   └── vocals.wav
-└── <span class="d">song name 2/</span>
-    ├── mixture.wav
-    ├── other.wav
-    └── vocals.wav</pre>
+<!--c:data.validation.code.06:code-->
       </div>
       <!--c:data.validation.p.54:prose:p|-->
 
@@ -389,7 +356,7 @@
           <!--c:data.validation.p.64:prose:p|-->
           <div class="code" style="margin-bottom:0">
             <div class="code-bar"><span class="tag">ValueError · validation stage</span></div>
-<pre>ValueError: operands could not be broadcast together with shapes</pre>
+<!--c:data.validation.code.07:code-->
           </div>
           <!--c:data.validation.p.65:prose:p| style="margin-top:12px"-->
         </div>

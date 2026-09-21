@@ -164,16 +164,12 @@
       <h3 id="the-patch"><!--c:training.focus.h3.22:inline--></h3>
       <div class="code">
         <div class="code-bar"><span class="tag">train.py · freeze everything except the mask estimators</span><button class="copy" type="button">Copy</button></div>
-<pre><span class="k">for</span> param <span class="k">in</span> model.parameters():
-    param.requires_grad <span class="eq">=</span> <span class="k">False</span>
-
-<span class="k">for</span> param <span class="k">in</span> model.mask_estimators.parameters():
-    param.requires_grad <span class="eq">=</span> <span class="k">True</span></pre>
+<!--c:training.focus.code.01:code-->
       </div>
       <!--c:training.focus.p.23:prose:p|-->
       <div class="code">
         <div class="code-bar"><span class="tag">train.py · around line 203</span></div>
-<pre>optim_params <span class="eq">=</span> dict()</pre>
+<!--c:training.focus.code.02:code-->
       </div>
 
       <figure class="fig">
@@ -268,29 +264,7 @@
 
       <div class="code">
         <div class="code-bar"><span class="tag">config.yaml · loss section</span><button class="copy" type="button">Copy</button></div>
-<pre><span class="f">loss_multistft</span><span class="eq">:</span>
-  <span class="f">fft_sizes</span><span class="eq">:</span>
-    - 1024
-    - 2048
-    - 4096
-  <span class="f">hop_sizes</span><span class="eq">:</span>
-    - 512
-    - 1024
-    - 2048
-  <span class="f">win_lengths</span><span class="eq">:</span>
-    - 1024
-    - 2048
-    - 4096
-  <span class="f">window</span><span class="eq">:</span> <span class="s">"hann_window"</span>
-  <span class="f">scale</span><span class="eq">:</span> <span class="s">"mel"</span>
-  <span class="f">n_bins</span><span class="eq">:</span> 128
-  <span class="f">sample_rate</span><span class="eq">:</span> 44100
-  <span class="f">perceptual_weighting</span><span class="eq">:</span> false
-  <span class="f">w_sc</span><span class="eq">:</span> 0.0
-  <span class="f">w_log_mag</span><span class="eq">:</span> 1.0
-  <span class="f">w_lin_mag</span><span class="eq">:</span> 0.0
-  <span class="f">w_phs</span><span class="eq">:</span> 0.0
-  <span class="f">mag_distance</span><span class="eq">:</span> <span class="s">"L1"</span></pre>
+<!--c:training.fullness.code.03:code-->
       </div>
 
       <div class="callout danger">
@@ -322,8 +296,7 @@
 
       <div class="code">
         <div class="code-bar"><span class="tag">powershell · administrator</span><button class="copy" type="button">Copy</button></div>
-<pre><span class="cmd">cd</span> <span class="ph">C:\path\to\Music-Source-Separation-Training</span>
-<span class="cmd">python</span> train.py <span class="f">--model_type</span> <span class="ph">mel_band_roformer</span> <span class="f">--config_path</span> <span class="ph">config.yaml</span> <span class="f">--results_path</span> results/ <span class="f">--data_path</span> <span class="ph">C:\data\dataset</span> <span class="f">--dataset_type</span> <span class="ph">2</span> <span class="f">--num_workers</span> 4 <span class="f">--device_ids</span> 0 <span class="f">--start_check_point</span> results/<span class="ph">model.ckpt</span> <span class="f">--valid_path</span> <span class="ph">C:\data\validation</span> <span class="f">--metric_for_scheduler</span> <span class="ph">sdr</span> <span class="f">--metrics</span> <span class="ph">sdr fullness bleedless</span></pre>
+<!--c:training.local.code.04:code-->
       </div>
 
       <figure class="fig">
@@ -420,8 +393,7 @@
           <!--c:training.cloud.p.115:prose:p|-->
           <div class="code">
             <div class="code-bar"><span class="tag">path syntax on the instance</span><button class="copy" type="button">Copy</button></div>
-<pre><span class="f">--data_path</span> <span class="ph">/TRAINING_STUFF/DATA/2stem_metal_dataset/</span>
-<span class="f">--valid_path</span> <span class="ph">/TRAINING_STUFF/DATA/validation/</span></pre>
+<!--c:training.cloud.code.05:code-->
           </div>
           <!--c:training.cloud.p.116:prose:p|-->
         </li>
@@ -448,8 +420,7 @@
           <!--c:training.cloud.p.126:prose:p|-->
           <div class="code" style="margin-bottom:0">
             <div class="code-bar"><span class="tag">pip · wheel build error</span></div>
-<pre>ERROR: Failed to build installable wheels for some pyproject.toml
-based projects (wxpython, diffq, pesq)</pre>
+<!--c:training.cloud.code.06:code-->
           </div>
           <!--c:training.cloud.p.127:prose:p| style="margin-top:12px"-->
           <ul style="margin-bottom:0">
