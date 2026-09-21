@@ -1,0 +1,718 @@
+{
+  "page": "training",
+  "title": "Training runs",
+  "source": "src/pages/training.html",
+  "sections": [
+    {
+      "id": "head",
+      "label": "Page head",
+      "heading": {
+        "key": "training.head.h1.02",
+        "label": "Page title · Training runs",
+        "md": "Training runs"
+      },
+      "blocks": [
+        {
+          "key": "training.head.p.01",
+          "label": "Paragraph · Chapters 08–12 · Running & refining",
+          "md": "Chapters 08–12 · Running & refining"
+        },
+        {
+          "key": "training.head.p.03",
+          "label": "Paragraph · From a checkpoint that needs redirecting to a model trained fro…",
+          "md": "From a checkpoint that needs redirecting to a model trained from nothing — plus the part nobody warns you about: what the log actually means while it scrolls past."
+        }
+      ]
+    },
+    {
+      "id": "scratch",
+      "label": "Training from scratch",
+      "heading": {
+        "key": "training.scratch.h2.04",
+        "label": "Chapter heading · Training from scratch",
+        "md": "Training from scratch"
+      },
+      "blocks": [
+        {
+          "key": "training.scratch.p.05",
+          "label": "Paragraph · You can train with no checkpoint at all. It is the right move w…",
+          "md": "You can train with no checkpoint at all. It is the right move when fine-tuning simply cannot give you the model you need — and it is also the slowest, least forgiving path."
+        },
+        {
+          "key": "training.scratch.p.06",
+          "label": "Paragraph · Fine-tuning adjusts an existing model toward your data. Trainin…",
+          "md": "Fine-tuning adjusts an existing model toward your data. Training from scratch builds the representation itself, which is what you want when your target is far away from anything published. In the source guide this was the route taken for a personal metal dataset: pre-train on a laptop to get *something* decent, then move to cloud GPUs with different parameters to push it further."
+        },
+        {
+          "key": "training.scratch.div.07",
+          "label": "Label · The entire change",
+          "md": "The entire change"
+        },
+        {
+          "key": "training.scratch.p.08",
+          "label": "Paragraph · Remove --start_check_point from your training command. That is…",
+          "md": "Remove `--start_check_point` from your training command. That is it — the trainer will initialise the weights itself."
+        },
+        {
+          "key": "training.scratch.div.09",
+          "label": "Label · Expect bad metrics, for a long time",
+          "md": "Expect bad metrics, for a long time"
+        },
+        {
+          "key": "training.scratch.p.10",
+          "label": "Paragraph · Metrics will look terrible early on — not because something is…",
+          "md": "Metrics will look terrible early on — not because something is broken, but because the model started from noise. On a laptop they will look even worse, because of the hardware limits. On cloud hardware the curve is smoother; start with a **smaller chunk size** until it converges, then raise it."
+        },
+        {
+          "key": "training.scratch.span.11",
+          "label": "Label · Schematic · the shape of the two curves",
+          "md": "Schematic · the shape of the two curves"
+        },
+        {
+          "key": "training.scratch.caption.12",
+          "label": "Caption · Why a from-scratch run feels broken. A schematic, not measured…",
+          "md": "<b>Why a from-scratch run feels broken.</b> A schematic, not measured data: a fine-tuned run starts from a model that already separates audio, so it reaches useful numbers in a few epochs. A from-scratch run starts from noise, spends a long time looking like a failure, and plateaus lower unless the data and hardware are generous."
+        },
+        {
+          "key": "training.scratch.span.13",
+          "label": "Label · Reference point",
+          "md": "Reference point"
+        },
+        {
+          "key": "training.scratch.h5.14",
+          "label": "Card title · What \"big\" actually means",
+          "md": "What \"big\" actually means"
+        },
+        {
+          "key": "training.scratch.p.15",
+          "label": "Paragraph · A Roformer at batch_size: 4 fills the entire 140 GB VRAM of an…",
+          "md": "A Roformer at `batch_size: 4` fills the entire 140 GB VRAM of an H200. Plan your chunk size and batch size around the card you have, not around the config's defaults."
+        },
+        {
+          "key": "training.scratch.span.16",
+          "label": "Label · Order of operations",
+          "md": "Order of operations"
+        },
+        {
+          "key": "training.scratch.h5.17",
+          "label": "Card title · Converge small, then grow",
+          "md": "Converge small, then grow"
+        },
+        {
+          "key": "training.scratch.p.18",
+          "label": "Paragraph · Small chunks converge faster and teach the core separation. Onc…",
+          "md": "Small chunks converge faster and teach the core separation. Once the metrics stop climbing, increase `chunk_size` and let the model learn longer musical context."
+        }
+      ]
+    },
+    {
+      "id": "focus",
+      "label": "Shifting a model's focus between stems",
+      "heading": {
+        "key": "training.focus.h2.19",
+        "label": "Chapter heading · Shifting a model's focus between stems",
+        "md": "Shifting a model's focus between stems"
+      },
+      "blocks": [
+        {
+          "key": "training.focus.p.20",
+          "label": "Paragraph · A special case worth knowing: taking a model that separates voc…",
+          "md": "A special case worth knowing: taking a model that separates vocals and turning it into one that separates instrumentals — without retraining everything from the ground up."
+        },
+        {
+          "key": "training.focus.p.21",
+          "label": "Paragraph · This one came from a real problem: needing to move a vocal mode…",
+          "md": "This one came from a real problem: needing to move a vocal model's target over to the instrumental. After a series of unsuccessful attempts, **unwa** suggested a transfer-learning approach and supplied the code for it."
+        },
+        {
+          "key": "training.focus.h3.22",
+          "label": "Subheading · The patch",
+          "md": "The patch"
+        },
+        {
+          "key": "training.focus.p.23",
+          "label": "Paragraph · Place it just above line 203 in train.py, where the optimiser p…",
+          "md": "Place it just above line 203 in `train.py`, where the optimiser parameters are assembled:"
+        },
+        {
+          "key": "training.focus.span.24",
+          "label": "Label · Figure 9.1 · the patched section in train.py",
+          "md": "Figure 9.1 · the patched section in train.py"
+        },
+        {
+          "key": "training.focus.caption.25",
+          "label": "Caption · Where the patch lives. The two loops sit immediately before the…",
+          "md": "<b>Where the patch lives.</b> The two loops sit immediately before the optimiser dictionary is built, so the optimiser only ever receives the mask-estimator parameters as trainable."
+        },
+        {
+          "key": "training.focus.h3.26",
+          "label": "Subheading · Why this works",
+          "md": "Why this works"
+        },
+        {
+          "key": "training.focus.p.27",
+          "label": "Paragraph · unwa's reasoning: \"in my experience, it is the MaskEstimator th…",
+          "md": "unwa's reasoning: *\"in my experience, it is the MaskEstimator that changes significantly when the target is changed.\"* Freezing the Mel-band projections and the Roformer blocks and training only the final masking modules is enough to move the model from one target to another — and it cuts training time dramatically."
+        },
+        {
+          "key": "training.focus.h6.28",
+          "label": "Label · Mel-Roformer · what the patch trains",
+          "md": "Mel-Roformer · what the patch trains"
+        },
+        {
+          "key": "training.focus.span.29",
+          "label": "Label · frozen",
+          "md": "<i class=\"k-frozen\"></i>frozen"
+        },
+        {
+          "key": "training.focus.span.30",
+          "label": "Label · trained",
+          "md": "<i class=\"k-train\"></i>trained"
+        },
+        {
+          "key": "training.focus.b.31",
+          "label": "Bold label · Complex spectrogram",
+          "md": "Complex spectrogram"
+        },
+        {
+          "key": "training.focus.span.32",
+          "label": "Label · input",
+          "md": "input"
+        },
+        {
+          "key": "training.focus.b.33",
+          "label": "Bold label · Mel-band projection",
+          "md": "Mel-band projection"
+        },
+        {
+          "key": "training.focus.span.34",
+          "label": "Label · frozen · weights kept",
+          "md": "frozen · weights kept"
+        },
+        {
+          "key": "training.focus.b.35",
+          "label": "Bold label · Roformer blocks",
+          "md": "Roformer blocks"
+        },
+        {
+          "key": "training.focus.span.36",
+          "label": "Label · frozen · repetition L",
+          "md": "frozen · repetition L"
+        },
+        {
+          "key": "training.focus.b.37",
+          "label": "Bold label · Embedding projection",
+          "md": "Embedding projection"
+        },
+        {
+          "key": "training.focus.span.38",
+          "label": "Label · trained",
+          "md": "trained"
+        },
+        {
+          "key": "training.focus.b.39",
+          "label": "Bold label · Mask estimation",
+          "md": "Mask estimation"
+        },
+        {
+          "key": "training.focus.span.40",
+          "label": "Label · trained",
+          "md": "trained"
+        },
+        {
+          "key": "training.focus.p.41",
+          "label": "Paragraph · requires_grad = False for every parameter, then True again for…",
+          "md": "`requires_grad = False` for every parameter, then `True` again for `model.mask_estimators`. Everything up to the embedding projection keeps the knowledge the original model learned; only the final modules adapt to the new target. The same diagram, as it appears in the original architecture figure, is [Figure 9.2](#fig-arch) below."
+        },
+        {
+          "key": "training.focus.span.42",
+          "label": "Label · Figure 9.2 · Mel-Roformer architecture",
+          "md": "Figure 9.2 · Mel-Roformer architecture"
+        },
+        {
+          "key": "training.focus.caption.43",
+          "label": "Caption · What gets frozen, and what gets trained. The spectrogram is pro…",
+          "md": "<b>What gets frozen, and what gets trained.</b> The spectrogram is projected into mel bands, processed by Roformer blocks, projected back into an embedding and turned into a mask. The patch keeps the early stages fixed and lets the embedding projection and mask estimation adapt to the new target."
+        },
+        {
+          "key": "training.focus.div.44",
+          "label": "Label · Limits of the trick",
+          "md": "Limits of the trick"
+        },
+        {
+          "key": "training.focus.li.45",
+          "label": "List item · It will not fine-tune the other blocks, so it is good for switc…",
+          "md": "It will not fine-tune the other blocks, so it is good for switching targets — not for full training of a new model."
+        },
+        {
+          "key": "training.focus.li.46",
+          "label": "List item · It does not always work. If the output does not improve, remove…",
+          "md": "It does not always work. If the output does not improve, remove the patch from `train.py` and train normally."
+        },
+        {
+          "key": "training.focus.h3.47",
+          "label": "Subheading · How it actually went",
+          "md": "How it actually went"
+        },
+        {
+          "key": "training.focus.p.48",
+          "label": "Paragraph · The run was taken to epoch 12 to complete the switch, plus 2 fu…",
+          "md": "The run was taken to **epoch 12** to complete the switch, plus **2 further epochs** to confirm the model stayed on the instrumental target — the second stretch purely to be sure it was not about to drift back."
+        },
+        {
+          "key": "training.focus.div.49",
+          "label": "Label · Mind the learning rate when resuming",
+          "md": "Mind the learning rate when resuming"
+        },
+        {
+          "key": "training.focus.p.50",
+          "label": "Paragraph · If the learning rate is too high for this second phase, the mod…",
+          "md": "If the learning rate is too high for this second phase, the model starts doing strange things — for example reporting values such as *\"inst other fullness: 49\"*. The most likely cause is that it learned too quickly. Compare the two results below."
+        },
+        {
+          "key": "training.focus.span.51",
+          "label": "Label · Figure 9.3 · over-cooked run",
+          "md": "Figure 9.3 · over-cooked run"
+        },
+        {
+          "key": "training.focus.caption.52",
+          "label": "Caption · Learning too fast. The vocal track on top and the instrumental…",
+          "md": "<b>Learning too fast.</b> The vocal track on top and the instrumental below show the signature of an over-cooked phase: smeared, hazy energy that no longer follows the music. If your spectrograms look like this, lower the learning rate."
+        },
+        {
+          "key": "training.focus.span.53",
+          "label": "Label · Figure 9.4 · the same run once settled",
+          "md": "Figure 9.4 · the same run once settled"
+        },
+        {
+          "key": "training.focus.caption.54",
+          "label": "Caption · What you are aiming for. The same material once the target has…",
+          "md": "<b>What you are aiming for.</b> The same material once the target has settled: dense, continuous instrumental structure, and a vocal region that behaves. Use this as your visual reference point when judging a checkpoint."
+        }
+      ]
+    },
+    {
+      "id": "fullness",
+      "label": "Fullness models and model fusion",
+      "heading": {
+        "key": "training.fullness.h2.55",
+        "label": "Chapter heading · Fullness models and model fusion",
+        "md": "Fullness models and model fusion"
+      },
+      "blocks": [
+        {
+          "key": "training.fullness.p.56",
+          "label": "Paragraph · Fullness measures how complete the target stem sounds. Training…",
+          "md": "Fullness measures how complete the target stem sounds. Training a model specifically for it takes three steps — and produces a specific, important artefact."
+        },
+        {
+          "key": "training.fullness.b.57",
+          "label": "Bold label · Patch the architecture switch in train.py",
+          "md": "Patch the architecture switch in train.py"
+        },
+        {
+          "key": "training.fullness.p.58",
+          "label": "Paragraph · Find the line beginning if args.model_type in ['mel_band_roform…",
+          "md": "Find the line beginning `if args.model_type in ['mel_band_roformer', 'bs_roformer']:` and place a `1` before either `mel` or `bs` — or search the file for anything containing `roformer`."
+        },
+        {
+          "key": "training.fullness.b.59",
+          "label": "Bold label · Use the multi-STFT loss",
+          "md": "Use the multi-STFT loss"
+        },
+        {
+          "key": "training.fullness.p.60",
+          "label": "Paragraph · Pass --use_multistft_loss as your loss argument on the training…",
+          "md": "Pass `--use_multistft_loss` as your loss argument on the training command."
+        },
+        {
+          "key": "training.fullness.b.61",
+          "label": "Bold label · Add the loss block to your config",
+          "md": "Add the loss block to your config"
+        },
+        {
+          "key": "training.fullness.p.62",
+          "label": "Paragraph · These values are a working starting point; they can be adjusted.",
+          "md": "These values are a working starting point; they can be adjusted."
+        },
+        {
+          "key": "training.fullness.div.63",
+          "label": "Label · Warning",
+          "md": "Warning"
+        },
+        {
+          "key": "training.fullness.p.64",
+          "label": "Paragraph · Training this way gives you fullness models with a lot of noise…",
+          "md": "Training this way gives you fullness models **with a lot of noise**. That is the trade this loss makes: a fuller sounding stem, at the cost of added noise. Judge whether that is a good deal for your material before you build a workflow around it."
+        },
+        {
+          "key": "training.fullness.h3.65",
+          "label": "Subheading · Model fusion (Sucial's script)",
+          "md": "Model fusion (Sucial's script)"
+        },
+        {
+          "key": "training.fullness.p.66",
+          "label": "Paragraph · Not strictly training, but part of the same toolbox: a fusion s…",
+          "md": "Not strictly training, but part of the same toolbox: a fusion script that merges two checkpoints into one, available at [huggingface.co/Sucial/…/model\\_fusion.py](https://huggingface.co/Sucial/Dereverb-Echo_Mel_Band_Roformer/blob/main/scripts/model_fusion.py). Download the `.py` file and drop it into the MSST folder."
+        },
+        {
+          "key": "training.fullness.div.67",
+          "label": "Label · Fusion requirements",
+          "md": "Fusion requirements"
+        },
+        {
+          "key": "training.fullness.li.68",
+          "label": "List item · All checkpoints must share the same target. You cannot fuse a v…",
+          "md": "All checkpoints must share the same target. You **cannot** fuse a vocal model with an instrumental model — two instrumentals both need their stem labelled `other`."
+        },
+        {
+          "key": "training.fullness.li.69",
+          "label": "List item · Possibly both checkpoints must share the same base architecture…",
+          "md": "Possibly both checkpoints must share the same base architecture settings (for example `dim 384`, `depth 6`, `mask_estimator_depth 2`). This one is not confirmed."
+        },
+        {
+          "key": "training.fullness.li.70",
+          "label": "List item · Weights are set inside the script and should sum to 1 — for exa…",
+          "md": "Weights are set inside the script and should sum to `1` — for example `0.5` and `0.5` while testing."
+        },
+        {
+          "key": "training.fullness.p.71",
+          "label": "Paragraph · Replace the placeholder checkpoint names in the script with the…",
+          "md": "Replace the placeholder checkpoint names in the script with the actual YAML names of the checkpoints you want to combine."
+        }
+      ]
+    },
+    {
+      "id": "local",
+      "label": "Running the training locally",
+      "heading": {
+        "key": "training.local.h2.72",
+        "label": "Chapter heading · Running the training locally",
+        "md": "Running the training locally"
+      },
+      "blocks": [
+        {
+          "key": "training.local.p.73",
+          "label": "Paragraph · Local training is the simplest loop there is: open a shell, pas…",
+          "md": "Local training is the simplest loop there is: open a shell, paste the command, let it run. Your GPU will spin hard — that is how you know it is working."
+        },
+        {
+          "key": "training.local.span.74",
+          "label": "Label · Figure 11.1 · console output during a local run",
+          "md": "Figure 11.1 · console output during a local run"
+        },
+        {
+          "key": "training.local.div.75",
+          "label": "Label · 1 2 3 4 5 6",
+          "md": "![Console log showing train epoch, learning rate, training loss, number of overlaps, per-epoch instrumental metrics, elapsed time and stored weights](assets/img/training-log.png)\r\n          <span class=\"pin\" style=\"left:39%;top:4%\">1</span>\r\n          <span class=\"pin\" style=\"left:33%;top:12%\">2</span>\r\n          <span class=\"pin\" style=\"left:17%;top:26%\">3</span>\r\n          <span class=\"pin\" style=\"left:41%;top:30%\">4</span>\r\n          <span class=\"pin\" style=\"left:47%;top:44%\">5</span>\r\n          <span class=\"pin\" style=\"left:83%;top:49%\">6</span>"
+        },
+        {
+          "key": "training.local.span.76",
+          "label": "Label · Epoch and learning rate — which pass this is, and the rate in f…",
+          "md": "<b>Epoch and learning rate</b> — which pass this is, and the rate in force. It moves when the scheduler reacts to a stalled metric."
+        },
+        {
+          "key": "training.local.span.77",
+          "label": "Label · Training loss — how far this epoch's output is from the target…",
+          "md": "<b>Training loss</b> — how far this epoch's output is from the target. You want it trending down; the `avg_loss` line next to it is smoother than the instantaneous number."
+        },
+        {
+          "key": "training.local.span.78",
+          "label": "Label · Num overlap — how many inference passes were averaged to produc…",
+          "md": "<b>Num overlap</b> — how many inference passes were averaged to produce the numbers below. Set it to `1` while training."
+        },
+        {
+          "key": "training.local.span.79",
+          "label": "Label · Per-stem metric summary — the averaged verdict for the target s…",
+          "md": "<b>Per-stem metric summary</b> — the averaged verdict for the target stem: *fullness*, *bleedless*, *l1\\_freq* (and *sdr* if you requested it). This is the block to compare with the previous epoch."
+        },
+        {
+          "key": "training.local.span.80",
+          "label": "Label · Elapsed time — wall-clock seconds for the epoch, which is how y…",
+          "md": "<b>Elapsed time</b> — wall-clock seconds for the epoch, which is how you work out what the rest of the run will cost."
+        },
+        {
+          "key": "training.local.span.81",
+          "label": "Label · Store weights — where the checkpoint was written. This is the f…",
+          "md": "<b>Store weights</b> — where the checkpoint was written. This is the file you load later to separate audio."
+        },
+        {
+          "key": "training.local.caption.82",
+          "label": "Caption · The console while it runs. Each block is one epoch. Read it top…",
+          "md": "<b>The console while it runs.</b> Each block is one epoch. Read it top to bottom as a story: how long the pass is, how wrong the model still is, how it scores on the validation tracks, and where the checkpoint landed."
+        },
+        {
+          "key": "training.local.h3.83",
+          "label": "Subheading · How to read the log",
+          "md": "How to read the log"
+        },
+        {
+          "key": "training.local.div.84",
+          "label": "Label · Fullness and bleedless pull against each other",
+          "md": "Fullness and bleedless pull against each other"
+        },
+        {
+          "key": "training.local.p.85",
+          "label": "Paragraph · Observed behaviour worth internalising: if fullness goes up, bl…",
+          "md": "Observed behaviour worth internalising: **if fullness goes up, bleedless tends to go down** — and the reverse. A stem cannot be maximally complete and maximally clean at the same time, so decide which trade your material needs before you chase a number."
+        },
+        {
+          "key": "training.local.h3.86",
+          "label": "Subheading · While it runs",
+          "md": "While it runs"
+        },
+        {
+          "key": "training.local.p.87",
+          "label": "Paragraph · Training is a waiting game. Locally you cannot do anything GPU…",
+          "md": "Training is a waiting game. Locally you cannot do anything GPU-heavy alongside it — no games, no renders, no video export — so plan something else for the hours. That changes on cloud hardware, where you are paying for the privilege of not caring about the machine."
+        }
+      ]
+    },
+    {
+      "id": "cloud",
+      "label": "Running the training in the cloud",
+      "heading": {
+        "key": "training.cloud.h2.88",
+        "label": "Chapter heading · Running the training in the cloud",
+        "md": "Running the training in the cloud"
+      },
+      "blocks": [
+        {
+          "key": "training.cloud.p.89",
+          "label": "Paragraph · A step-by-step walkthrough for renting a GPU on vast.ai. It is…",
+          "md": "A step-by-step walkthrough for renting a GPU on vast.ai. It is genuinely unintuitive, and the existing documentation is not written for this use case. Follow the steps in order."
+        },
+        {
+          "key": "training.cloud.span.90",
+          "label": "Label · Step 01",
+          "md": "Step 01"
+        },
+        {
+          "key": "training.cloud.b.91",
+          "label": "Bold label · Upload to Drive",
+          "md": "Upload to Drive"
+        },
+        {
+          "key": "training.cloud.span.92",
+          "label": "Label · Repo plus both datasets, with at least 100 GB free",
+          "md": "Repo plus both datasets, with at least 100 GB free"
+        },
+        {
+          "key": "training.cloud.span.93",
+          "label": "Label · Step 02",
+          "md": "Step 02"
+        },
+        {
+          "key": "training.cloud.b.94",
+          "label": "Bold label · Connect the drive",
+          "md": "Connect the drive"
+        },
+        {
+          "key": "training.cloud.span.95",
+          "label": "Label · vast.ai → CLOUD → Connect Google Drive",
+          "md": "vast.ai → CLOUD → Connect Google Drive"
+        },
+        {
+          "key": "training.cloud.span.96",
+          "label": "Label · Step 03",
+          "md": "Step 03"
+        },
+        {
+          "key": "training.cloud.b.97",
+          "label": "Bold label · Rent a GPU",
+          "md": "Rent a GPU"
+        },
+        {
+          "key": "training.cloud.span.98",
+          "label": "Label · PyTorch (cuDNN) template, CUDA 12.4, SSH + Jupyter",
+          "md": "PyTorch (cuDNN) template, CUDA 12.4, SSH + Jupyter"
+        },
+        {
+          "key": "training.cloud.span.99",
+          "label": "Label · Step 04",
+          "md": "Step 04"
+        },
+        {
+          "key": "training.cloud.b.100",
+          "label": "Bold label · Pull the data",
+          "md": "Pull the data"
+        },
+        {
+          "key": "training.cloud.span.101",
+          "label": "Label · Create a dump folder, then download into /TRAINING_STUFF",
+          "md": "Create a dump folder, then download into `/TRAINING_STUFF`"
+        },
+        {
+          "key": "training.cloud.span.102",
+          "label": "Label · Step 05",
+          "md": "Step 05"
+        },
+        {
+          "key": "training.cloud.b.103",
+          "label": "Bold label · Open a terminal",
+          "md": "Open a terminal"
+        },
+        {
+          "key": "training.cloud.span.104",
+          "label": "Label · cd, install requirements, OpenBLAS export, train",
+          "md": "cd, install requirements, OpenBLAS export, train"
+        },
+        {
+          "key": "training.cloud.span.105",
+          "label": "Label · Step 06",
+          "md": "Step 06"
+        },
+        {
+          "key": "training.cloud.b.106",
+          "label": "Bold label · Training starts",
+          "md": "Training starts"
+        },
+        {
+          "key": "training.cloud.span.107",
+          "label": "Label · Once “Collecting Metadata” appears, you are running",
+          "md": "Once “Collecting Metadata” appears, you are running"
+        },
+        {
+          "key": "training.cloud.b.108",
+          "label": "Bold label · Put everything on Google Drive",
+          "md": "Put everything on Google Drive"
+        },
+        {
+          "key": "training.cloud.p.109",
+          "label": "Paragraph · Upload the training repository and both datasets into a folder…",
+          "md": "Upload the training repository and both datasets into a folder of your choosing, and make sure you have **at least 100 GB** of drive space free. vast.ai offers a direct connection to Drive under *CLOUD* on the site (below *INSTANCES*): click *Connect Google Drive*, name the connection, and authorise it."
+        },
+        {
+          "key": "training.cloud.b.110",
+          "label": "Bold label · Rent a GPU",
+          "md": "Rent a GPU"
+        },
+        {
+          "key": "training.cloud.p.111",
+          "label": "Paragraph · In the SEARCH section, pick the PyTorch (cuDNN Runtime) templat…",
+          "md": "In the *SEARCH* section, pick the *PyTorch (cuDNN Runtime)* template with CUDA 12.4, SSH and Jupyter. Give the instance enough disk space — it is included in the hourly price, so larger storage costs more per hour."
+        },
+        {
+          "key": "training.cloud.b.112",
+          "label": "Bold label · Create a dumping folder, then pull your data down",
+          "md": "Create a dumping folder, then pull your data down"
+        },
+        {
+          "key": "training.cloud.p.113",
+          "label": "Paragraph · Once the instance appears under INSTANCES, wait for it to finis…",
+          "md": "Once the instance appears under *INSTANCES*, wait for it to finish loading and enter it. Create a folder for the data (in the source guide it was simply called `TRAINING_STUFF`). Do not close the page: go back to *INSTANCES* and click the cloud icon on the instance — a message appears about uploading or downloading data from cloud providers. Enter the source folder and the destination path, for example `/TRAINING_STUFF`, and let it run."
+        },
+        {
+          "key": "training.cloud.b.114",
+          "label": "Bold label · Open a terminal and adapt the training command",
+          "md": "Open a terminal and adapt the training command"
+        },
+        {
+          "key": "training.cloud.p.115",
+          "label": "Paragraph · When the transfer finishes, your data is visible in the Jupyter…",
+          "md": "When the transfer finishes, your data is visible in the Jupyter file browser. Take the training command from earlier in the guide, point `--data_path` and `--valid_path` at the uploaded folders, and — this is the part people get wrong — put a slash both *before* and *after* the path:"
+        },
+        {
+          "key": "training.cloud.p.116",
+          "label": "Paragraph · Then open File → New → Terminal in Jupyter.",
+          "md": "Then open *File → New → Terminal* in Jupyter."
+        },
+        {
+          "key": "training.cloud.b.117",
+          "label": "Bold label · Run the four commands in sequence",
+          "md": "Run the four commands in sequence"
+        },
+        {
+          "key": "training.cloud.p.118",
+          "label": "Paragraph · In the terminal, one after the other:",
+          "md": "In the terminal, one after the other:"
+        },
+        {
+          "key": "training.cloud.li.119",
+          "label": "List item · change directory into the repository",
+          "md": "change directory into the repository"
+        },
+        {
+          "key": "training.cloud.li.120",
+          "label": "List item · install the requirements",
+          "md": "install the requirements"
+        },
+        {
+          "key": "training.cloud.li.121",
+          "label": "List item · the OpenBLAS export (it surfaced at the metadata stage in the s…",
+          "md": "the OpenBLAS export (it surfaced at the metadata stage in the source run, and turned out to be unrelated to the actual problem — but it costs nothing to set)"
+        },
+        {
+          "key": "training.cloud.li.122",
+          "label": "List item · the training command",
+          "md": "the training command"
+        },
+        {
+          "key": "training.cloud.b.123",
+          "label": "Bold label · Install the missing modules as they appear",
+          "md": "Install the missing modules as they appear"
+        },
+        {
+          "key": "training.cloud.p.124",
+          "label": "Paragraph · Expect No module named X. Install it, paste the training comman…",
+          "md": "Expect `No module named X`. Install it, paste the training command again, repeat until you see the metadata collection stage — at which point training starts properly. The modules that came up in the source run: `wandb`, `soundfile`, `auraloss`, `audiomentations`, `pedalboard`, `ml_collections`, `omegaconf`, `einops`, `beartype`, `rotary_embedding_torch`."
+        },
+        {
+          "key": "training.cloud.div.125",
+          "label": "Label · “Failed to build installable wheels”",
+          "md": "“Failed to build installable wheels”"
+        },
+        {
+          "key": "training.cloud.p.126",
+          "label": "Paragraph · At the end of the requirements install you will likely see:",
+          "md": "At the end of the requirements install you will likely see:"
+        },
+        {
+          "key": "training.cloud.p.127",
+          "label": "Paragraph · Two solutions, either of which works:",
+          "md": "Two solutions, either of which works:"
+        },
+        {
+          "key": "training.cloud.li.128",
+          "label": "List item · If pesq is the failure, install the build toolchain and pin num…",
+          "md": "If `pesq` is the failure, install the build toolchain and pin numpy: `sudo apt-get install build-essential`, then `pip install numpy==1.26.4`."
+        },
+        {
+          "key": "training.cloud.li.129",
+          "label": "List item · Or simply delete wx-python from requirements.txt. It is only us…",
+          "md": "Or simply delete `wx-python` from `requirements.txt`. It is only used by the GUI, not by training, and it is the package that breaks requirements installs on some systems such as Colab."
+        },
+        {
+          "key": "training.cloud.span.130",
+          "label": "Label · Cost control",
+          "md": "Cost control"
+        },
+        {
+          "key": "training.cloud.h5.131",
+          "label": "Card title · Don't pay for a stuck run",
+          "md": "Don't pay for a stuck run"
+        },
+        {
+          "key": "training.cloud.p.132",
+          "label": "Paragraph · Watch the first few hundred steps. If loss is flat or the log i…",
+          "md": "Watch the first few hundred steps. If loss is flat or the log is repeating errors, stop the instance rather than hoping — hourly billing continues while you sleep."
+        },
+        {
+          "key": "training.cloud.span.133",
+          "label": "Label · Sanity first",
+          "md": "Sanity first"
+        },
+        {
+          "key": "training.cloud.h5.134",
+          "label": "Card title · Test locally, then rent",
+          "md": "Test locally, then rent"
+        },
+        {
+          "key": "training.cloud.p.135",
+          "label": "Paragraph · Run the same command on your own machine for a handful of steps…",
+          "md": "Run the same command on your own machine for a handful of steps. It proves the config, the dataset type and the paths before any cloud money is spent."
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,105 @@
+# yaml-language-server: $schema=https://unpkg.com/@sveltia/cms/schema/sveltia-cms.json
+#
+# Sveltia CMS configuration for the MSST Guide.
+#
+# Every field below maps onto a key in content/pages/*.json, which
+# tools/build.mjs renders into the pages. The `key` fields are hidden on
+# purpose: they are how a block in the editor is matched to its slot in the
+# template, so they must not change.
+
+backend:
+  name: github
+  # The repository that holds this site, as owner/repo. Every save the author
+  # makes is a commit to this repository.
+  repo: bascurtiz/msst-guide
+  branch: main
+  # REPLACE: the URL of your Sveltia CMS Authenticator Worker (see SETUP.md).
+  # Until that exists you can leave the line commented out and sign in with a
+  # GitHub personal access token instead.
+  # base_url: https://sveltia-cms-auth.YOUR-SUBDOMAIN.workers.dev
+  commit_messages:
+    update: "content: edit {{collection}} {{slug}}"
+
+# Images the editor inserts are committed here and served from /assets/uploads.
+media_folder: assets/uploads
+public_folder: /assets/uploads
+
+site_url: https://msst-guide.pages.dev/
+display_url: https://msst-guide.pages.dev/
+logo_url: https://msst-guide.pages.dev/assets/img/favicon.svg
+
+# The rendered pages live at the repository root; there is no page preview to
+# open mid-edit, and a stale one would be misleading.
+editor:
+  preview: false
+
+collections:
+  - name: pages
+    label: Chapters
+    label_singular: Chapter
+    description: >-
+      The text of the guide. Saving commits the change; the site rebuilds
+      itself from it a minute later.
+    folder: content/pages
+    format: json
+    extension: json
+    create: false
+    delete: false
+    identifier_field: title
+    summary: "{{title}}"
+    fields:
+      - { name: page, widget: hidden }
+      - { name: source, widget: hidden }
+      - name: title
+        label: Chapter name
+        widget: string
+        hint: Only used to organise this editor screen. The page's own heading is edited below.
+      - name: sections
+        label: Sections
+        label_singular: Section
+        widget: list
+        collapsed: true
+        summary: "{{fields.label}}"
+        hint: One per chapter heading on the page, in the order they appear.
+        fields:
+          - { name: id, widget: hidden }
+          - name: label
+            label: Section
+            widget: string
+            hint: A name for this section in the editor only — it is not shown on the site.
+          - name: heading
+            label: Heading
+            widget: object
+            required: false
+            fields:
+              - { name: key, widget: hidden }
+              - { name: label, widget: hidden }
+              - name: md
+                label: Heading text
+                widget: richtext
+                modes: [rich_text, raw]
+                buttons: [bold, italic, code]
+                hint: The chapter heading. Inline formatting only — **bold**, *italic*, `code`.
+          - name: blocks
+            label: Text
+            label_singular: Block
+            widget: list
+            collapsed: true
+            summary: "{{fields.label}}"
+            hint: >-
+              Every paragraph, list item, sub-heading and label in this section,
+              in the order they appear on the page.
+            fields:
+              - { name: key, widget: hidden }
+              - name: label
+                label: Where this is on the page
+                widget: string
+                hint: For your orientation in this list — not shown on the site.
+              - name: md
+                label: Text
+                widget: richtext
+                modes: [rich_text, raw]
+                hint: >-
+                  **bold**, *italic*, `code`, [links](https://example.com).
+                  Leave the occasional raw HTML tag (like <i>+</i>) alone — or
+                  switch to the raw mode to edit it.

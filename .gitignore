@@ -1,0 +1,11 @@
+# The packager's output. Both are rebuilt from the repository by
+# `node tools/package-site.mjs`, so they are artifacts, not source.
+dist/
+training-guide.zip
+
+# Editor/agent scratch and any local installs.
+.freebuff/
+node_modules/
+
+# The rendered pages at the root are NOT ignored, deliberately: they are
+# committed so the repository deploys anywhere with no build step. See README.

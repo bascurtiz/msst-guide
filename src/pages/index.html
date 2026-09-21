@@ -1,0 +1,383 @@
+<!doctype html>
+<!-- TEMPLATE — not served. Prose lives in content/pages/index.json; render the pages with: node tools/build.mjs -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Training Audio Source Separation Models · MSST Guide</title>
+<meta name="description" content="A practical, chaptered guide to training and fine-tuning audio source separation models (vocal removers) locally and in the cloud.">
+<meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1">
+<!-- Deployment URL used by the canonical and social tags below. Change every
+     occurrence if this site is hosted under a different domain, then rerun
+     python tools/seo.py (sitemap.xml + robots.txt). -->
+<link rel="canonical" href="https://msst-guide.pages.dev/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="MSST Guide">
+<meta property="og:title" content="Training Audio Source Separation Models — A Practical Guide">
+<meta property="og:description" content="A practical, chaptered guide to training and fine-tuning audio source separation models (vocal removers) locally and in the cloud.">
+<meta property="og:url" content="https://msst-guide.pages.dev/">
+<meta property="og:image" content="https://msst-guide.pages.dev/assets/img/og-image.png">
+<meta property="og:image:type" content="image/png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="MSST Guide waveform mark above the title Training Audio Source Separation Models">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Training Audio Source Separation Models — A Practical Guide">
+<meta name="twitter:description" content="How to train a vocal remover: datasets, configuration, metrics and GPU time — locally or rented by the hour.">
+<meta name="twitter:image" content="https://msst-guide.pages.dev/assets/img/twitter-card.png">
+<meta name="twitter:image:alt" content="MSST Guide waveform mark above the title Training Audio Source Separation Models">
+<link rel="preload" href="assets/fonts/montserrat-latin.woff2" as="font" type="font/woff2" crossorigin>
+<meta name="color-scheme" content="dark light">
+<meta name="theme-color" content="#0e1013">
+<link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
+<link rel="alternate icon" href="assets/img/favicon-32.png" sizes="32x32" type="image/png">
+<link rel="apple-touch-icon" href="assets/img/apple-touch-icon.png">
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Organization","@id":"https://msst-guide.pages.dev/#publisher","name":"MSST Guide","url":"https://msst-guide.pages.dev/","description":"A community handbook for training audio source separation models."},{"@type":"WebSite","@id":"https://msst-guide.pages.dev/#website","url":"https://msst-guide.pages.dev/","name":"MSST Guide","alternateName":"Training Audio Source Separation Models","description":"How to train a vocal remover: datasets, configuration, metrics and GPU time, locally or in the cloud.","inLanguage":"en","publisher":{"@id":"https://msst-guide.pages.dev/#publisher"}},{"@type":"WebPage","@id":"https://msst-guide.pages.dev/#webpage","url":"https://msst-guide.pages.dev/","name":"Training Audio Source Separation Models — A Practical Guide","description":"A practical, chaptered guide to training and fine-tuning audio source separation models (vocal removers) locally and in the cloud.","isPartOf":{"@id":"https://msst-guide.pages.dev/#website"},"primaryImageOfPage":{"@id":"https://msst-guide.pages.dev/#card"},"image":{"@id":"https://msst-guide.pages.dev/#card"},"inLanguage":"en","dateModified":"2026-09-20"},{"@type":"ImageObject","@id":"https://msst-guide.pages.dev/#card","url":"https://msst-guide.pages.dev/assets/img/og-image.png","contentUrl":"https://msst-guide.pages.dev/assets/img/og-image.png","width":1200,"height":630,"caption":"Training Audio Source Separation Models — a practical community guide"},{"@type":"Book","@id":"https://msst-guide.pages.dev/#book","name":"Training Audio Source Separation Models — A Practical Guide","description":"Thirteen chapters and four appendices covering requirements, datasets, configuration, training runs, cloud GPUs, troubleshooting and metrics.","bookEdition":"2","inLanguage":"en","numberOfPages":4,"author":{"@id":"https://msst-guide.pages.dev/#publisher"},"publisher":{"@id":"https://msst-guide.pages.dev/#publisher"},"abstract":"How to train and fine-tune audio source separation models, from choosing a GPU to reading the metrics.","hasPart":[{"@type":"Chapter","name":"Before you train","url":"https://msst-guide.pages.dev/data.html","position":1},{"@type":"Chapter","name":"Setup & configuration","url":"https://msst-guide.pages.dev/setup.html","position":2},{"@type":"Chapter","name":"Training runs","url":"https://msst-guide.pages.dev/training.html","position":3},{"@type":"Chapter","name":"Reference and appendices","url":"https://msst-guide.pages.dev/reference.html","position":4}]}]}</script>
+<script>/* apply the saved theme before first paint to avoid a flash */(function(){try{var t=localStorage.getItem("msst-theme");if(t!=="light"&&t!=="dark"){t=window.matchMedia&&window.matchMedia("(prefers-color-scheme: light)").matches?"light":"dark";}document.documentElement.setAttribute("data-theme",t);}catch(e){document.documentElement.setAttribute("data-theme","dark");}})();</script>
+<link rel="stylesheet" href="assets/css/site.css?v=61c969be">
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<div class="progress" aria-hidden="true"><span id="bar"></span></div>
+
+<header class="site-header">
+  <div class="inner">
+    <a class="brand" href="index.html">
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M2 14h2.2l1.6-6 1.8 10 2-14 2 16 1.8-9 1.6 4H22" stroke="url(#lg)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><defs><linearGradient id="lg" x1="2" y1="4" x2="22" y2="20"><stop stop-color="#0294be"/><stop offset="1" stop-color="#1468b2"/></linearGradient></defs></svg>
+      <b>MSST <i>Guide</i></b>
+    </a>
+    <nav class="site-nav" aria-label="Sections">
+      <a href="index.html" aria-current="page">Home</a>
+      <a href="data.html">Before you train</a>
+      <a href="setup.html">Setup &amp; config</a>
+      <a href="training.html">Training runs</a>
+      <a href="reference.html">Reference</a>
+    </nav>
+    <div class="header-actions">
+      <button class="btn btn-ghost btn-search" id="searchBtn" type="button" aria-haspopup="dialog" aria-expanded="false" aria-controls="searchOverlay" aria-label="Search the guide" title="Search all pages (press /)">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M16.4 16.4L21 21"/></svg>
+        <span class="search-lbl">Search</span>
+      </button>
+      <button class="switch" id="themeToggle" type="button" role="switch" aria-checked="true" aria-label="Switch to light theme" title="Switch to light theme">
+        <span class="track">
+          <span class="thumb" aria-hidden="true"></span>
+          <span class="ico ico-sun" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round"><circle cx="12" cy="12" r="4.3"/><path d="M12 1.8v2.6M12 19.6v2.6M1.8 12h2.6M19.6 12h2.6M4.8 4.8l1.9 1.9M17.3 17.3l1.9 1.9M19.2 4.8l-1.9 1.9M6.7 17.3l-1.9 1.9"/></svg></span>
+          <span class="ico ico-moon" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M20.6 14.3A8.7 8.7 0 0 1 9.7 3.4 8.9 8.9 0 1 0 20.6 14.3z"/></svg></span>
+        </span>
+      </button>
+      <button class="btn btn-ghost" type="button" data-print aria-label="Save as PDF" title="Save as PDF">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9V3h12v6"/><rect x="3" y="9" width="18" height="8" rx="2"/><path d="M6 17h12v4H6z"/></svg>
+        <span class="print-lbl">Save as PDF</span>
+      </button>
+      <button class="menu-btn" id="menuBtn" type="button" aria-expanded="false" aria-controls="drawer">Menu</button>
+    </div>
+  </div>
+</header>
+
+<div class="drawer" id="drawer">
+  <p class="dlabel">Sections</p>
+  <ul>
+    <li><a href="index.html" aria-current="page">Home &amp; overview</a></li>
+    <li><a href="data.html">02–04 · Before you train</a></li>
+    <li><a href="setup.html">05–07 · Setup &amp; config</a></li>
+    <li><a href="training.html">08–12 · Training runs</a></li>
+    <li><a href="reference.html">13 · Reference &amp; appendices</a></li>
+  </ul>
+</div>
+
+<main id="main">
+<div class="shell">
+
+  <!-- ================= HERO ================= -->
+  <section class="hero">
+    <!--c:index.head.p.01:prose:p| class="eyebrow"-->
+    <h1><!--c:index.head.h1.02:inline--></h1>
+    <!--c:index.head.p.03:prose:p| class="sub"-->
+    <div class="hero-grid">
+      <div>
+        <div class="cta">
+          <a class="btn btn-primary" href="data.html">Start the guide</a>
+          <a class="btn" href="reference.html#errors">Fix an error</a>
+          <a class="btn btn-ghost" href="#map">What's inside</a>
+        </div>
+        <!--c:index.head.p.04:prose:p|-->
+        <!--c:index.head.p.05:prose:p| class="note-small"-->
+      </div>
+      <div class="term" aria-label="Example training command">
+        <div class="term-bar"><i></i><i></i><i></i><span>train.bat</span></div>
+<pre><span class="p">&gt;</span> python train.py
+  <span class="c">--model_type</span> mel_band_roformer
+  <span class="c">--config_path</span> config_vocals.yaml
+  <span class="c">--results_path</span> results/
+  <span class="c">--data_path</span> /data/2stem_dataset/
+  <span class="c">--dataset_type</span> 2
+  <span class="c">--num_workers</span> 4
+  <span class="c">--device_ids</span> 0
+  <span class="c">--start_check_point</span> results/model.ckpt
+  <span class="c">--valid_path</span> /data/validation/
+  <span class="c">--metric_for_scheduler</span> sdr
+  <span class="c">--metrics</span> sdr fullness bleedless</pre>
+      </div>
+    </div>
+
+    <div class="stats">
+      <div class="stat"><b><!--c:index.head.b.06:inline--></b><span><!--c:index.head.span.07:inline--></span></div>
+      <div class="stat"><b><!--c:index.head.b.08:inline--></b><span><!--c:index.head.span.09:inline--></span></div>
+      <div class="stat"><b><!--c:index.head.b.10:inline--></b><span><!--c:index.head.span.11:inline--></span></div>
+      <div class="stat"><b><!--c:index.head.b.12:inline--></b><span><!--c:index.head.span.13:inline--></span></div>
+    </div>
+
+    <h3 id="the-pipeline-in-one-picture" style="margin-top:44px"><!--c:index.head.h3.14:inline--></h3>
+    <!--c:index.head.p.15:prose:p|-->
+    <ul class="flow">
+      <li>
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 6.5h5.2l2 2.6H21v9.4H3z"/></svg>
+        <span class="k"><!--c:index.head.span.16:inline--></span><b><!--c:index.head.b.17:inline--></b><span class="d"><!--c:index.head.span.18:inline--></span>
+      </li>
+      <li>
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3.2l7 2.8v6.2c0 4.3-2.9 7.3-7 8.6-4.1-1.3-7-4.3-7-8.6V6z"/><path d="M9 12.2l2 2 4-4.2"/></svg>
+        <span class="k"><!--c:index.head.span.19:inline--></span><b><!--c:index.head.b.20:inline--></b><span class="d"><!--c:index.head.span.21:inline--></span>
+      </li>
+      <li>
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l8 4.4v9.2L12 21l-8-4.4V7.4z"/><path d="M4 7.4l8 4.4 8-4.4M12 11.8V21"/></svg>
+        <span class="k"><!--c:index.head.span.22:inline--></span><b><!--c:index.head.b.23:inline--></b><span class="d"><!--c:index.head.span.24:inline--></span>
+      </li>
+      <li>
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 8h14M5 16h14"/><circle cx="9" cy="8" r="2.2"/><circle cx="15" cy="16" r="2.2"/></svg>
+        <span class="k"><!--c:index.head.span.25:inline--></span><b><!--c:index.head.b.26:inline--></b><span class="d"><!--c:index.head.span.27:inline--></span>
+      </li>
+      <li class="accent">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="6.5" y="6.5" width="11" height="11" rx="2"/><path d="M10 3v3.5M14 3v3.5M10 17.5V21M14 17.5V21M3 10h3.5M3 14h3.5M17.5 10H21M17.5 14H21"/></svg>
+        <span class="k"><!--c:index.head.span.28:inline--></span><b><!--c:index.head.b.29:inline--></b><span class="d"><!--c:index.head.span.30:inline--></span>
+      </li>
+      <li>
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19.5V5M4 19.5h16"/><path d="M7.5 15.5l4-5 3 3 5-7.5"/></svg>
+        <span class="k"><!--c:index.head.span.31:inline--></span><b><!--c:index.head.b.32:inline--></b><span class="d"><!--c:index.head.span.33:inline--></span>
+      </li>
+      <li>
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="8.4"/><circle cx="12" cy="12" r="2.5"/></svg>
+        <span class="k"><!--c:index.head.span.34:inline--></span><b><!--c:index.head.b.35:inline--></b><span class="d"><!--c:index.head.span.36:inline--></span>
+      </li>
+    </ul>
+    <div class="callout quiet question">
+      <div class="ico"></div>
+      <div>
+        <div class="ttl"><!--c:index.head.div.37:inline--></div>
+        <!--c:index.head.p.38:prose:p|-->
+      </div>
+    </div>
+  </section>
+
+  <hr>
+
+  <!-- ================= SHOULD YOU ================= -->
+  <section aria-labelledby="why">
+    <h2 id="why" style="margin-top:0"><!--c:index.why.h2.39:inline--></h2>
+    <!--c:index.why.p.40:prose:p| class="lead-in"-->
+    <div class="cards">
+      <div class="card">
+        <span class="k"><!--c:index.why.span.41:inline--></span>
+        <h5><!--c:index.why.h5.42:inline--></h5>
+        <!--c:index.why.p.43:prose:p|-->
+      </div>
+      <div class="card">
+        <span class="k"><!--c:index.why.span.44:inline--></span>
+        <h5><!--c:index.why.h5.45:inline--></h5>
+        <!--c:index.why.p.46:prose:p|-->
+      </div>
+      <div class="card">
+        <span class="k"><!--c:index.why.span.47:inline--></span>
+        <h5><!--c:index.why.h5.48:inline--></h5>
+        <!--c:index.why.p.49:prose:p|-->
+      </div>
+    </div>
+
+    <h3 id="what-you-need-in-one-line"><!--c:index.why.h3.50:inline--></h3>
+    <!--c:index.why.p.51:prose:p|-->
+    <div class="callout">
+      <div class="ico"></div>
+      <div>
+        <div class="ttl"><!--c:index.why.div.52:inline--></div>
+        <!--c:index.why.p.53:prose:p|-->
+      </div>
+    </div>
+
+    <h3 id="can-you-do-this-with-no-prior-knowledge"><!--c:index.why.h3.54:inline--></h3>
+    <!--c:index.why.p.55:prose:p|-->
+    <div class="callout quiet">
+      <div class="ico"></div>
+      <div>
+        <div class="ttl"><!--c:index.why.div.56:inline--></div>
+        <!--c:index.why.p.57:prose:p|-->
+      </div>
+    </div>
+  </section>
+
+  <hr>
+
+  <!-- ================= QUICK START ================= -->
+  <section aria-labelledby="quick">
+    <h2 id="quick"><!--c:index.quick.h2.58:inline--></h2>
+    <!--c:index.quick.p.59:prose:p| class="lead-in"-->
+    <ol class="steps">
+      <li>
+        <b><!--c:index.quick.b.60:inline--></b>
+        <!--c:index.quick.p.61:prose:p|-->
+      </li>
+      <li>
+        <b><!--c:index.quick.b.62:inline--></b>
+        <!--c:index.quick.p.63:prose:p|-->
+      </li>
+      <li>
+        <b><!--c:index.quick.b.64:inline--></b>
+        <!--c:index.quick.p.65:prose:p|-->
+      </li>
+      <li>
+        <b><!--c:index.quick.b.66:inline--></b>
+        <!--c:index.quick.p.67:prose:p|-->
+      </li>
+      <li>
+        <b><!--c:index.quick.b.68:inline--></b>
+        <!--c:index.quick.p.69:prose:p|-->
+      </li>
+      <li>
+        <b><!--c:index.quick.b.70:inline--></b>
+        <!--c:index.quick.p.71:prose:p|-->
+      </li>
+    </ol>
+  </section>
+
+  <hr>
+
+  <!-- ================= MAP ================= -->
+  <section id="map" aria-labelledby="map-h">
+    <h2 id="map-h"><!--c:index.map-h.h2.72:inline--></h2>
+    <!--c:index.map-h.p.73:prose:p| class="lead-in"-->
+    <div class="grid-3">
+      <a class="node" href="data.html">
+        <span class="n"><!--c:index.map-h.span.74:inline--></span>
+        <h4><!--c:index.map-h.h4.75:inline--></h4>
+        <!--c:index.map-h.p.76:prose:p|-->
+        <span class="go"><!--c:index.map-h.span.77:inline--></span>
+      </a>
+      <a class="node" href="setup.html">
+        <span class="n"><!--c:index.map-h.span.78:inline--></span>
+        <h4><!--c:index.map-h.h4.79:inline--></h4>
+        <!--c:index.map-h.p.80:prose:p|-->
+        <span class="go"><!--c:index.map-h.span.81:inline--></span>
+      </a>
+      <a class="node" href="training.html">
+        <span class="n"><!--c:index.map-h.span.82:inline--></span>
+        <h4><!--c:index.map-h.h4.83:inline--></h4>
+        <!--c:index.map-h.p.84:prose:p|-->
+        <span class="go"><!--c:index.map-h.span.85:inline--></span>
+      </a>
+      <a class="node" href="reference.html">
+        <span class="n"><!--c:index.map-h.span.86:inline--></span>
+        <h4><!--c:index.map-h.h4.87:inline--></h4>
+        <!--c:index.map-h.p.88:prose:p|-->
+        <span class="go"><!--c:index.map-h.span.89:inline--></span>
+      </a>
+      <a class="node" href="reference.html#metrics">
+        <span class="n"><!--c:index.map-h.span.90:inline--></span>
+        <h4><!--c:index.map-h.h4.91:inline--></h4>
+        <!--c:index.map-h.p.92:prose:p|-->
+        <span class="go"><!--c:index.map-h.span.93:inline--></span>
+      </a>
+      <a class="node" href="training.html#cloud">
+        <span class="n"><!--c:index.map-h.span.94:inline--></span>
+        <h4><!--c:index.map-h.h4.95:inline--></h4>
+        <!--c:index.map-h.p.96:prose:p|-->
+        <span class="go"><!--c:index.map-h.span.97:inline--></span>
+      </a>
+    </div>
+  </section>
+
+  <hr>
+
+  <!-- ================= LOCAL VS CLOUD ================= -->
+  <section aria-labelledby="loc">
+    <h2 id="loc"><!--c:index.loc.h2.98:inline--></h2>
+    <!--c:index.loc.p.99:prose:p| class="lead-in"-->
+    <div class="two-col">
+      <div class="card">
+        <span class="k"><!--c:index.loc.span.100:inline--></span>
+        <h5><!--c:index.loc.h5.101:inline--></h5>
+        <ul>
+          <li><!--c:index.loc.li.102:inline--></li>
+          <li><!--c:index.loc.li.103:inline--></li>
+          <li><!--c:index.loc.li.104:inline--></li>
+          <li><!--c:index.loc.li.105:inline--></li>
+        </ul>
+        <a class="more" href="training.html#local"><!--c:index.loc.a.106:inline--></a>
+      </div>
+      <div class="card">
+        <span class="k"><!--c:index.loc.span.107:inline--></span>
+        <h5><!--c:index.loc.h5.108:inline--></h5>
+        <ul>
+          <li><!--c:index.loc.li.109:inline--></li>
+          <li><!--c:index.loc.li.110:inline--></li>
+          <li><!--c:index.loc.li.111:inline--></li>
+          <li><!--c:index.loc.li.112:inline--></li>
+        </ul>
+        <a class="more" href="training.html#cloud"><!--c:index.loc.a.113:inline--></a>
+      </div>
+    </div>
+    <div class="callout warn">
+      <div class="ico"></div>
+      <div>
+        <div class="ttl"><!--c:index.loc.div.114:inline--></div>
+        <!--c:index.loc.p.115:prose:p|-->
+      </div>
+    </div>
+  </section>
+
+  <div class="pager">
+    <span></span>
+    <a class="next" href="data.html">
+      <span class="lbl">Next · Chapters 02–04</span>
+      <span class="ttl">Before you train →</span>
+    </a>
+  </div>
+
+</div>
+</main>
+
+<footer class="site-footer">
+  <div class="inner">
+    <div>
+      <h6>About this guide</h6>
+      <p>A rewritten, restructured edition of Meskvlla33's community document on training audio source separation models, expanded with a troubleshooting index, a glossary and a metric reference.</p>
+    </div>
+    <div>
+      <h6>Read</h6>
+      <ul>
+        <li><a href="data.html">02–04 · Before you train</a></li>
+        <li><a href="setup.html">05–07 · Setup &amp; config</a></li>
+        <li><a href="training.html">08–12 · Training runs</a></li>
+        <li><a href="reference.html">13 · Reference &amp; appendices</a></li>
+      </ul>
+    </div>
+    <div>
+      <h6>Elsewhere</h6>
+      <ul>
+        <li><a href="https://github.com/ZFTurbo/Music-Source-Separation-Training" rel="noopener">Training repository</a></li>
+        <li><a href="https://www.pytorch.org" rel="noopener">PyTorch</a></li>
+        <li><a href="https://vast.ai" rel="noopener">vast.ai</a></li>
+        <li><a href="reference.html#credits">Credits</a></li>
+      </ul>
+    </div>
+    <div class="colophon">
+      <span>Edition 2.0 · 2026 · Community maintained</span>
+      <span>Original guide by Meskvlla33</span>
+    </div>
+  </div>
+</footer>
+
+<button class="backtop" id="backtop" type="button" aria-label="Back to top">
+  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
+</button>
+<script src="assets/js/search-index.js?v=d0ee56dd"></script>
+<script src="assets/js/site.js?v=aad2f860"></script>
+</body>
+</html>

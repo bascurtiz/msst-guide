@@ -1,0 +1,22 @@
+# Line endings, pinned where they matter.
+#
+# This project is edited on Windows and runs on Linux (a GitHub runner, and
+# Cloudflare's build container), so the two ends have to agree.
+#
+# Two files must be LF *in the repository* whatever the working tree uses,
+# because they are consumed on Linux and a CRLF one fails there rather than
+# merely looking untidy: a CRLF `run:` block is a shell error on the runner, and
+# `_headers` is parsed by Cloudflare. Naming them here makes that a property of
+# the repository instead of a property of whichever machine did the commit.
+#
+# The rest of the text files are deliberately left unpinned: they are stored as
+# LF and checked out as each platform prefers (this checkout has
+# `core.autocrlf=true`, so the working copies are CRLF). Nothing else here reads
+# raw bytes — the pages are HTML, and the renderer normalises newlines itself.
+
+_headers                  text eol=lf
+.github/workflows/*.yml   text eol=lf
+
+# The build and its tests run on both.
+tools/*.mjs               text eol=lf
+tools/lib/*.mjs           text eol=lf

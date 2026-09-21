@@ -1,0 +1,391 @@
+{
+  "page": "data",
+  "title": "Before you train",
+  "source": "src/pages/data.html",
+  "sections": [
+    {
+      "id": "head",
+      "label": "Page head",
+      "heading": {
+        "key": "data.head.h1.02",
+        "label": "Page title · Before you train",
+        "md": "Before you train"
+      },
+      "blocks": [
+        {
+          "key": "data.head.p.01",
+          "label": "Paragraph · Chapters 02–04 · Foundations",
+          "md": "Chapters 02–04 · Foundations"
+        },
+        {
+          "key": "data.head.p.03",
+          "label": "Paragraph · Three things stand between you and a training run: the hardware…",
+          "md": "Three things stand between you and a training run: the hardware to do it, a dataset to learn from, and a validation set to measure progress against. Get these right and everything afterwards is mostly patience."
+        }
+      ]
+    },
+    {
+      "id": "requirements",
+      "label": "Requirements",
+      "heading": {
+        "key": "data.requirements.h2.04",
+        "label": "Chapter heading · Requirements",
+        "md": "Requirements"
+      },
+      "blocks": [
+        {
+          "key": "data.requirements.p.05",
+          "label": "Paragraph · This is the complete shopping list. Nothing here is optional, a…",
+          "md": "This is the complete shopping list. Nothing here is optional, and two items — the GPU and Python — are the ones people underestimate."
+        },
+        {
+          "key": "data.requirements.h3.06",
+          "label": "Subheading · What you need",
+          "md": "What you need"
+        },
+        {
+          "key": "data.requirements.li.07",
+          "label": "List item · A dataset made of official stems for whatever you want to separ…",
+          "md": "**A dataset** made of official stems for whatever you want to separate — in the reference case, instrumentals and vocals from official releases."
+        },
+        {
+          "key": "data.requirements.li.08",
+          "label": "List item · A validation dataset, laid out per track as stem 1, stem 2 and…",
+          "md": "**A validation dataset**, laid out per track as stem 1, stem 2 and a mixture (the two stems summed together)."
+        },
+        {
+          "key": "data.requirements.li.09",
+          "label": "List item · The training repository — the code that does the work.",
+          "md": "**The training repository** — the code that does the work."
+        },
+        {
+          "key": "data.requirements.li.10",
+          "label": "List item · A model to train: a checkpoint plus its YAML config. The reposi…",
+          "md": "**A model to train**: a checkpoint plus its YAML config. The repository ships several; you can train any architecture that has both files."
+        },
+        {
+          "key": "data.requirements.h3.11",
+          "label": "Subheading · Hardware and software, honestly",
+          "md": "Hardware and software, honestly"
+        },
+        {
+          "key": "data.requirements.h6.12",
+          "label": "Label · What fits in how much VRAM",
+          "md": "What fits in how much VRAM"
+        },
+        {
+          "key": "data.requirements.span.13",
+          "label": "Label · 8 GB",
+          "md": "8 GB"
+        },
+        {
+          "key": "data.requirements.span.14",
+          "label": "Label · the stated floor",
+          "md": "the stated floor"
+        },
+        {
+          "key": "data.requirements.span.15",
+          "label": "Label · 24 GB",
+          "md": "24 GB"
+        },
+        {
+          "key": "data.requirements.span.16",
+          "label": "Label · a 24 GB card",
+          "md": "a 24 GB card"
+        },
+        {
+          "key": "data.requirements.span.17",
+          "label": "Label · 140 GB",
+          "md": "140 GB"
+        },
+        {
+          "key": "data.requirements.span.18",
+          "label": "Label · H200 · batch 4",
+          "md": "H200 · batch 4"
+        },
+        {
+          "key": "data.requirements.p.19",
+          "label": "Paragraph · Bars are drawn to the same scale. They are guidance, not gospel…",
+          "md": "Bars are drawn to the same scale. They are guidance, not gospel: `chunk_size` and `batch_size` decide what actually fits, so a smaller card becomes usable if you lower them — it just takes longer to converge."
+        },
+        {
+          "key": "data.requirements.div.20",
+          "label": "Label · The cloud alternative",
+          "md": "The cloud alternative"
+        },
+        {
+          "key": "data.requirements.p.21",
+          "label": "Paragraph · If your card is too small, rent one. Services such as vast.ai a…",
+          "md": "If your card is too small, rent one. Services such as [vast.ai](https://vast.ai) and [runpod.io](https://runpod.io) rent fast GPUs by the hour, and you can train on hardware you could never justify buying. The trade-off is setup overhead and the pressure of paying for every idle minute — see [Chapter 12](training.html#cloud)."
+        }
+      ]
+    },
+    {
+      "id": "dataset",
+      "label": "Building a dataset",
+      "heading": {
+        "key": "data.dataset.h2.22",
+        "label": "Chapter heading · Building a dataset",
+        "md": "Building a dataset"
+      },
+      "blocks": [
+        {
+          "key": "data.dataset.p.23",
+          "label": "Paragraph · The dataset is the part that takes longest, because it is mostl…",
+          "md": "The dataset is the part that takes longest, because it is mostly research and file management rather than compute. You are hunting official stems across the internet and arranging them so the trainer can read them."
+        },
+        {
+          "key": "data.dataset.div.24",
+          "label": "Label · Format rule",
+          "md": "Format rule"
+        },
+        {
+          "key": "data.dataset.p.25",
+          "label": "Paragraph · Every track in your dataset must be FLAC or WAV. MP3 will not w…",
+          "md": "Every track in your dataset must be **FLAC or WAV**. MP3 will not work — lossy compression changes the waveform enough that the model learns the codec's artefacts."
+        },
+        {
+          "key": "data.dataset.h3.26",
+          "label": "Subheading · If you have no dataset yet",
+          "md": "If you have no dataset yet"
+        },
+        {
+          "key": "data.dataset.p.27",
+          "label": "Paragraph · Start with Bas Curtiz's walkthrough, which covers dataset creat…",
+          "md": "Start with Bas Curtiz's walkthrough, which covers dataset creation in far more depth than a written chapter can: [youtube.com/watch?v=Wmt\\_0zu94L8](https://www.youtube.com/watch?v=Wmt_0zu94L8). What follows is how that dataset must be laid out for this specific trainer."
+        },
+        {
+          "key": "data.dataset.h3.28",
+          "label": "Subheading · Type 1 — one folder per song, one file per stem",
+          "md": "Type 1 — one folder per song, one file per stem"
+        },
+        {
+          "key": "data.dataset.p.29",
+          "label": "Paragraph · Type 1 mirrors the MUSDB18 structure and is what 4-stem models…",
+          "md": "Type 1 mirrors the MUSDB18 structure and is what 4-stem models expect. Every stem of a song lives together, and **all stems of a song must end at the same time** — the trainer reads them as one aligned example."
+        },
+        {
+          "key": "data.dataset.div.30",
+          "label": "Label · Mismatched stem lengths",
+          "md": "Mismatched stem lengths"
+        },
+        {
+          "key": "data.dataset.p.31",
+          "label": "Paragraph · If stems differ in length you will hit this while the metadata…",
+          "md": "If stems differ in length you will hit this while the metadata is being collected:"
+        },
+        {
+          "key": "data.dataset.p.32",
+          "label": "Paragraph · Trim or pad the offending stems so every file in the folder end…",
+          "md": "Trim or pad the offending stems so every file in the folder ends on the same sample."
+        },
+        {
+          "key": "data.dataset.h3.33",
+          "label": "Subheading · Type 2 — one folder per stem, all songs inside",
+          "md": "Type 2 — one folder per stem, all songs inside"
+        },
+        {
+          "key": "data.dataset.p.34",
+          "label": "Paragraph · Type 2 has exactly two folders: dump every instrumental into ot…",
+          "md": "Type 2 has exactly two folders: dump every instrumental into `other` and every vocal into `vocals`. Track lengths *do not* need to match, because the loader picks random songs, splits each into chunks (exactly like an inference pass), mixes them and feeds the result to the model."
+        },
+        {
+          "key": "data.dataset.span.35",
+          "label": "Label · Schematic · how the loader reads each layout",
+          "md": "Schematic · how the loader reads each layout"
+        },
+        {
+          "key": "data.dataset.caption.36",
+          "label": "Caption · Why the two layouts behave differently. Type 1 gives the model…",
+          "md": "<b>Why the two layouts behave differently.</b> Type 1 gives the model one aligned song at a time, so the stems have to match sample-for-sample. Type 2 never sees a whole song: it draws random windows from each stem folder and mixes them, which is why track lengths can differ."
+        },
+        {
+          "key": "data.dataset.h3.37",
+          "label": "Subheading · How many files?",
+          "md": "How many files?"
+        },
+        {
+          "key": "data.dataset.p.38",
+          "label": "Paragraph · The original documentation recommends at least 200 audio files…",
+          "md": "The original documentation recommends **at least 200 audio files**, and more is always better. As a real reference point, the finished metal dataset in the source guide holds **2135 instrumentals and 1779 vocals** — 3914 tracks in total."
+        },
+        {
+          "key": "data.dataset.span.39",
+          "label": "Label · Short files",
+          "md": "Short files"
+        },
+        {
+          "key": "data.dataset.h5.40",
+          "label": "Card title · More tracks, more variety",
+          "md": "More tracks, more variety"
+        },
+        {
+          "key": "data.dataset.p.41",
+          "label": "Paragraph · Standard 3–5 minute songs need volume: a few hundred tracks min…",
+          "md": "Standard 3–5 minute songs need volume: a few hundred tracks minimum, ideally thousands. Breadth is what teaches a model to generalise."
+        },
+        {
+          "key": "data.dataset.span.42",
+          "label": "Label · Long files",
+          "md": "Long files"
+        },
+        {
+          "key": "data.dataset.h5.43",
+          "label": "Card title · Fewer tracks, still long runs",
+          "md": "Fewer tracks, still long runs"
+        },
+        {
+          "key": "data.dataset.p.44",
+          "label": "Paragraph · If your source material is 10 minutes or more per file, you can…",
+          "md": "If your source material is 10 minutes or more per file, you can get away with a lower file count — the model still chunks the audio according to the `chunk_size` in your YAML."
+        },
+        {
+          "key": "data.dataset.h3.45",
+          "label": "Subheading · Where the audio should come from",
+          "md": "Where the audio should come from"
+        },
+        {
+          "key": "data.dataset.p.46",
+          "label": "Paragraph · Use official sources. For vocals you can sometimes substitute a…",
+          "md": "Use official sources. For vocals you can sometimes substitute a separation — a good Mel-Roformer pass, or inverting an official instrumental — but the recommendation stands: official instrumentals and official vocals give the cleanest training signal. Anything synthesised teaches the model the artefacts of whatever made it."
+        },
+        {
+          "key": "data.dataset.div.47",
+          "label": "Label · Switching a 4-stem model to 2 stems",
+          "md": "Switching a 4-stem model to 2 stems"
+        },
+        {
+          "key": "data.dataset.p.48",
+          "label": "Paragraph · When training SCNet from 4 stems down to 2, the config must dec…",
+          "md": "When training SCNet from 4 stems down to 2, the config must declare only the stems you actually want. Set `target_instrument` to `null` and list the instruments explicitly — otherwise the loss cannot match shapes:"
+        },
+        {
+          "key": "data.dataset.p.49",
+          "label": "Paragraph · The symptom of getting it wrong is this runtime error:",
+          "md": "The symptom of getting it wrong is this runtime error:"
+        },
+        {
+          "key": "data.dataset.div.50",
+          "label": "Label · Time budget",
+          "md": "Time budget"
+        },
+        {
+          "key": "data.dataset.p.51",
+          "label": "Paragraph · Expect the dataset to be the slowest stage of the whole project…",
+          "md": "Expect the dataset to be the slowest stage of the whole project — not because of processing power, but because you are scouring the internet for clean, official stems. Budget weeks, not evenings."
+        }
+      ]
+    },
+    {
+      "id": "validation",
+      "label": "Building a validation set",
+      "heading": {
+        "key": "data.validation.h2.52",
+        "label": "Chapter heading · Building a validation set",
+        "md": "Building a validation set"
+      },
+      "blocks": [
+        {
+          "key": "data.validation.p.53",
+          "label": "Paragraph · The validation set is your scoreboard. It is small, it is read…",
+          "md": "The validation set is your scoreboard. It is small, it is read after every epoch, and its only job is to tell you whether the model is actually improving."
+        },
+        {
+          "key": "data.validation.p.54",
+          "label": "Paragraph · For a Type 1 (4-stem) setup, each song folder also carries drum…",
+          "md": "For a Type 1 (4-stem) setup, each song folder also carries `drums.wav` and `bass.wav`. The mixture is not an approximation — it is the stems summed, so the model's output can be compared directly against the truth."
+        },
+        {
+          "key": "data.validation.span.55",
+          "label": "Label · Schematic · validation/song name 1",
+          "md": "Schematic · validation/song name 1"
+        },
+        {
+          "key": "data.validation.caption.56",
+          "label": "Caption · The relationship the metrics depend on. The model is asked to r…",
+          "md": "<b>The relationship the metrics depend on.</b> The model is asked to reproduce `vocals` and `other` from `mixture`, so the three files have to describe exactly the same stretch of time. Shapes are illustrative, not real audio."
+        },
+        {
+          "key": "data.validation.div.57",
+          "label": "Label · 16-bit WAV only",
+          "md": "16-bit WAV only"
+        },
+        {
+          "key": "data.validation.p.58",
+          "label": "Paragraph · The validation loader accepts 16-bit WAV files. Export them cor…",
+          "md": "The validation loader accepts **16-bit WAV** files. Export them correctly: FLAC or 24-bit files can throw errors during validation, which is exactly the kind of problem you do not want to discover after a week of training."
+        },
+        {
+          "key": "data.validation.h3.59",
+          "label": "Subheading · Choose your tracks wisely",
+          "md": "Choose your tracks wisely"
+        },
+        {
+          "key": "data.validation.li.60",
+          "label": "List item · Reuse tracks already in your dataset. You already have their st…",
+          "md": "**Reuse tracks already in your dataset.** You already have their stems, so assembling the mixture and the folder is quick."
+        },
+        {
+          "key": "data.validation.li.61",
+          "label": "List item · Full tracks give higher metrics — more audio means a more repre…",
+          "md": "**Full tracks give higher metrics** — more audio means a more representative score, and it is what the model will face in real use."
+        },
+        {
+          "key": "data.validation.li.62",
+          "label": "List item · Clips make validation faster. Cutting to 30 seconds–1 minute sp…",
+          "md": "**Clips make validation faster.** Cutting to 30 seconds–1 minute speeds up every epoch, at the cost of lower metrics. That is a fine trade while you are testing a config and a bad one when you are judging a finished model."
+        },
+        {
+          "key": "data.validation.div.63",
+          "label": "Label · Everything must end at the same time",
+          "md": "Everything must end at the same time"
+        },
+        {
+          "key": "data.validation.p.64",
+          "label": "Paragraph · Inside each validation song folder, mixture, the stems and any…",
+          "md": "Inside each validation song folder, `mixture`, the stems and any other files must be identical in length. If they are not, validation fails with a broadcast error:"
+        },
+        {
+          "key": "data.validation.p.65",
+          "label": "Paragraph · Trim the longest file down, or re-export all of them from the s…",
+          "md": "Trim the longest file down, or re-export all of them from the same edit session."
+        },
+        {
+          "key": "data.validation.h3.66",
+          "label": "Subheading · Sanity checklist",
+          "md": "Sanity checklist"
+        },
+        {
+          "key": "data.validation.div.67",
+          "label": "Label · Before you spend GPU time",
+          "md": "Before you spend GPU time"
+        },
+        {
+          "key": "data.validation.li.68",
+          "label": "List item · Every training file is FLAC or WAV; every validation file is 16…",
+          "md": "Every training file is FLAC or WAV; every validation file is 16-bit WAV."
+        },
+        {
+          "key": "data.validation.li.69",
+          "label": "List item · Type 1 song folders: all stems end at the same sample.",
+          "md": "Type 1 song folders: all stems end at the same sample."
+        },
+        {
+          "key": "data.validation.li.70",
+          "label": "List item · Validation folders: mixture and stems are identical in length.",
+          "md": "Validation folders: mixture and stems are identical in length."
+        },
+        {
+          "key": "data.validation.li.71",
+          "label": "List item · instruments in the YAML lists exactly the stems your folders co…",
+          "md": "`instruments` in the YAML lists exactly the stems your folders contain."
+        },
+        {
+          "key": "data.validation.li.72",
+          "label": "List item · At least a few hundred tracks; the validation set is a small, r…",
+          "md": "At least a few hundred tracks; the validation set is a small, representative subset."
+        }
+      ]
+    }
+  ]
+}

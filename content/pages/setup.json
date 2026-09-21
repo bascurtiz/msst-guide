@@ -1,0 +1,451 @@
+{
+  "page": "setup",
+  "title": "Setup &amp; configuration",
+  "source": "src/pages/setup.html",
+  "sections": [
+    {
+      "id": "head",
+      "label": "Page head",
+      "heading": {
+        "key": "setup.head.h1.02",
+        "label": "Page title · Setup &amp; configuration",
+        "md": "Setup & configuration"
+      },
+      "blocks": [
+        {
+          "key": "setup.head.p.01",
+          "label": "Paragraph · Chapters 05–07 · Installation & configuration",
+          "md": "Chapters 05–07 · Installation & configuration"
+        },
+        {
+          "key": "setup.head.p.03",
+          "label": "Paragraph · The repository, the commands that drive it, and the YAML that t…",
+          "md": "The repository, the commands that drive it, and the YAML that tunes it. This is the part you will come back to constantly — bookmark the argument tables."
+        }
+      ]
+    },
+    {
+      "id": "repo",
+      "label": "The training repository",
+      "heading": {
+        "key": "setup.repo.h2.04",
+        "label": "Chapter heading · The training repository",
+        "md": "The training repository"
+      },
+      "blocks": [
+        {
+          "key": "setup.repo.p.05",
+          "label": "Paragraph · One repository does the work: ZFTurbo/Music-Source-Separation-T…",
+          "md": "One repository does the work: [ZFTurbo/Music-Source-Separation-Training](https://github.com/ZFTurbo/Music-Source-Separation-Training), usually shortened to **MSST**. It trains, validates and runs inference on the same architectures that UVR and the separation web apps use."
+        },
+        {
+          "key": "setup.repo.h3.06",
+          "label": "Subheading · Get the code",
+          "md": "Get the code"
+        },
+        {
+          "key": "setup.repo.b.07",
+          "label": "Bold label · Download the repository",
+          "md": "Download the repository"
+        },
+        {
+          "key": "setup.repo.p.08",
+          "label": "Paragraph · Open the repository page, press the green Code button and choos…",
+          "md": "Open the repository page, press the green <span class=\"kbd\">Code</span> button and choose *Download as ZIP*, then extract it anywhere convenient."
+        },
+        {
+          "key": "setup.repo.b.09",
+          "label": "Bold label · Pick the model you want to train",
+          "md": "Pick the model you want to train"
+        },
+        {
+          "key": "setup.repo.p.10",
+          "label": "Paragraph · Scroll to the Pre-trained models section, open the List of Pre…",
+          "md": "Scroll to the *Pre-trained models* section, open the *List of Pre-trained models*, and grab the **Config** and the **Weights** for your chosen architecture — for example a Mel-Band Roformer, or Kimberley Jensen's Roformer as a base."
+        },
+        {
+          "key": "setup.repo.b.11",
+          "label": "Bold label · Place the two files correctly",
+          "md": "Place the two files correctly"
+        },
+        {
+          "key": "setup.repo.p.12",
+          "label": "Paragraph · The checkpoint goes into a folder named results; the YAML goes…",
+          "md": "The checkpoint goes into a folder named `results`; the YAML goes at the repository root, next to `train.py`, `valid.py` and `inference.py`."
+        },
+        {
+          "key": "setup.repo.h3.13",
+          "label": "Subheading · Config vs. checkpoint",
+          "md": "Config vs. checkpoint"
+        },
+        {
+          "key": "setup.repo.b.14",
+          "label": "Bold label · Config → .yaml",
+          "md": "Config → `.yaml`"
+        },
+        {
+          "key": "setup.repo.span.15",
+          "label": "Label · editable",
+          "md": "editable"
+        },
+        {
+          "key": "setup.repo.p.16",
+          "label": "Paragraph · Everything about the model and how it trains: architecture dime…",
+          "md": "Everything about the model and how it trains: architecture dimensions, chunk size, learning rate, epochs, which instruments to target."
+        },
+        {
+          "key": "setup.repo.li.17",
+          "label": "List item · Where most of your tuning happens.",
+          "md": "Where most of your tuning happens."
+        },
+        {
+          "key": "setup.repo.li.18",
+          "label": "List item · Lives at the repo root, next to train.py.",
+          "md": "Lives at the repo root, next to `train.py`."
+        },
+        {
+          "key": "setup.repo.b.19",
+          "label": "Bold label · Weights → .ckpt",
+          "md": "Weights → `.ckpt`"
+        },
+        {
+          "key": "setup.repo.span.20",
+          "label": "Label · millions of numbers",
+          "md": "millions of numbers"
+        },
+        {
+          "key": "setup.repo.p.21",
+          "label": "Paragraph · The model itself. You never edit it — you load it, train furthe…",
+          "md": "The model itself. You never edit it — you load it, train further, and let the trainer write new checkpoints."
+        },
+        {
+          "key": "setup.repo.li.22",
+          "label": "List item · Lives in results/.",
+          "md": "Lives in `results/`."
+        },
+        {
+          "key": "setup.repo.li.23",
+          "label": "List item · One file, plus its matching config.",
+          "md": "One file, plus its matching config."
+        },
+        {
+          "key": "setup.repo.p.24",
+          "label": "Paragraph · If you have used UVR before, you already know these two files…",
+          "md": "If you have used UVR before, you already know these two files: this is exactly the pairing it ships with."
+        },
+        {
+          "key": "setup.repo.div.25",
+          "label": "Label · Two practical notes",
+          "md": "Two practical notes"
+        },
+        {
+          "key": "setup.repo.li.26",
+          "label": "List item · Some browsers display a config file instead of downloading it…",
+          "md": "Some browsers display a config file instead of downloading it. If that happens, open it in a text editor (Notepad++ works fine), copy the contents, and save the file yourself with a `.yaml` extension."
+        },
+        {
+          "key": "setup.repo.li.27",
+          "label": "List item · Every model published with the repository is open-source. Check…",
+          "md": "Every model published with the repository is open-source. Check the licence of the specific checkpoint before you build anything commercial on top of it."
+        },
+        {
+          "key": "setup.repo.div.28",
+          "label": "Label · Rofomers have their own loss",
+          "md": "Rofomers have their own loss"
+        },
+        {
+          "key": "setup.repo.p.29",
+          "label": "Paragraph · Mel-Band and BS Roformers train with an additional spectrogram…",
+          "md": "Mel-Band and BS Roformers train with an additional spectrogram loss rather than a pure waveform loss. That is why you never need to add one manually unless you are deliberately training for fullness — see [Chapter 10](training.html#fullness)."
+        }
+      ]
+    },
+    {
+      "id": "commands",
+      "label": "Commands & arguments",
+      "heading": {
+        "key": "setup.commands.h2.30",
+        "label": "Chapter heading · Commands &amp; arguments",
+        "md": "Commands & arguments"
+      },
+      "blocks": [
+        {
+          "key": "setup.commands.p.31",
+          "label": "Paragraph · Everything runs through Python scripts, so everything is a comm…",
+          "md": "Everything runs through Python scripts, so everything is a command with arguments. Copy the templates, replace the placeholders, and keep them somewhere you can paste from."
+        },
+        {
+          "key": "setup.commands.div.32",
+          "label": "Label · Local runs: use an administrator shell",
+          "md": "Local runs: use an administrator shell"
+        },
+        {
+          "key": "setup.commands.p.33",
+          "label": "Paragraph · On Windows, run these commands in a Command Prompt or PowerShel…",
+          "md": "On Windows, run these commands in a Command Prompt or PowerShell opened **as administrator**. Package installs and some file operations will fail silently or half-way without it."
+        },
+        {
+          "key": "setup.commands.h3.34",
+          "label": "Subheading · Installation",
+          "md": "Installation"
+        },
+        {
+          "key": "setup.commands.h3.35",
+          "label": "Subheading · The training command",
+          "md": "The training command"
+        },
+        {
+          "key": "setup.commands.p.36",
+          "label": "Paragraph · This is the command you will run the most. Every highlighted va…",
+          "md": "This is the command you will run the most. Every highlighted value has to be replaced with your own paths and choices."
+        },
+        {
+          "key": "setup.commands.p.37",
+          "label": "Paragraph · The valid options for --metrics and --metric_for_scheduler are…",
+          "md": "The valid options for `--metrics` and `--metric_for_scheduler` are listed in the argument tables below; what each one measures is explained in [Appendix B](reference.html#metrics)."
+        },
+        {
+          "key": "setup.commands.div.38",
+          "label": "Label · Make it a two-click run",
+          "md": "Make it a two-click run"
+        },
+        {
+          "key": "setup.commands.p.39",
+          "label": "Paragraph · Paste the command into Notepad, edit the values there, and save…",
+          "md": "Paste the command into Notepad, edit the values there, and save it as `run.bat` in the repository root. From then on you double-click it, or type `.\\run.bat` in the shell. No more re-typing the argument list every time — and no more typos in paths."
+        },
+        {
+          "key": "setup.commands.h3.40",
+          "label": "Subheading · Inference: using the model",
+          "md": "Inference: using the model"
+        },
+        {
+          "key": "setup.commands.p.41",
+          "label": "Paragraph · Once you have a checkpoint you are happy with, inference separa…",
+          "md": "Once you have a checkpoint you are happy with, inference separates files with it."
+        },
+        {
+          "key": "setup.commands.p.42",
+          "label": "Paragraph · Create two folders first: input, where you drop the files you w…",
+          "md": "Create two folders first: `input`, where you drop the files you want separated, and `separation_results`, where the script writes the stems."
+        },
+        {
+          "key": "setup.commands.div.43",
+          "label": "Label · Cloud only · OpenBLAS",
+          "md": "Cloud only · OpenBLAS"
+        },
+        {
+          "key": "setup.commands.p.44",
+          "label": "Paragraph · On rented instances you may hit an OpenBLAS threading error dur…",
+          "md": "On rented instances you may hit an OpenBLAS threading error during training. Fix it for the current session with:"
+        },
+        {
+          "key": "setup.commands.p.45",
+          "label": "Paragraph · It only applies to the terminal session you run it in — see Cha…",
+          "md": "It only applies to the terminal session you run it in — see [Chapter 12](training.html#cloud) for where it fits in the cloud sequence."
+        },
+        {
+          "key": "setup.commands.h3.46",
+          "label": "Subheading · Argument reference — training",
+          "md": "Argument reference — training"
+        },
+        {
+          "key": "setup.commands.h3.47",
+          "label": "Subheading · Argument reference — inference",
+          "md": "Argument reference — inference"
+        }
+      ]
+    },
+    {
+      "id": "yaml",
+      "label": "Configuring the YAML",
+      "heading": {
+        "key": "setup.yaml.h2.48",
+        "label": "Chapter heading · Configuring the YAML",
+        "md": "Configuring the YAML"
+      },
+      "blocks": [
+        {
+          "key": "setup.yaml.p.49",
+          "label": "Paragraph · The config is where the run is actually shaped. Its defaults ar…",
+          "md": "The config is where the run is actually shaped. Its defaults are sane, but the training block is the part worth understanding — and the part worth experimenting with."
+        },
+        {
+          "key": "setup.yaml.p.50",
+          "label": "Paragraph · A config has four sections: audio, model, training and inferenc…",
+          "md": "A config has four sections: `audio`, `model`, `training` and `inference`. You rarely touch the first two, with one exception: the audio chunk size. Which block owns the rest of the spectrum settings — `n_fft`, `hop_length`, `dim_f` — depends on the architecture, and there is a [table of who owns what](#hop-length-a-property-of-the-model-not-a-taste) below the calculator."
+        },
+        {
+          "key": "setup.yaml.h3.51",
+          "label": "Subheading · chunk_size — the one audio setting you will change",
+          "md": "chunk\\_size — the one audio setting you will change"
+        },
+        {
+          "key": "setup.yaml.p.52",
+          "label": "Paragraph · The trainer reads the window itself from audio.chunk_size, in s…",
+          "md": "The trainer reads the window itself from `audio.chunk_size`, in samples — that key is the one every architecture family reads. Configs also describe the same window in frames (`dim_t`), and because every STFT here runs with `center=True` the two are one value in two units:"
+        },
+        {
+          "key": "setup.yaml.div.53",
+          "label": "Label · The formula",
+          "md": "The formula"
+        },
+        {
+          "key": "setup.yaml.p.54",
+          "label": "Paragraph · chunk_size = (dim_t − 1) × hop_length",
+          "md": "`chunk_size = (dim_t − 1) × hop_length`"
+        },
+        {
+          "key": "setup.yaml.p.55",
+          "label": "Paragraph · The conversions above assume hop_length: 441 — the step every p…",
+          "md": "The conversions above assume `hop_length: 441` — the step every published Roformer in this guide uses. A different hop gives a different sample count for the same `dim_t`, because the frame count is what follows from the window: `floor(chunk_size ÷ hop_length) + 1`. So the hop decides both the window and the memory, and it belongs to the model rather than to you — the [hop\\_length section](#hop-length-a-property-of-the-model-not-a-taste) below the calculator has the details. Smaller chunks train faster and use less VRAM; larger chunks teach the model longer musical context. This is the main dial you change when a run will not fit."
+        },
+        {
+          "key": "setup.yaml.span.56",
+          "label": "Label · Schematic · chunk windows drawn to scale",
+          "md": "Schematic · chunk windows drawn to scale"
+        },
+        {
+          "key": "setup.yaml.caption.57",
+          "label": "Caption · The one audio setting worth changing. Roformer and MDX-Net conf…",
+          "md": "<b>The one audio setting worth changing.</b> Roformer and MDX-Net configs describe their window in frames (`dim_t`); the trainer reads samples (`chunk_size`). Bars are scaled to a 16-second excerpt, so what you are looking at is how much musical context each setting sees."
+        },
+        {
+          "key": "setup.yaml.h3.58",
+          "label": "Subheading · hop_length and n_fft — which block of the config owns them",
+          "md": "hop\\_length and n\\_fft — which block of the config owns them"
+        },
+        {
+          "key": "setup.yaml.p.59",
+          "label": "Paragraph · hop_length is the step between STFT frames, and it is not a fre…",
+          "md": "`hop_length` is the step between STFT frames, and it is not a free preference: it is baked into the\r\n        spectrogram the weights were trained on, so change it and the checkpoint you are fine-tuning no longer matches its\r\n        own input. Where you change it, though, depends on the architecture — and this is the mistake that costs people an\r\n        afternoon, because a Roformer config and an mdx23c config both have an `n_fft` and a\r\n        `hop_length`, in *different blocks*, and only one of the two counts in each."
+        },
+        {
+          "key": "setup.yaml.p.60",
+          "label": "Paragraph · The mechanism is plain in the source. mel_band_roformer and bs_…",
+          "md": "The mechanism is plain in the source. `mel_band_roformer` and `bs_roformer` are constructed as\r\n        `MelBandRoformer(**config.model)`, and SCNet as `SCNet(**config.model)` — the model block is\r\n        the only thing they see, and their STFT parameters are named there. mdx23c and DTTNet go the other way and are\r\n        handed the whole audio block (`STFT(config.audio)`), so for them `audio.n_fft`,\r\n        `audio.hop_length` and `audio.dim_f` are the real ones. What every family reads from\r\n        `audio` is `chunk_size`, `num_channels`, `sample_rate` and\r\n        `min_mean_abs`.\n\nTwo rules account for every config in this ecosystem, and which one is right depends entirely on where your config\r\n        came from:"
+        },
+        {
+          "key": "setup.yaml.p.61",
+          "label": "Paragraph · Every published Roformer checkpoint this guide tells you to fin…",
+          "md": "Every *published* Roformer checkpoint this guide tells you to fine-tune uses `441` — a tenth of\r\n        the sample rate, so a frame lands exactly on 10 ms of audio at any full-band rate. The blank templates that ship with\r\n        MSST, and the DTTNet config, use `n_fft ÷ 4` — the ordinary 75 % overlap you would pick for a fresh STFT —\r\n        and mdx23c halves that again. So “keep `hop_length = n_fft ÷ 4`” is good advice for a config you are\r\n        writing from scratch and the wrong advice for a checkpoint you are continuing: load Kimberley Jensen's model with\r\n        `hop_length: 512` and its learned features no longer line up with the input you feed them.\n\nThat is why the calculator's hop rule is a choice rather than a constant, and why it carries an `n_fft`\r\n        field: both STFT rules are measured from the window, and `dim_f` — the width the transformer actually\r\n        reads — is half of it, so `n_fft: 2048` is `dim_f: 1024`, `4096` is `2048`.\r\n        A wider window is therefore also a wider spectrogram and a heavier model, which is the one part of the memory\r\n        estimate the calculator still does not scale for."
+        },
+        {
+          "key": "setup.yaml.div.62",
+          "label": "Label · Don't tune the copy that is ignored",
+          "md": "Don't tune the copy that is ignored"
+        },
+        {
+          "key": "setup.yaml.p.63",
+          "label": "Paragraph · A Roformer config carries hop_length twice — once under audio…",
+          "md": "A Roformer config carries `hop_length` twice — once under `audio`, once as\r\n            `model.stft_hop_length` — and the shipped ones annotate the first copy `# don't work (use in model)`. viperx's BS-Roformer config says exactly that about both `audio.hop_length: 441` and\r\n            `audio.dim_t: 801`. For mdx23c and DTTNet there is no second copy to get wrong: edit\r\n            `audio.hop_length` or edit nothing. Setting both copies to the same number keeps a config readable\r\n            either way."
+        },
+        {
+          "key": "setup.yaml.p.64",
+          "label": "Paragraph · Because the hop decides how many frames the window divides into…",
+          "md": "Because the hop decides how many frames the window divides into, and the frame count is what the model attends\r\n        over, the hop is a memory setting as much as a spectral one. At a fixed `chunk_size` the relationship is\r\n        exact: `frames = floor(chunk_size ÷ hop_length) + 1`, so `chunk_size: 587412` is 1333 frames\r\n        at `hop_length: 441` and 1148 frames at `512` — the same 13.3 seconds of audio, seen through\r\n        far fewer, wider steps. That is the direction the calculator's hop rule moves in: it holds the window and lets the\r\n        frame count follow. Run it the other way — hold `dim_t` and let the window grow — and\r\n        `dim_t: 801` is an 8.00 s window at `441` but a 9.29 s one at `512`. Which of the\r\n        two you want depends on what you are doing: keeping `chunk_size` is how you switch conventions without\r\n        changing the music the model hears, and keeping `dim_t` is what a fine-tune does when it inherits the\r\n        frames its checkpoint was trained on."
+        },
+        {
+          "key": "setup.yaml.h3.65",
+          "label": "Subheading · Sample rate — the band each choice keeps",
+          "md": "Sample rate — the band each choice keeps"
+        },
+        {
+          "key": "setup.yaml.p.66",
+          "label": "Paragraph · The sample rate is not a memory dial, but it does decide someth…",
+          "md": "The sample rate is not a memory dial, but it does decide something you cannot undo later: everything above\r\n        *half* the rate — the Nyquist frequency — is gone before training starts. A rate of 22 050 Hz keeps\r\n        0–11 025 Hz and throws away cymbals, sibilance and guitar harmonics: free for a bass model, fatal for a drum\r\n        model."
+        },
+        {
+          "key": "setup.yaml.p.67",
+          "label": "Paragraph · Halving the rate halves what the loader reads and what the STFT…",
+          "md": "Halving the rate halves what the loader reads and what the STFT transforms, and whether it halves\r\n        the memory depends entirely on the hop — because `frames = chunk_size ÷ hop_length + 1`. At a fixed\r\n        `chunk_size` a halved rate makes the same chunk *twice as long*, so you get twice the frames and the\r\n        estimate doubles; halve `chunk_size` at the same time and it comes straight back to where it started.\r\n        That is exactly what `hop_length = rate ÷ 100` arranges without you thinking about it:\r\n        `frames per second = rate ÷ hop_length` is 100 at every full-band rate, so the frame count follows the\r\n        seconds of audio and nothing else. Under a fixed hop it does not: at `hop_length: 512` a halved rate\r\n        halves the frames per second, so the same 13.3 s window arrives as 574 frames instead of 1148 — half the memory, and\r\n        each frame now steps 23.2 ms instead of 11.6 ms. One arithmetic wrinkle, and only under the\r\n        `rate ÷ 100` rule: 22 050 ÷ 100 is not a whole number, so the hop lands on 221 rather than 220.5 —\r\n        10.02 ms per frame instead of 10, which moves the window by tens of milliseconds — while 24 000 ÷ 100 = 240 lands\r\n        exactly. Switch the rule to `n_fft ÷ 4` and the wrinkle disappears: `512` at any rate."
+        },
+        {
+          "key": "setup.yaml.div.68",
+          "label": "Label · A halved rate is an experiment, not a setting",
+          "md": "A halved rate is an experiment, not a setting"
+        },
+        {
+          "key": "setup.yaml.p.69",
+          "label": "Paragraph · No model in this guide's ecosystem is published below 44.1 kHz…",
+          "md": "No model in this guide's ecosystem is published below 44.1 kHz, and the mel filterbank is built *from*\r\n            the sample rate — change the rate and a checkpoint's learned features no longer line up with the input they are\r\n            being fed. If you try it, change `audio.sample_rate`, `audio.hop_length` and the\r\n            `sample_rate` in the `loss_multistft` block together, then judge the run on validation\r\n            metrics against an untouched full-band baseline."
+        },
+        {
+          "key": "setup.yaml.h3.70",
+          "label": "Subheading · Channels — stereo is architecture, not file format",
+          "md": "Channels — stereo is architecture, not file format"
+        },
+        {
+          "key": "setup.yaml.p.71",
+          "label": "Paragraph · Every Roformer published for this ecosystem is stereo, and the…",
+          "md": "Every Roformer published for this ecosystem is stereo, and the config says so twice: `audio.num_channels: 2`\r\n        and `model.stereo: true`. Those lines describe the *model*, not your files. The band-split front end\r\n        turns each mel band's two channels into one longer sequence for the transformer to attend over, which is why a\r\n        stereo run costs more than a mono one — and why the calculator now asks which you are training.\n\nThe distinction matters in both directions. If your source material is mono, you have not made training any\r\n        cheaper: a stereo model still expects two channels, so the mono file arrives duplicated. And if you genuinely want\r\n        a mono model, you change the architecture — `num_channels: 1` together with `stereo: false`,\r\n        trained on mono mixtures and targets — which halves the sequence and so most of the activation memory."
+        },
+        {
+          "key": "setup.yaml.div.72",
+          "label": "Label · Mono is a different model, not a smaller version of the same one",
+          "md": "Mono is a different model, not a smaller version of the same one"
+        },
+        {
+          "key": "setup.yaml.p.73",
+          "label": "Paragraph · A checkpoint trained with stereo: true will not load into a ste…",
+          "md": "A checkpoint trained with `stereo: true` will not load into a `stereo: false` model — the\r\n            shapes differ, so you are training from scratch, not fine-tuning. Mono suits material that is genuinely\r\n            single-channel (a bass DI, a close-mic drum, a mono room recording) and is a bad deal wherever the stereo image\r\n            carries information: wide guitars, spacious drums, reverb tails. Judge it on the same validation metrics as any\r\n            other architecture change."
+        },
+        {
+          "key": "setup.yaml.h3.74",
+          "label": "Subheading · The training block",
+          "md": "The training block"
+        },
+        {
+          "key": "setup.yaml.h4.75",
+          "label": "Heading · Augmentation options",
+          "md": "Augmentation options"
+        },
+        {
+          "key": "setup.yaml.li.76",
+          "label": "List item · augmentation — master switch for audiomentations and pedalboard…",
+          "md": "`augmentation` — master switch for audiomentations and pedalboard augmentations."
+        },
+        {
+          "key": "setup.yaml.li.77",
+          "label": "List item · augmentation_type — which augmentation profile to use.",
+          "md": "`augmentation_type` — which augmentation profile to use."
+        },
+        {
+          "key": "setup.yaml.li.78",
+          "label": "List item · augmentation_mix — mixes several stems of the same type with so…",
+          "md": "`augmentation_mix` — mixes several stems of the same type with some probability, useful when your dataset is small."
+        },
+        {
+          "key": "setup.yaml.li.79",
+          "label": "List item · augmentation_loudness, _type, _min, _max — randomly change the…",
+          "md": "`augmentation_loudness`, `_type`, `_min`, `_max` — randomly change the loudness of each stem, with the range you specify."
+        },
+        {
+          "key": "setup.yaml.li.80",
+          "label": "List item · use_mp3_compress — deprecated; leave it false.",
+          "md": "`use_mp3_compress` — deprecated; leave it `false`."
+        },
+        {
+          "key": "setup.yaml.div.81",
+          "label": "Label · Set inference overlap to 1 while training",
+          "md": "Set inference overlap to 1 while training"
+        },
+        {
+          "key": "setup.yaml.p.82",
+          "label": "Paragraph · num_overlap in the inference section of the config controls how…",
+          "md": "`num_overlap` in the inference section of the config controls how many passes are averaged at inference time. During training it only costs time — always set it to `1` for the training run, and raise it later when you actually separate audio."
+        },
+        {
+          "key": "setup.yaml.div.83",
+          "label": "Label · Optimal parameters take time",
+          "md": "Optimal parameters take time"
+        },
+        {
+          "key": "setup.yaml.p.84",
+          "label": "Paragraph · There is no magic config. Expect to find your numbers by iterat…",
+          "md": "There is no magic config. Expect to find your numbers by iterating: change one thing, train, listen, compare metrics. Add `use_torch_checkpoint` if you genuinely need the VRAM saving — that is, when you are seeing `CUDA_OutOfMemory` errors."
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,738 @@
+<!doctype html>
+<!-- TEMPLATE — not served. Prose lives in content/pages/setup.json; render the pages with: node tools/build.mjs -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Setup &amp; configuration — Repository, commands and the YAML · MSST Guide</title>
+<meta name="description" content="Installing the training repository, the full command and argument reference for training and inference, and how to configure the YAML.">
+<meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1">
+<link rel="canonical" href="https://msst-guide.pages.dev/setup.html">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="MSST Guide">
+<meta property="og:title" content="Setup &amp; configuration — Repository, commands and YAML">
+<meta property="og:description" content="Installing the training repository, the full command and argument reference for training and inference, and how to configure the YAML.">
+<meta property="og:url" content="https://msst-guide.pages.dev/setup.html">
+<meta property="og:image" content="https://msst-guide.pages.dev/assets/img/og-image.png">
+<meta property="og:image:type" content="image/png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="MSST Guide waveform mark above the title Training Audio Source Separation Models">
+<meta property="article:section" content="Setup and configuration">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Setup &amp; configuration — Repository, commands and YAML">
+<meta name="twitter:description" content="Chapters 05–07: the training repository, every command and argument, and tuning the YAML — including the chunk size calculator.">
+<meta name="twitter:image" content="https://msst-guide.pages.dev/assets/img/twitter-card.png">
+<meta name="twitter:image:alt" content="MSST Guide waveform mark above the title Training Audio Source Separation Models">
+<link rel="preload" href="assets/fonts/montserrat-latin.woff2" as="font" type="font/woff2" crossorigin>
+<meta name="color-scheme" content="dark light">
+<meta name="theme-color" content="#0e1013">
+<link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
+<link rel="alternate icon" href="assets/img/favicon-32.png" sizes="32x32" type="image/png">
+<link rel="apple-touch-icon" href="assets/img/apple-touch-icon.png">
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"TechArticle","@id":"https://msst-guide.pages.dev/setup.html#article","headline":"Setup & configuration — Repository, commands and the YAML","description":"Installing the training repository, the full command and argument reference for training and inference, and how to configure the YAML.","articleSection":"Chapters 05–07 · Setup & configuration","inLanguage":"en","proficiencyLevel":"Beginner","isPartOf":{"@id":"https://msst-guide.pages.dev/#book"},"mainEntityOfPage":{"@id":"https://msst-guide.pages.dev/setup.html#webpage"},"image":{"@id":"https://msst-guide.pages.dev/#card"},"author":{"@id":"https://msst-guide.pages.dev/#publisher"},"publisher":{"@id":"https://msst-guide.pages.dev/#publisher"},"dateModified":"2026-09-20"},{"@type":"WebPage","@id":"https://msst-guide.pages.dev/setup.html#webpage","url":"https://msst-guide.pages.dev/setup.html","name":"Setup & configuration — Repository, commands and the YAML · MSST Guide","description":"Installing the training repository, the full command and argument reference for training and inference, and how to configure the YAML.","isPartOf":{"@id":"https://msst-guide.pages.dev/#website"},"about":{"@id":"https://msst-guide.pages.dev/setup.html#article"},"inLanguage":"en"},{"@type":"BreadcrumbList","@id":"https://msst-guide.pages.dev/setup.html#breadcrumbs","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://msst-guide.pages.dev/"},{"@type":"ListItem","position":2,"name":"Setup & configuration","item":"https://msst-guide.pages.dev/setup.html"}]}]}</script>
+<script>/* apply the saved theme before first paint to avoid a flash */(function(){try{var t=localStorage.getItem("msst-theme");if(t!=="light"&&t!=="dark"){t=window.matchMedia&&window.matchMedia("(prefers-color-scheme: light)").matches?"light":"dark";}document.documentElement.setAttribute("data-theme",t);}catch(e){document.documentElement.setAttribute("data-theme","dark");}})();</script>
+<link rel="stylesheet" href="assets/css/site.css?v=61c969be">
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<div class="progress" aria-hidden="true"><span id="bar"></span></div>
+
+<header class="site-header">
+  <div class="inner">
+    <a class="brand" href="index.html">
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M2 14h2.2l1.6-6 1.8 10 2-14 2 16 1.8-9 1.6 4H22" stroke="url(#lg)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><defs><linearGradient id="lg" x1="2" y1="4" x2="22" y2="20"><stop stop-color="#0294be"/><stop offset="1" stop-color="#1468b2"/></linearGradient></defs></svg>
+      <b>MSST <i>Guide</i></b>
+    </a>
+    <nav class="site-nav" aria-label="Sections">
+      <a href="index.html">Home</a>
+      <a href="data.html">Before you train</a>
+      <a href="setup.html" aria-current="page">Setup &amp; config</a>
+      <a href="training.html">Training runs</a>
+      <a href="reference.html">Reference</a>
+    </nav>
+    <div class="header-actions">
+      <button class="btn btn-ghost btn-search" id="searchBtn" type="button" aria-haspopup="dialog" aria-expanded="false" aria-controls="searchOverlay" aria-label="Search the guide" title="Search all pages (press /)">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M16.4 16.4L21 21"/></svg>
+        <span class="search-lbl">Search</span>
+      </button>
+      <button class="switch" id="themeToggle" type="button" role="switch" aria-checked="true" aria-label="Switch to light theme" title="Switch to light theme">
+        <span class="track">
+          <span class="thumb" aria-hidden="true"></span>
+          <span class="ico ico-sun" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round"><circle cx="12" cy="12" r="4.3"/><path d="M12 1.8v2.6M12 19.6v2.6M1.8 12h2.6M19.6 12h2.6M4.8 4.8l1.9 1.9M17.3 17.3l1.9 1.9M19.2 4.8l-1.9 1.9M6.7 17.3l-1.9 1.9"/></svg></span>
+          <span class="ico ico-moon" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M20.6 14.3A8.7 8.7 0 0 1 9.7 3.4 8.9 8.9 0 1 0 20.6 14.3z"/></svg></span>
+        </span>
+      </button>
+      <button class="btn btn-ghost" type="button" data-print aria-label="Save as PDF" title="Save as PDF">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9V3h12v6"/><rect x="3" y="9" width="18" height="8" rx="2"/><path d="M6 17h12v4H6z"/></svg>
+        <span class="print-lbl">Save as PDF</span>
+      </button>
+      <button class="menu-btn" id="menuBtn" type="button" aria-expanded="false" aria-controls="drawer">Menu</button>
+    </div>
+  </div>
+</header>
+
+<div class="drawer" id="drawer">
+  <p class="dlabel">Sections</p>
+  <ul>
+    <li><a href="index.html">Home &amp; overview</a></li>
+    <li><a href="data.html">02–04 · Before you train</a></li>
+    <li><a href="setup.html" aria-current="page">05–07 · Setup &amp; config</a></li>
+    <li><a href="training.html">08–12 · Training runs</a></li>
+    <li><a href="reference.html">13 · Reference &amp; appendices</a></li>
+  </ul>
+</div>
+
+<main id="main">
+<div class="shell">
+
+  <div class="page-head">
+    <p class="crumbs"><a href="index.html">Guide</a><span>/</span>Part two</p>
+    <!--c:setup.head.p.01:prose:p| class="eyebrow"-->
+    <h1><!--c:setup.head.h1.02:inline--></h1>
+    <!--c:setup.head.p.03:prose:p| class="lede"-->
+    <div class="chips">
+      <span>Ch 05 Repository</span>
+      <span>Ch 06 Commands</span>
+      <span>Ch 07 YAML</span>
+      <span>~14 min read</span>
+    </div>
+  </div>
+
+  <div class="with-toc">
+    <article>
+
+      <!-- ============ REPOSITORY ============ -->
+      <h2 id="repo"><!--c:setup.repo.h2.04:inline--></h2>
+      <!--c:setup.repo.p.05:prose:p| class="lead-in"-->
+
+      <h3 id="get-the-code"><!--c:setup.repo.h3.06:inline--></h3>
+      <ol class="steps">
+        <li>
+          <b><!--c:setup.repo.b.07:inline--></b>
+          <!--c:setup.repo.p.08:prose:p|-->
+        </li>
+        <li>
+          <b><!--c:setup.repo.b.09:inline--></b>
+          <!--c:setup.repo.p.10:prose:p|-->
+        </li>
+        <li>
+          <b><!--c:setup.repo.b.11:inline--></b>
+          <!--c:setup.repo.p.12:prose:p|-->
+        </li>
+      </ol>
+
+      <div class="tree">
+        <div class="tree-bar">Repository layout after step 3</div>
+<pre><span class="d">Music-Source-Separation-Training/</span>
+├── train.py
+├── valid.py
+├── inference.py
+├── requirements.txt
+├── <span class="hl">config_vocals_mel_band_roformer.yaml</span>   <span class="c">← the config, at the root</span>
+└── <span class="d">results/</span>
+    └── <span class="hl">model_mel_band_roformer.ckpt</span>          <span class="c">← the weights</span></pre>
+      </div>
+
+      <h3 id="config-vs-checkpoint"><!--c:setup.repo.h3.13:inline--></h3>
+      <div class="panel-grid">
+        <div class="panel">
+          <div class="panel-head">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M13.5 3.5H7a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V9z"/><path d="M13.5 3.5V9H19"/><path d="M9 13h6M9 16.5h4"/></svg>
+            <b><!--c:setup.repo.b.14:inline--></b>
+            <span class="chip up"><!--c:setup.repo.span.15:inline--></span>
+          </div>
+          <div class="panel-body">
+            <!--c:setup.repo.p.16:prose:p|-->
+            <ul>
+              <li><!--c:setup.repo.li.17:inline--></li>
+              <li><!--c:setup.repo.li.18:inline--></li>
+            </ul>
+          </div>
+        </div>
+        <div class="panel">
+          <div class="panel-head">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><ellipse cx="12" cy="6.5" rx="7.5" ry="3"/><path d="M4.5 6.5v11c0 1.7 3.4 3 7.5 3s7.5-1.3 7.5-3v-11"/><path d="M4.5 12c0 1.7 3.4 3 7.5 3s7.5-1.3 7.5-3"/></svg>
+            <b><!--c:setup.repo.b.19:inline--></b>
+            <span class="chip"><!--c:setup.repo.span.20:inline--></span>
+          </div>
+          <div class="panel-body">
+            <!--c:setup.repo.p.21:prose:p|-->
+            <ul>
+              <li><!--c:setup.repo.li.22:inline--></li>
+              <li><!--c:setup.repo.li.23:inline--></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <!--c:setup.repo.p.24:prose:p| class="note-small"-->
+
+      <div class="callout quiet">
+        <div class="ico"></div>
+        <div>
+          <div class="ttl"><!--c:setup.repo.div.25:inline--></div>
+          <ul style="margin-bottom:0">
+            <li><!--c:setup.repo.li.26:inline--></li>
+            <li><!--c:setup.repo.li.27:inline--></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="callout formula">
+        <div class="ico"></div>
+        <div>
+          <div class="ttl"><!--c:setup.repo.div.28:inline--></div>
+          <!--c:setup.repo.p.29:prose:p|-->
+        </div>
+      </div>
+
+      <!-- ============ COMMANDS ============ -->
+      <h2 id="commands"><!--c:setup.commands.h2.30:inline--></h2>
+      <!--c:setup.commands.p.31:prose:p| class="lead-in"-->
+
+      <div class="callout danger">
+        <div class="ico"></div>
+        <div>
+          <div class="ttl"><!--c:setup.commands.div.32:inline--></div>
+          <!--c:setup.commands.p.33:prose:p|-->
+        </div>
+      </div>
+
+      <h3 id="installation"><!--c:setup.commands.h3.34:inline--></h3>
+      <div class="code">
+        <div class="code-bar"><span class="tag">powershell · one-time setup</span><button class="copy" type="button">Copy</button></div>
+<pre><span class="c"># 1. Install PyTorch — pick the command for your CUDA version</span>
+<span class="c">#    https://pytorch.org/get-started/locally/</span>
+<span class="cmd">pip install</span> torch torchvision torchaudio <span class="f">--index-url</span> <span class="ph">https://download.pytorch.org/whl/cu124</span>
+
+<span class="c"># 2. Install the repository requirements (from the repo folder)</span>
+<span class="cmd">cd</span> <span class="ph">C:\path\to\Music-Source-Separation-Training</span>
+<span class="cmd">pip install</span> <span class="f">-r</span> requirements.txt
+
+<span class="c"># 3. Install anything the previous step skipped</span>
+<span class="cmd">pip install</span> <span class="ph">name-of-missing-package</span></pre>
+      </div>
+
+      <h3 id="the-training-command"><!--c:setup.commands.h3.35:inline--></h3>
+      <!--c:setup.commands.p.36:prose:p|-->
+      <div class="code">
+        <div class="code-bar"><span class="tag">powershell · start training</span><button class="copy" type="button">Copy</button></div>
+<pre><span class="cmd">python</span> train.py
+  <span class="f">--model_type</span> <span class="ph">mel_band_roformer</span>
+  <span class="f">--config_path</span> <span class="ph">config_vocals.yaml</span>
+  <span class="f">--results_path</span> results/
+  <span class="f">--data_path</span> <span class="ph">C:\path\to\dataset</span>
+  <span class="f">--dataset_type</span> <span class="ph">2</span>
+  <span class="f">--num_workers</span> 4
+  <span class="f">--device_ids</span> 0
+  <span class="f">--start_check_point</span> results/<span class="ph">model.ckpt</span>
+  <span class="f">--valid_path</span> <span class="ph">C:\path\to\validation</span>
+  <span class="f">--metric_for_scheduler</span> <span class="ph">sdr</span>
+  <span class="f">--metrics</span> <span class="ph">sdr fullness bleedless</span></pre>
+      </div>
+      <!--c:setup.commands.p.37:prose:p| class="note-small"-->
+
+      <div class="callout star">
+        <div class="ico"></div>
+        <div>
+          <div class="ttl"><!--c:setup.commands.div.38:inline--></div>
+          <!--c:setup.commands.p.39:prose:p|-->
+        </div>
+      </div>
+
+      <h3 id="inference-using-the-model"><!--c:setup.commands.h3.40:inline--></h3>
+      <!--c:setup.commands.p.41:prose:p|-->
+      <div class="code">
+        <div class="code-bar"><span class="tag">powershell · inference</span><button class="copy" type="button">Copy</button></div>
+<pre><span class="cmd">python</span> inference.py
+  <span class="f">--model_type</span> <span class="ph">mel_band_roformer</span>
+  <span class="f">--config_path</span> <span class="ph">config_vocals.yaml</span>
+  <span class="f">--start_check_point</span> results/<span class="ph">model.ckpt</span>
+  <span class="f">--input_folder</span> input
+  <span class="f">--store_dir</span> separation_results</pre>
+      </div>
+      <!--c:setup.commands.p.42:prose:p|-->
+
+      <div class="callout warn">
+        <div class="ico"></div>
+        <div>
+          <div class="ttl"><!--c:setup.commands.div.43:inline--></div>
+          <!--c:setup.commands.p.44:prose:p|-->
+          <div class="code" style="margin-bottom:0">
+            <div class="code-bar"><span class="tag">bash · cloud</span><button class="copy" type="button">Copy</button></div>
+<pre><span class="cmd">export</span> OPENBLAS_NUM_THREADS=1</pre>
+          </div>
+          <!--c:setup.commands.p.45:prose:p| style="margin-top:12px"-->
+        </div>
+      </div>
+
+      <h3 id="argument-reference-training"><!--c:setup.commands.h3.46:inline--></h3>
+      <div class="table-scroll">
+        <table>
+          <thead><tr><th>Argument</th><th>What it does</th></tr></thead>
+          <tbody>
+            <tr><td class="t-key"><code>--model_type</code></td><td>Architecture to train: <code>mdx23c</code>, <code>htdemucs</code>, <code>segm_models</code>, <code>mel_band_roformer</code>, <code>bs_roformer</code>, <code>swin_upernet</code>, <code>bandit</code>.</td></tr>
+            <tr><td class="t-key"><code>--config_path</code></td><td>Path to the YAML config for that model.</td></tr>
+            <tr><td class="t-key"><code>--start_check_point</code></td><td>Initial checkpoint to start from (fine-tuning). Omit it to train from scratch.</td></tr>
+            <tr><td class="t-key"><code>--results_path</code></td><td>Folder for outputs — both <code>.ckpt</code> files and run metadata.</td></tr>
+            <tr><td class="t-key"><code>--data_path</code></td><td>Path to your dataset folder.</td></tr>
+            <tr><td class="t-key"><code>--dataset_type</code></td><td><code>1</code>, <code>2</code>, <code>3</code> or <code>4</code> — which layout your data follows. See the <a href="https://github.com/ZFTurbo/Music-Source-Separation-Training/blob/main/docs/dataset_types.md" rel="noopener">dataset types documentation</a>.</td></tr>
+            <tr><td class="t-key"><code>--valid_path</code></td><td>Path to the validation dataset folder.</td></tr>
+            <tr><td class="t-key"><code>--num_workers</code></td><td>How many CPU workers load and pre-process audio in parallel.</td></tr>
+            <tr><td class="t-key"><code>--pin_memory</code></td><td>Keeps host memory page-locked so transfers to the GPU are faster; worth enabling with several workers.</td></tr>
+            <tr><td class="t-key"><code>--seed</code></td><td>Seeds the randomness in the run — experiment with values for reproducibility.</td></tr>
+            <tr><td class="t-key"><code>--device_ids</code></td><td>List of GPU IDs to use; normally just <code>0</code>.</td></tr>
+            <tr><td class="t-key"><code>--use_multistft_loss</code></td><td>Multi-STFT loss (spectrogram based) — the setting behind fullness models.</td></tr>
+            <tr><td class="t-key"><code>--use_mse_loss</code></td><td>Default MSE loss, waveform based.</td></tr>
+            <tr><td class="t-key"><code>--use_l1_loss</code></td><td>L1 loss, waveform based.</td></tr>
+            <tr><td class="t-key"><code>--wandb_key</code></td><td>Weights &amp; Biases API key, for live run dashboards.</td></tr>
+            <tr><td class="t-key"><code>--pre_valid</code></td><td>Runs a validation pass before training begins.</td></tr>
+            <tr><td class="t-key"><code>--metrics</code></td><td>Metrics to compute each validation pass: <code>sdr</code>, <code>l1_freq</code>, <code>si_sdr</code>, <code>neg_log_wmse</code>, <code>aura_stft</code>, <code>aura_mrstft</code>, <code>bleedless</code>, <code>fullness</code>.</td></tr>
+            <tr><td class="t-key"><code>--metric_for_scheduler</code></td><td>Which metric the learning-rate scheduler watches (same options as above).</td></tr>
+            <tr><td class="t-key"><code>--train_lora</code></td><td>Train with LoRA (Low-Rank Adaptation) instead of full weights.</td></tr>
+            <tr><td class="t-key"><code>--lora_checkpoint</code></td><td>Starting checkpoint for LoRA weights.</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3 id="argument-reference-inference"><!--c:setup.commands.h3.47:inline--></h3>
+      <div class="table-scroll">
+        <table>
+          <thead><tr><th>Argument</th><th>What it does</th></tr></thead>
+          <tbody>
+            <tr><td class="t-key"><code>--model_type</code></td><td>Architecture, matching the checkpoint you loaded.</td></tr>
+            <tr><td class="t-key"><code>--config_path</code></td><td>Path to the config file.</td></tr>
+            <tr><td class="t-key"><code>--start_check_point</code></td><td>The checkpoint to run.</td></tr>
+            <tr><td class="t-key"><code>--input_folder</code></td><td>Folder holding the mixtures you want separated.</td></tr>
+            <tr><td class="t-key"><code>--store_dir</code></td><td>Where the resulting stems are written.</td></tr>
+            <tr><td class="t-key"><code>--draw_spectro</code></td><td>Also renders spectrogram images of the results; the value sets how many seconds of the track to draw (default <code>0</code>, off).</td></tr>
+            <tr><td class="t-key"><code>--device_ids</code></td><td>List of GPU IDs to use.</td></tr>
+            <tr><td class="t-key"><code>--extract_instrumental</code></td><td>Inverts the vocal output to produce an instrumental (and vice versa).</td></tr>
+            <tr><td class="t-key"><code>--disable_detailed_pbar</code></td><td>Turns off the detailed progress bar.</td></tr>
+            <tr><td class="t-key"><code>--force_cpu</code></td><td>Forces CPU inference even when CUDA is available.</td></tr>
+            <tr><td class="t-key"><code>--flac_file</code></td><td>Write FLAC instead of WAV.</td></tr>
+            <tr><td class="t-key"><code>--pcm_type</code></td><td>Bit depth for FLAC output: <code>PCM_16</code> or <code>PCM_24</code>.</td></tr>
+            <tr><td class="t-key"><code>--use_tta</code></td><td>Test-time augmentation (polarity and channel inversion). Roughly triples runtime, reduces noise and slightly improves quality.</td></tr>
+            <tr><td class="t-key"><code>--lora_checkpoint</code></td><td>Starting checkpoint for LoRA weights.</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- ============ YAML ============ -->
+      <h2 id="yaml"><!--c:setup.yaml.h2.48:inline--></h2>
+      <!--c:setup.yaml.p.49:prose:p| class="lead-in"-->
+      <!--c:setup.yaml.p.50:prose:p|-->
+
+      <h3 id="chunk_size-the-one-audio-setting-you-will-change"><!--c:setup.yaml.h3.51:inline--></h3>
+      <!--c:setup.yaml.p.52:prose:p|-->
+      <div class="callout formula">
+        <div class="ico"></div>
+        <div>
+          <div class="ttl"><!--c:setup.yaml.div.53:inline--></div>
+          <!--c:setup.yaml.p.54:prose:p|-->
+        </div>
+      </div>
+      <div class="table-scroll">
+        <table>
+          <thead><tr><th>dim_t</th><th>chunk_size (samples)</th><th>Audio window</th></tr></thead>
+          <tbody>
+            <tr><td><code>256</code></td><td><code>112455</code></td><td>2.55 s</td></tr>
+            <tr><td><code>801</code></td><td><code>352800</code></td><td>8.00 s</td></tr>
+            <tr><td><code>1101</code></td><td><code>485100</code></td><td>11.00 s</td></tr>
+            <tr><td><code>1333</code></td><td><code>587412</code></td><td>13.32 s</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <!--c:setup.yaml.p.55:prose:p| class="note-small"-->
+
+      <figure class="fig">
+        <div class="fig-bar"><span class="tag"><!--c:setup.yaml.span.56:inline--></span></div>
+        <div class="fig-scroll">
+        <svg class="schematic" viewBox="0 0 620 212" role="img" aria-label="Four roformer window sizes drawn to scale over the same 16 seconds of a track: 2.55, 8, 11 and 13.32 seconds.">
+          <text class="hd" x="8" y="14">ONE TRACK · FIRST 16 SECONDS SHOWN TO SCALE</text>
+          <rect class="track" x="80" y="26" width="480" height="16" rx="3"/>
+          <text class="lbl" x="8" y="38">whole track</text>
+
+          <text class="lbl" x="8" y="72">dim_t 256</text>
+          <rect class="win" x="80" y="58" width="77" height="16" rx="3"/>
+          <text class="lbl" x="88" y="70">112455</text><text class="lbl" x="165" y="70">2.55 s</text>
+
+          <text class="lbl" x="8" y="98">dim_t 801</text>
+          <rect class="win" x="80" y="84" width="240" height="16" rx="3"/>
+          <text class="lbl" x="88" y="96">352800</text><text class="lbl" x="328" y="96">8.00 s</text>
+
+          <text class="lbl" x="8" y="124">dim_t 1101</text>
+          <rect class="win" x="80" y="110" width="330" height="16" rx="3"/>
+          <text class="lbl" x="88" y="122">485100</text><text class="lbl" x="418" y="122">11.00 s</text>
+
+          <text class="lbl" x="8" y="150">dim_t 1333</text>
+          <rect class="win" x="80" y="136" width="396" height="16" rx="3"/>
+          <text class="lbl" x="88" y="148">587412</text><text class="lbl" x="484" y="148">13.32 s</text>
+
+          <text class="lbl" x="8" y="180">chunk_size = (dim_t − 1) × hop_length — the same track,</text>
+          <text class="lbl" x="8" y="196">seen through four different window lengths.</text>
+        </svg>
+        </div>
+        <!--c:setup.yaml.caption.57:prose:figcaption|-->
+      </figure>
+
+      <div class="calc" id="calc">
+        <div class="calc-head">
+          <h6>Chunk size &amp; VRAM calculator</h6>
+          <p>Type in your numbers and see what window you are actually asking for, and whether your card can hold it. Nothing is sent anywhere — the arithmetic runs in the page.</p>
+        </div>
+        <noscript><p class="calc-note" style="border-top:0;padding-top:14px">This calculator needs JavaScript. Without it, the same arithmetic by hand: <code>chunk_size = (dim_t − 1) × hop_length</code>, and seconds = <code>chunk_size ÷ sample_rate</code>.</p></noscript>
+        <div class="calc-presets target" role="group" aria-label="Presets for what you are separating">
+          <span class="p-lbl">target preset</span>
+          <button type="button" data-target="vocals">Vocals</button>
+          <button type="button" data-target="drums">Drums</button>
+          <button type="button" data-target="bass">Bass</button>
+          <button type="button" data-target="guitar">Guitar DI</button>
+          <button type="button" data-target="other">Other</button>
+        </div>
+        <div class="calc-grid">
+          <label class="field"><span>architecture</span>
+            <select id="c-arch">
+              <option value="roformer" selected>Roformer</option>
+              <option value="mdx">MDX-Net · mdx23c / DTTNet</option>
+              <option value="scnet">SCNet</option>
+            </select>
+            <code class="key">which block owns the STFT</code>
+          </label>
+          <div class="field">
+            <span id="lbl-chunk">chunk_size (samples)</span>
+            <input id="c-chunk" type="number" inputmode="numeric" min="2048" max="40000000" step="1" value="587412" aria-labelledby="lbl-chunk">
+            <code class="key">audio.chunk_size</code>
+          </div>
+          <div class="field">
+            <span id="lbl-dimt">dim_t preset (frames)</span>
+            <select id="c-dimt" aria-labelledby="lbl-dimt">
+              <option value="256">256</option>
+              <option value="801">801</option>
+              <option value="1101">1101</option>
+              <option value="1333" selected>1333</option>
+            </select>
+            <input id="c-dimtfree" type="number" inputmode="numeric" min="16" max="32768" step="1" value="1333" aria-labelledby="lbl-dimt" hidden>
+            <label class="auto"><input id="c-dimtuser" type="checkbox"><span>user-defined</span></label>
+          </div>
+          <div class="field">
+            <span id="lbl-hop">hop_length</span>
+            <input id="c-hop" type="number" inputmode="numeric" min="1" max="8192" step="1" value="441" readonly aria-labelledby="lbl-hop">
+            <label class="auto"><input id="c-hopauto" type="checkbox" checked><span>auto</span></label>
+            <select id="c-hoprule" aria-label="hop_length rule">
+              <option value="rate100" selected>rate ÷ 100</option>
+              <option value="fft4">n_fft ÷ 4</option>
+              <option value="fft8">n_fft ÷ 8</option>
+            </select>
+            <code class="key" id="k-hop">model.stft_hop_length</code>
+          </div>
+          <div class="field">
+            <span id="lbl-nfft">n_fft</span>
+            <input id="c-nfft" type="number" inputmode="numeric" min="128" max="16384" step="1" value="2048" aria-labelledby="lbl-nfft">
+            <code class="key" id="k-nfft">model.stft_n_fft</code>
+          </div>
+          <div class="field">
+            <span id="lbl-sr">sample rate</span>
+            <select id="c-sr" aria-labelledby="lbl-sr">
+              <optgroup label="Full band · every published checkpoint">
+                <option value="44100" selected>44 100 Hz</option>
+                <option value="48000">48 000 Hz</option>
+              </optgroup>
+              <optgroup label="Low band · half rate, experimental">
+                <option value="22050">22 050 Hz</option>
+                <option value="24000">24 000 Hz</option>
+              </optgroup>
+            </select>
+            <input id="c-srfree" type="number" inputmode="numeric" min="1000" max="192000" step="1" value="44100" aria-labelledby="lbl-sr" hidden>
+            <label class="auto"><input id="c-sruser" type="checkbox"><span>user-defined</span></label>
+          </div>
+          <label class="field"><span>channels</span>
+            <select id="c-ch">
+              <option value="2" selected>Stereo (2 ch)</option>
+              <option value="1">Mono (1 ch)</option>
+            </select>
+          </label>
+          <label class="field"><span>batch_size</span>
+            <input id="c-batch" type="number" inputmode="numeric" min="1" max="256" step="1" value="4">
+          </label>
+          <label class="field"><span>grad accum steps</span>
+            <input id="c-acc" type="number" inputmode="numeric" min="1" max="512" step="1" value="1">
+          </label>
+          <label class="field"><span>GPU VRAM</span>
+            <select id="c-vram">
+              <option value="8">8 GB</option>
+              <option value="12">12 GB</option>
+              <option value="16">16 GB</option>
+              <option value="20">20 GB</option>
+              <option value="24" selected>24 GB</option>
+              <option value="32">32 GB</option>
+              <option value="48">48 GB</option>
+              <option value="80">80 GB</option>
+              <option value="140">140 GB (H200)</option>
+            </select>
+          </label>
+        </div>
+        <p class="calc-note arch">
+          <span class="a-lbl" id="o-arch-lbl">where these settings live · Roformer</span>
+          <span id="o-arch-text">—</span>
+        </p>
+        <div class="calc-out" aria-live="polite">
+          <div class="kv hi"><span>chunk_size</span><b id="o-chunk">—</b></div>
+          <div class="kv hi"><span>frames (dim_t)</span><b id="o-frames">—</b></div>
+          <div class="kv"><span>window</span><b id="o-window">—</b></div>
+          <div class="kv"><span>frame step</span><b id="o-step">—</b></div>
+          <div class="kv"><span>frames per second</span><b id="o-fps">—</b></div>
+          <div class="kv"><span>bandwidth kept</span><b id="o-band">—</b></div>
+          <div class="kv"><span>effective batch</span><b id="o-eff">—</b></div>
+          <div class="kv"><span id="o-vram-lbl">estimated VRAM</span><b id="o-vram">—</b></div>
+        </div>
+        <p class="calc-note flag" id="o-flag" hidden></p>
+        <div class="calc-target" id="o-target" hidden>
+          <div class="v" id="o-target-title">—</div>
+          <p id="o-target-text">—</p>
+        </div>
+        <div class="calc-verdict" id="o-verdict">
+          <div class="v" id="o-status">—</div>
+          <p id="o-advice">—</p>
+        </div>
+        <p class="calc-note">
+          <strong>How this is derived.</strong> The window is <code>chunk_size</code> — the number the YAML holds and the
+          one key every architecture family reads. Every STFT in this ecosystem runs with <code>center=True</code>, so a
+          window of <code>chunk_size</code> samples becomes <code>floor(chunk_size ÷ hop_length) + 1</code> frames, and
+          across it a whole number of frames is <code>chunk_size = (dim_t − 1) × hop_length</code>. The frame count is what
+          the model is asked to attend over, and <strong>the memory figure is anchored on frames and batch size</strong> —
+          one data point, a <em>stereo</em> Roformer at <code>batch_size: 4</code> and <code>dim_t: 1333</code>
+          (13.32 s at <code>hop_length: 441</code>) filling a 140 GB H200. That is why the hop moves this number and
+          <code>dim_t</code> follows it: at a fixed window, half the hop is twice the frames. The sample rate reaches the
+          estimate only through frames — <code>frames per second = rate ÷ hop_length</code> — so under the
+          <code>rate ÷ 100</code> rule, where the hop halves with the rate, 100 frames per second stays 100 frames per
+          second and halving the rate changes nothing; under a fixed hop it halves the frames, and the window it covers
+          doubles until <code>chunk_size</code> is halved to match. The anchor is a Roformer, so pick a different
+          architecture and the figure is that measurement <em>extrapolated</em> — the guide has no mdx23c, DTTNet or
+          SCNet run to check it against. Real attention cost also grows faster than the frame count does, so wide windows
+          land worse than this predicts; <code>use_amp</code> and <code>use_torch_checkpoint</code> move it the other
+          way, and <code>dim_f</code> — the number of mel bands — is a second lever this tool does not model. Choosing
+          <em>Mono (1 ch)</em> halves the sequence the transformer attends over and the tool halves its figure with it,
+          the least certain step here. Use it to decide what to try first, not to predict an exact number.
+        </p>
+      </div>
+
+      <h3 id="hop-length-a-property-of-the-model-not-a-taste"><!--c:setup.yaml.h3.58:inline--></h3>
+      <!--c:setup.yaml.p.59:prose:p|-->
+      <div class="table-scroll">
+        <table>
+          <thead><tr><th>Architecture</th><th><code>n_fft</code> / <code>hop_length</code></th><th>Spectrogram width</th><th>Window</th></tr></thead>
+          <tbody>
+            <tr><td class="t-key">Roformer<br><span class="note-small">bs_roformer, mel_band_roformer, bs_conformer, bs_mamba2</span></td><td><code>model.stft_n_fft</code><br><code>model.stft_hop_length</code> <span class="note-small">(and <code>stft_win_length</code>)</span></td><td><code>model.freqs_per_bands</code> or <code>model.num_bands</code>, at <code>model.sample_rate</code></td><td><code>audio.chunk_size</code></td></tr>
+            <tr><td class="t-key">mdx23c · DTTNet</td><td><code>audio.n_fft</code><br><code>audio.hop_length</code></td><td><code>audio.dim_f</code> <span class="note-small">(the model crops to it)</span></td><td><code>audio.chunk_size</code><br><code>audio.dim_t</code></td></tr>
+            <tr><td class="t-key">SCNet</td><td><code>model.nfft</code><br><code>model.hop_size</code> <span class="note-small">(and <code>win_size</code>)</span></td><td>derived from <code>model.nfft</code></td><td><code>audio.chunk_size</code></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <!--c:setup.yaml.p.60:prose:p|-->
+      <div class="table-scroll">
+        <table>
+          <thead><tr><th>Real config</th><th><code>n_fft</code></th><th><code>hop_length</code></th><th>Frame</th><th>Rule</th></tr></thead>
+          <tbody>
+            <tr><td>Kimberley Jensen · vocals mel-band</td><td>2048</td><td><code>441</code></td><td>10.0 ms</td><td><code>rate ÷ 100</code></td></tr>
+            <tr><td>viperx · mel-band ep 3005</td><td>2048</td><td><code>441</code></td><td>10.0 ms</td><td><code>rate ÷ 100</code></td></tr>
+            <tr><td>pcunwa · Mel-Band-Roformer-small</td><td>2048</td><td><code>441</code></td><td>10.0 ms</td><td><code>rate ÷ 100</code></td></tr>
+            <tr><td>MSST template · mel-band / BS Roformer</td><td>2048</td><td><code>512</code></td><td>11.6 ms</td><td><code>n_fft ÷ 4</code></td></tr>
+            <tr><td>MSST template · DTTNet</td><td>4096</td><td><code>1024</code></td><td>23.2 ms</td><td><code>n_fft ÷ 4</code></td></tr>
+            <tr><td>MSST template · mdx23c</td><td>8192</td><td><code>1024</code></td><td>23.2 ms</td><td><code>n_fft ÷ 8</code></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <!--c:setup.yaml.p.61:prose:p|-->
+      <div class="callout warn">
+        <div class="ico"></div>
+        <div>
+          <div class="ttl"><!--c:setup.yaml.div.62:inline--></div>
+          <!--c:setup.yaml.p.63:prose:p|-->
+        </div>
+      </div>
+      <!--c:setup.yaml.p.64:prose:p|-->
+
+      <h3 id="sample-rate-the-band-each-choice-keeps"><!--c:setup.yaml.h3.65:inline--></h3>
+      <!--c:setup.yaml.p.66:prose:p|-->
+      <div class="table-scroll">
+        <table>
+          <thead><tr><th>Rate</th><th>Keeps up to</th><th>What it costs</th><th>Fair target</th></tr></thead>
+          <tbody>
+            <tr><td><code>44 100</code></td><td>22 050 Hz</td><td>Nothing — and it is what every Roformer in this guide was trained at</td><td>Anything</td></tr>
+            <tr><td><code>48 000</code></td><td>24 000 Hz</td><td>Nothing, but a 44.1 kHz checkpoint expects that rate's filterbank</td><td>Anything, if you train from scratch</td></tr>
+            <tr><td class="t-key"><code>22 050</code><br>44 100 ÷ 2</td><td>11 025 Hz</td><td>Cymbals, sibilance, synth harmonics — and the top of a guitar DI's pick scrape</td><td>Bass, kick, a guitar DI — low-band targets only</td></tr>
+            <tr><td class="t-key"><code>24 000</code><br>48 000 ÷ 2</td><td>12 000 Hz</td><td>The same, 975 Hz wider</td><td>Bass, kick, a guitar DI — low-band targets only</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <!--c:setup.yaml.p.67:prose:p| class="note-small"-->
+
+      <div class="callout warn">
+        <div class="ico"></div>
+        <div>
+          <div class="ttl"><!--c:setup.yaml.div.68:inline--></div>
+          <!--c:setup.yaml.p.69:prose:p|-->
+        </div>
+      </div>
+
+      <h3 id="channels-stereo-is-architecture-not-file-format"><!--c:setup.yaml.h3.70:inline--></h3>
+      <!--c:setup.yaml.p.71:prose:p|-->
+      <div class="callout warn">
+        <div class="ico"></div>
+        <div>
+          <div class="ttl"><!--c:setup.yaml.div.72:inline--></div>
+          <!--c:setup.yaml.p.73:prose:p|-->
+        </div>
+      </div>
+
+      <h3 id="the-training-block"><!--c:setup.yaml.h3.74:inline--></h3>
+      <div class="code">
+        <div class="code-bar"><span class="tag">config.yaml · training section</span><button class="copy" type="button">Copy</button></div>
+<pre><span class="f">training</span><span class="eq">:</span>
+  <span class="f">batch_size</span><span class="eq">:</span> 1
+  <span class="f">gradient_accumulation_steps</span><span class="eq">:</span> 1
+  <span class="f">grad_clip</span><span class="eq">:</span> 0
+  <span class="f">instruments</span><span class="eq">:</span>
+    - vocals
+    - other
+  <span class="f">lr</span><span class="eq">:</span> 1.0e-05
+  <span class="f">patience</span><span class="eq">:</span> 2
+  <span class="f">reduce_factor</span><span class="eq">:</span> 0.95
+  <span class="f">target_instrument</span><span class="eq">:</span> vocals
+  <span class="f">num_epochs</span><span class="eq">:</span> 1000
+  <span class="f">num_steps</span><span class="eq">:</span> 1000
+  <span class="f">optimizer</span><span class="eq">:</span> adam
+  <span class="f">ema_momentum</span><span class="eq">:</span> 0.999
+  <span class="f">q</span><span class="eq">:</span> 0.95
+  <span class="f">coarse_loss_clip</span><span class="eq">:</span> false
+  <span class="f">other_fix</span><span class="eq">:</span> true
+  <span class="f">use_amp</span><span class="eq">:</span> true
+  <span class="f">use_torch_checkpoint</span><span class="eq">:</span> true
+  <span class="f">augmentation</span><span class="eq">:</span> false
+  <span class="f">augmentation_type</span><span class="eq">:</span> null
+  <span class="f">use_mp3_compress</span><span class="eq">:</span> false
+  <span class="f">augmentation_mix</span><span class="eq">:</span> false
+  <span class="f">augmentation_loudness</span><span class="eq">:</span> false
+  <span class="f">augmentation_loudness_type</span><span class="eq">:</span> 1
+  <span class="f">augmentation_loudness_min</span><span class="eq">:</span> 0
+  <span class="f">augmentation_loudness_max</span><span class="eq">:</span> 0</pre>
+      </div>
+
+      <div class="table-scroll">
+        <table>
+          <thead><tr><th>Key</th><th>Meaning</th></tr></thead>
+          <tbody>
+            <tr><td class="t-key"><code>batch_size</code></td><td>How many audio samples are used to update the weights. Higher values need more VRAM.</td></tr>
+            <tr><td class="t-key"><code>gradient_accumulation_steps</code></td><td>Simulates a larger batch without the VRAM cost: effective batch becomes <code>batch_size × steps</code>. Weights are not updated on the in-between steps.</td></tr>
+            <tr><td class="t-key"><code>grad_clip</code></td><td>Gradient clipping threshold. <code>0</code> leaves it off.</td></tr>
+            <tr><td class="t-key"><code>instruments</code></td><td>The stems inside your dataset. Must match the folders you actually created.</td></tr>
+            <tr><td class="t-key"><code>lr</code></td><td>Learning rate. <code>1.0e-05</code> is the common default; <code>5.0e-06</code> is the other frequent choice for fine-tuning.</td></tr>
+            <tr><td class="t-key"><code>patience</code></td><td>How many epochs the scheduler waits without improvement before dropping the learning rate.</td></tr>
+            <tr><td class="t-key"><code>reduce_factor</code></td><td>How much the learning rate is multiplied by when it drops (<code>0.95</code> = −5%).</td></tr>
+            <tr><td class="t-key"><code>target_instrument</code></td><td>The stem the model focuses on. Set to <code>null</code> when you are declaring stems explicitly.</td></tr>
+            <tr><td class="t-key"><code>num_epochs</code></td><td>How many times the full <code>num_steps</code> cycle runs. Can be changed when resuming from a checkpoint.</td></tr>
+            <tr><td class="t-key"><code>num_steps</code></td><td>Weight updates per epoch (divided by gradient accumulation). Validation runs each time this count is reached. Also resumable.</td></tr>
+            <tr><td class="t-key"><code>optimizer</code></td><td>Optimiser for training; <code>adam</code> is the default.</td></tr>
+            <tr><td class="t-key"><code>ema_momentum</code></td><td>Momentum of the exponential moving average of the weights — a smoother, usually more stable copy of the model.</td></tr>
+            <tr><td class="t-key"><code>q</code></td><td>Quantile-style parameter used by the loss weighting.</td></tr>
+            <tr><td class="t-key"><code>coarse_loss_clip</code></td><td>Clips extreme loss values early in training to avoid a first-epoch blow-up.</td></tr>
+            <tr><td class="t-key"><code>other_fix</code></td><td>Needed on multisong datasets to check that <code>other</code> really is an instrumental.</td></tr>
+            <tr><td class="t-key"><code>use_amp</code></td><td>Mixed-precision (float16) training. Usually should be <code>true</code> — it is a large speed and VRAM win.</td></tr>
+            <tr><td class="t-key"><code>use_torch_checkpoint</code></td><td>Gradient checkpointing: trades a little speed for notably lower VRAM use. Enable when you hit out-of-memory errors.</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h4><!--c:setup.yaml.h4.75:inline--></h4>
+      <ul>
+        <li><!--c:setup.yaml.li.76:inline--></li>
+        <li><!--c:setup.yaml.li.77:inline--></li>
+        <li><!--c:setup.yaml.li.78:inline--></li>
+        <li><!--c:setup.yaml.li.79:inline--></li>
+        <li><!--c:setup.yaml.li.80:inline--></li>
+      </ul>
+
+      <div class="callout warn">
+        <div class="ico"></div>
+        <div>
+          <div class="ttl"><!--c:setup.yaml.div.81:inline--></div>
+          <!--c:setup.yaml.p.82:prose:p|-->
+        </div>
+      </div>
+
+      <div class="callout">
+        <div class="ico"></div>
+        <div>
+          <div class="ttl"><!--c:setup.yaml.div.83:inline--></div>
+          <!--c:setup.yaml.p.84:prose:p|-->
+        </div>
+      </div>
+
+      <div class="pager">
+        <a href="data.html">
+          <span class="lbl">Previous · Chapters 02–04</span>
+          <span class="ttl">← Before you train</span>
+        </a>
+        <a class="next" href="training.html">
+          <span class="lbl">Next · Chapters 08–12</span>
+          <span class="ttl">Training runs →</span>
+        </a>
+      </div>
+
+    </article>
+
+    <aside class="toc" aria-label="On this page">
+      <h6>On this page</h6>
+      <ol>
+        <li><a href="#repo">The training repository</a></li>
+        <li><a href="#commands">Commands &amp; arguments</a></li>
+        <li><a href="#yaml">Configuring the YAML</a></li>
+      </ol>
+      <div class="toc-foot">
+        <a class="btn btn-ghost" href="reference.html#metrics" style="width:100%;justify-content:center">Metric reference →</a>
+      </div>
+    </aside>
+  </div>
+
+</div>
+</main>
+
+<footer class="site-footer">
+  <div class="inner">
+    <div>
+      <h6>About this guide</h6>
+      <p>A rewritten, restructured edition of Meskvlla33's community document on training audio source separation models, expanded with a troubleshooting index, a glossary and a metric reference.</p>
+    </div>
+    <div>
+      <h6>Read</h6>
+      <ul>
+        <li><a href="data.html">02–04 · Before you train</a></li>
+        <li><a href="setup.html">05–07 · Setup &amp; config</a></li>
+        <li><a href="training.html">08–12 · Training runs</a></li>
+        <li><a href="reference.html">13 · Reference &amp; appendices</a></li>
+      </ul>
+    </div>
+    <div>
+      <h6>Elsewhere</h6>
+      <ul>
+        <li><a href="https://github.com/ZFTurbo/Music-Source-Separation-Training" rel="noopener">Training repository</a></li>
+        <li><a href="https://www.pytorch.org" rel="noopener">PyTorch</a></li>
+        <li><a href="https://vast.ai" rel="noopener">vast.ai</a></li>
+        <li><a href="reference.html#credits">Credits</a></li>
+      </ul>
+    </div>
+    <div class="colophon">
+      <span>Edition 2.0 · 2026 · Community maintained</span>
+      <span>Original guide by Meskvlla33</span>
+    </div>
+  </div>
+</footer>
+
+<button class="backtop" id="backtop" type="button" aria-label="Back to top">
+  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
+</button>
+<script src="assets/js/search-index.js?v=d0ee56dd"></script>
+<script src="assets/js/site.js?v=aad2f860"></script>
+</body>
+</html>

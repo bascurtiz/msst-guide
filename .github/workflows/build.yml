@@ -1,0 +1,87 @@
+name: Render the pages
+
+# The site is a plain static folder, so the repository has to hold the rendered
+# pages. When the editor saves — which commits content/pages/*.json — this
+# renders them back into the pages and commits that, and Cloudflare Pages
+# republishes. No build step on the host, no output directory to configure.
+#
+# The generated pages are deliberately absent from `paths` below, so this
+# workflow's own commit does not trigger another run.
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "content/**"
+      - "src/**"
+      - "tools/**"
+      - "assets/css/**"
+      - "assets/js/site.js"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: render-pages
+  cancel-in-progress: false
+
+jobs:
+  render:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      # A renderer bug would otherwise publish silently mangled pages.
+      - name: Test the markdown renderer
+        run: node --test tools/lib/md.test.mjs
+
+      - name: Render the pages
+        run: node tools/build.mjs
+
+      - name: Commit the rendered pages
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html data.html setup.html training.html reference.html \
+                  assets/js/search-index.js
+          if git diff --cached --quiet; then
+            echo "The pages were already current — nothing to commit."
+            exit 0
+          fi
+          git commit -m "chore: render the pages from content"
+          git push
+
+      # Uploading to a Pages project set up as "Direct Upload". Such a project is
+      # not connected to this repository, so a commit — including the one the
+      # editor's save just made — does not go live by itself, and neither does
+      # the commit above. This step closes that gap.
+      #
+      # It is skipped unless both secrets exist, so the workflow above stands on
+      # its own and nothing changes until you add them:
+      #
+      #   CLOUDFLARE_API_TOKEN   a token with the "Cloudflare Pages: Edit" permission
+      #   CLOUDFLARE_ACCOUNT_ID  from the dashboard URL, or `npx wrangler whoami`
+      #
+      # Optionally set a CLOUDFLARE_PROJECT_NAME repository *variable* if the
+      # Pages project is not called msst-guide.
+      - name: Publish to Cloudflare Pages
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          CLOUDFLARE_PROJECT_NAME: ${{ vars.CLOUDFLARE_PROJECT_NAME }}
+        run: |
+          if [ -z "$CLOUDFLARE_API_TOKEN" ] || [ -z "$CLOUDFLARE_ACCOUNT_ID" ]; then
+            echo "::notice::No Cloudflare secrets — skipping the upload."
+            echo "Add CLOUDFLARE_API_TOKEN and CLOUDFLARE_ACCOUNT_ID to publish"
+            echo "automatically, or upload dist/ yourself. See admin/SETUP.md."
+            exit 0
+          fi
+          node tools/package-site.mjs --no-build --no-zip
+          npx --yes wrangler@4 pages deploy dist \
+            --project-name "${CLOUDFLARE_PROJECT_NAME:-msst-guide}" \
+            --branch main

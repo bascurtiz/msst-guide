@@ -1,0 +1,612 @@
+{
+  "page": "index",
+  "title": "Training Audio Source Separation Models",
+  "source": "src/pages/index.html",
+  "sections": [
+    {
+      "id": "head",
+      "label": "Page head",
+      "heading": {
+        "key": "index.head.h1.02",
+        "label": "Page title · Training Audio Source Separation Models",
+        "md": "Training *Audio Source Separation* Models"
+      },
+      "blocks": [
+        {
+          "key": "index.head.p.01",
+          "label": "Paragraph · Community handbook · Music source separation",
+          "md": "Community handbook · Music source separation"
+        },
+        {
+          "key": "index.head.p.03",
+          "label": "Paragraph · How to train a vocal remover — the whole path, from choosing a…",
+          "md": "How to train a vocal remover — the whole path, from choosing a GPU and building a dataset to fine-tuning a pre-trained model, reading the metrics and renting cloud compute."
+        },
+        {
+          "key": "index.head.p.04",
+          "label": "Paragraph · Everything here was learned the slow way: failed runs, mismatch…",
+          "md": "Everything here was learned the slow way: failed runs, mismatched stem lengths, out-of-memory errors and a lot of listening. It is written for people who have **never trained a model before** and who want a straight answer to one question — *how do I actually do this?*"
+        },
+        {
+          "key": "index.head.p.05",
+          "label": "Paragraph · No prior machine-learning knowledge required. Comfort with a te…",
+          "md": "No prior machine-learning knowledge required. Comfort with a terminal, file paths and audio files is enough."
+        },
+        {
+          "key": "index.head.b.06",
+          "label": "Bold label · 8 GB+",
+          "md": "8 GB<i>+</i>"
+        },
+        {
+          "key": "index.head.span.07",
+          "label": "Label · VRAM minimum · NVIDIA only",
+          "md": "VRAM minimum · NVIDIA only"
+        },
+        {
+          "key": "index.head.b.08",
+          "label": "Bold label · 200+",
+          "md": "200<i>+</i>"
+        },
+        {
+          "key": "index.head.span.09",
+          "label": "Label · Dataset floor, more is better",
+          "md": "Dataset floor, more is better"
+        },
+        {
+          "key": "index.head.b.10",
+          "label": "Bold label · 2",
+          "md": "2"
+        },
+        {
+          "key": "index.head.span.11",
+          "label": "Label · Files to start: .ckpt + .yaml",
+          "md": "Files to start: `.ckpt` \\+ `.yaml`"
+        },
+        {
+          "key": "index.head.b.12",
+          "label": "Bold label · 1000×1000",
+          "md": "1000<i>×</i>1000"
+        },
+        {
+          "key": "index.head.span.13",
+          "label": "Label · Default epochs × steps",
+          "md": "Default epochs × steps"
+        },
+        {
+          "key": "index.head.h3.14",
+          "label": "Subheading · The pipeline in one picture",
+          "md": "The pipeline in one picture"
+        },
+        {
+          "key": "index.head.p.15",
+          "label": "Paragraph · Seven stages, in the order you will meet them. Everything on th…",
+          "md": "Seven stages, in the order you will meet them. Everything on this site is one of these boxes in more detail."
+        },
+        {
+          "key": "index.head.span.16",
+          "label": "Label · Step 01",
+          "md": "Step 01"
+        },
+        {
+          "key": "index.head.b.17",
+          "label": "Bold label · Dataset",
+          "md": "Dataset"
+        },
+        {
+          "key": "index.head.span.18",
+          "label": "Label · FLAC or WAV stems of the songs you care about",
+          "md": "FLAC or WAV stems of the songs you care about"
+        },
+        {
+          "key": "index.head.span.19",
+          "label": "Label · Step 02",
+          "md": "Step 02"
+        },
+        {
+          "key": "index.head.b.20",
+          "label": "Bold label · Validation set",
+          "md": "Validation set"
+        },
+        {
+          "key": "index.head.span.21",
+          "label": "Label · A few tracks in 16-bit WAV: mixture + stems",
+          "md": "A few tracks in 16-bit WAV: mixture + stems"
+        },
+        {
+          "key": "index.head.span.22",
+          "label": "Label · Step 03",
+          "md": "Step 03"
+        },
+        {
+          "key": "index.head.b.23",
+          "label": "Bold label · Repo + model",
+          "md": "Repo + model"
+        },
+        {
+          "key": "index.head.span.24",
+          "label": "Label · MSST with a .ckpt in results/ and its YAML",
+          "md": "MSST with a `.ckpt` in `results/` and its YAML"
+        },
+        {
+          "key": "index.head.span.25",
+          "label": "Label · Step 04",
+          "md": "Step 04"
+        },
+        {
+          "key": "index.head.b.26",
+          "label": "Bold label · Config",
+          "md": "Config"
+        },
+        {
+          "key": "index.head.span.27",
+          "label": "Label · Chunk size, learning rate, instruments, epochs",
+          "md": "Chunk size, learning rate, instruments, epochs"
+        },
+        {
+          "key": "index.head.span.28",
+          "label": "Label · Step 05",
+          "md": "Step 05"
+        },
+        {
+          "key": "index.head.b.29",
+          "label": "Bold label · Training run",
+          "md": "Training run"
+        },
+        {
+          "key": "index.head.span.30",
+          "label": "Label · Your GPU, or a rented one that finishes in hours",
+          "md": "Your GPU, or a rented one that finishes in hours"
+        },
+        {
+          "key": "index.head.span.31",
+          "label": "Label · Step 06",
+          "md": "Step 06"
+        },
+        {
+          "key": "index.head.b.32",
+          "label": "Bold label · Metrics",
+          "md": "Metrics"
+        },
+        {
+          "key": "index.head.span.33",
+          "label": "Label · SDR, l1_freq, fullness, bleedless — per epoch",
+          "md": "SDR, l1\\_freq, fullness, bleedless — per epoch"
+        },
+        {
+          "key": "index.head.span.34",
+          "label": "Label · Step 07",
+          "md": "Step 07"
+        },
+        {
+          "key": "index.head.b.35",
+          "label": "Bold label · Your model",
+          "md": "Your model"
+        },
+        {
+          "key": "index.head.span.36",
+          "label": "Label · Checkpoints you can separate audio with",
+          "md": "Checkpoints you can separate audio with"
+        },
+        {
+          "key": "index.head.div.37",
+          "label": "Label · Where beginners get stuck",
+          "md": "Where beginners get stuck"
+        },
+        {
+          "key": "index.head.p.38",
+          "label": "Paragraph · Not the training itself — the two stages either side of it. A d…",
+          "md": "Not the training itself — the two stages either side of it. A dataset whose stems do not match in length, or a validation folder exported as FLAC, will stop a run before a single epoch completes. [Part one](data.html) exists to prevent exactly that."
+        }
+      ]
+    },
+    {
+      "id": "why",
+      "label": "Should you train at all?",
+      "heading": {
+        "key": "index.why.h2.39",
+        "label": "Chapter heading · Should you train at all?",
+        "md": "Should you train at all?"
+      },
+      "blocks": [
+        {
+          "key": "index.why.p.40",
+          "label": "Paragraph · Fine-tuning exists for the cases where no published model does…",
+          "md": "Fine-tuning exists for the cases where no published model does what you need. Knowing when that is saves weeks."
+        },
+        {
+          "key": "index.why.span.41",
+          "label": "Label · When it's worth it",
+          "md": "When it's worth it"
+        },
+        {
+          "key": "index.why.h5.42",
+          "label": "Card title · A model misses your material",
+          "md": "A model misses your material"
+        },
+        {
+          "key": "index.why.p.43",
+          "label": "Paragraph · Some genres break generic separators. Metal is the classic exam…",
+          "md": "Some genres break generic separators. Metal is the classic example: so many overlapping sounds that most models smear instruments into each other. Roformers do fairly well, but they come with trade-offs — bleed, dullness, or a target that does not match what you want."
+        },
+        {
+          "key": "index.why.span.44",
+          "label": "Label · When it isn't",
+          "md": "When it isn't"
+        },
+        {
+          "key": "index.why.h5.45",
+          "label": "Card title · An existing model is already close",
+          "md": "An existing model is already close"
+        },
+        {
+          "key": "index.why.p.46",
+          "label": "Paragraph · If a released checkpoint gets you 90% of the way, an ensemble o…",
+          "md": "If a released checkpoint gets you 90% of the way, an ensemble or a different model will usually beat a from-scratch training run that costs GPU rent and weeks of your attention."
+        },
+        {
+          "key": "index.why.span.47",
+          "label": "Label · The realistic version",
+          "md": "The realistic version"
+        },
+        {
+          "key": "index.why.h5.48",
+          "label": "Card title · Fine-tune first, pre-train last",
+          "md": "Fine-tune first, pre-train last"
+        },
+        {
+          "key": "index.why.p.49",
+          "label": "Paragraph · Fine-tuning shifts an existing model toward your data and conve…",
+          "md": "Fine-tuning shifts an existing model toward your data and converges in days. Training from nothing is dramatically slower and its early metrics look terrible — by design. Start at the shallow end."
+        },
+        {
+          "key": "index.why.h3.50",
+          "label": "Subheading · What you need, in one line",
+          "md": "What you need, in one line"
+        },
+        {
+          "key": "index.why.p.51",
+          "label": "Paragraph · A computer with an NVIDIA GPU (required — AMD and Apple GPUs ar…",
+          "md": "A computer with an **NVIDIA GPU** (required — AMD and Apple GPUs are not supported by the training stack), at least **8 GB of VRAM** and a reasonably fast card; or a rented GPU from [vast.ai](https://vast.ai), [runpod.io](https://runpod.io) and similar. Plus Python, which you can grab from [python.org](https://www.python.org/downloads/)."
+        },
+        {
+          "key": "index.why.div.52",
+          "label": "Label · Is 8 GB enough?",
+          "md": "Is 8 GB enough?"
+        },
+        {
+          "key": "index.why.p.53",
+          "label": "Paragraph · For pre-training, or for shifting an existing model's target, a…",
+          "md": "For *pre-training*, or for shifting an existing model's target, a small card can work — slowly. For real training runs, no: rent cloud compute. A single Roformer at batch size 4 can fill an entire 140 GB H200, so treat small VRAM as a prototyping budget, not a training budget."
+        },
+        {
+          "key": "index.why.h3.54",
+          "label": "Subheading · Can you do this with no prior knowledge?",
+          "md": "Can you do this with no prior knowledge?"
+        },
+        {
+          "key": "index.why.p.55",
+          "label": "Paragraph · Yes. That is the entire reason this guide exists. The repositor…",
+          "md": "Yes. That is the entire reason this guide exists. The repository's own documentation describes the training scripts accurately but never spells out the actual \"how to\" — which file goes where, which argument matters, and what the numbers scrolling past your screen mean. That is the gap this guide fills."
+        },
+        {
+          "key": "index.why.div.56",
+          "label": "Label · Scope",
+          "md": "Scope"
+        },
+        {
+          "key": "index.why.p.57",
+          "label": "Paragraph · This covers everything learned over months of training, plus th…",
+          "md": "This covers everything learned over months of training, plus the fixes contributed by the community. It is not the final word: separation research moves fast, and there is always more to learn. Treat it as a solid starting map, not a contract."
+        }
+      ]
+    },
+    {
+      "id": "quick",
+      "label": "The 60-second version",
+      "heading": {
+        "key": "index.quick.h2.58",
+        "label": "Chapter heading · The 60-second version",
+        "md": "The 60-second version"
+      },
+      "blocks": [
+        {
+          "key": "index.quick.p.59",
+          "label": "Paragraph · If you only read one list on this site, read this one. Every st…",
+          "md": "If you only read one list on this site, read this one. Every step links to the chapter that explains it properly."
+        },
+        {
+          "key": "index.quick.b.60",
+          "label": "Bold label · Check your hardware",
+          "md": "Check your hardware"
+        },
+        {
+          "key": "index.quick.p.61",
+          "label": "Paragraph · NVIDIA GPU, 8 GB+ VRAM, CUDA-capable. Otherwise budget for clou…",
+          "md": "NVIDIA GPU, 8 GB+ VRAM, CUDA-capable. Otherwise budget for cloud rental — [Chapter 12](training.html#cloud) covers it end to end."
+        },
+        {
+          "key": "index.quick.b.62",
+          "label": "Bold label · Build a dataset of official stems",
+          "md": "Build a dataset of official stems"
+        },
+        {
+          "key": "index.quick.p.63",
+          "label": "Paragraph · Instrumentals and vocals in FLAC or WAV (never MP3), arranged i…",
+          "md": "Instrumentals and vocals in FLAC or WAV (never MP3), arranged in one of two layouts — [Chapter 03](data.html#dataset). Aim well past 200 files."
+        },
+        {
+          "key": "index.quick.b.64",
+          "label": "Bold label · Build a validation set",
+          "md": "Build a validation set"
+        },
+        {
+          "key": "index.quick.p.65",
+          "label": "Paragraph · A handful of tracks with mixture plus their stems, exported as…",
+          "md": "A handful of tracks with `mixture` plus their stems, exported as **16-bit WAV** — [Chapter 04](data.html#validation)."
+        },
+        {
+          "key": "index.quick.b.66",
+          "label": "Bold label · Install the training repository",
+          "md": "Install the training repository"
+        },
+        {
+          "key": "index.quick.p.67",
+          "label": "Paragraph · Download Music-Source-Separation-Training, install PyTorch and…",
+          "md": "Download [Music-Source-Separation-Training](https://github.com/ZFTurbo/Music-Source-Separation-Training), install PyTorch and the requirements, then drop a checkpoint into `results/` and its YAML at the repo root — [Chapter 05](setup.html#repo)."
+        },
+        {
+          "key": "index.quick.b.68",
+          "label": "Bold label · Point the train command at your data",
+          "md": "Point the train command at your data"
+        },
+        {
+          "key": "index.quick.p.69",
+          "label": "Paragraph · Fill in the paths, dataset type and model arguments — Chapter 0…",
+          "md": "Fill in the paths, dataset type and model arguments — [Chapter 06](setup.html#commands), then tune the config in [Chapter 07](setup.html#yaml)."
+        },
+        {
+          "key": "index.quick.b.70",
+          "label": "Bold label · Run it and read the metrics",
+          "md": "Run it and read the metrics"
+        },
+        {
+          "key": "index.quick.p.71",
+          "label": "Paragraph · Watch loss fall, compare validation metrics per epoch, and list…",
+          "md": "Watch loss fall, compare validation metrics per epoch, and listen to the checkpoints it stores — [Chapters 11](training.html#local) and [Appendix B](reference.html#metrics)."
+        }
+      ]
+    },
+    {
+      "id": "map-h",
+      "label": "What's inside",
+      "heading": {
+        "key": "index.map-h.h2.72",
+        "label": "Chapter heading · What's inside",
+        "md": "What's inside"
+      },
+      "blocks": [
+        {
+          "key": "index.map-h.p.73",
+          "label": "Paragraph · Five sections, thirteen chapters and four appendices. Each chap…",
+          "md": "Five sections, thirteen chapters and four appendices. Each chapter follows the same shape: overview, numbered steps, then the caveats and the errors you are likely to hit."
+        },
+        {
+          "key": "index.map-h.span.74",
+          "label": "Label · Chapters 02–04",
+          "md": "Chapters 02–04"
+        },
+        {
+          "key": "index.map-h.h4.75",
+          "label": "Heading · Before you train",
+          "md": "Before you train"
+        },
+        {
+          "key": "index.map-h.p.76",
+          "label": "Paragraph · Hardware and software requirements, the two dataset layouts, ho…",
+          "md": "Hardware and software requirements, the two dataset layouts, how many files you actually need, and how to build a validation set that will not throw errors at you."
+        },
+        {
+          "key": "index.map-h.span.77",
+          "label": "Label · Open section →",
+          "md": "Open section →"
+        },
+        {
+          "key": "index.map-h.span.78",
+          "label": "Label · Chapters 05–07",
+          "md": "Chapters 05–07"
+        },
+        {
+          "key": "index.map-h.h4.79",
+          "label": "Heading · Setup &amp; configuration",
+          "md": "Setup & configuration"
+        },
+        {
+          "key": "index.map-h.p.80",
+          "label": "Paragraph · The training repository, config vs. checkpoint, the full comman…",
+          "md": "The training repository, config vs. checkpoint, the full command and argument reference, and how to tune the YAML — including the chunk size conversion table."
+        },
+        {
+          "key": "index.map-h.span.81",
+          "label": "Label · Open section →",
+          "md": "Open section →"
+        },
+        {
+          "key": "index.map-h.span.82",
+          "label": "Label · Chapters 08–12",
+          "md": "Chapters 08–12"
+        },
+        {
+          "key": "index.map-h.h4.83",
+          "label": "Heading · Training runs",
+          "md": "Training runs"
+        },
+        {
+          "key": "index.map-h.p.84",
+          "label": "Paragraph · Training from scratch, shifting a model's focus from one stem t…",
+          "md": "Training from scratch, shifting a model's focus from one stem to another, fullness models and model fusion, then local runs and a full cloud walkthrough."
+        },
+        {
+          "key": "index.map-h.span.85",
+          "label": "Label · Open section →",
+          "md": "Open section →"
+        },
+        {
+          "key": "index.map-h.span.86",
+          "label": "Label · Chapter 13 + A–D",
+          "md": "Chapter 13 + A–D"
+        },
+        {
+          "key": "index.map-h.h4.87",
+          "label": "Heading · Reference",
+          "md": "Reference"
+        },
+        {
+          "key": "index.map-h.p.88",
+          "label": "Paragraph · An error-to-fix index, a glossary of the vocabulary, a metric r…",
+          "md": "An error-to-fix index, a glossary of the vocabulary, a metric reference explaining what you are actually looking at, and the credits."
+        },
+        {
+          "key": "index.map-h.span.89",
+          "label": "Label · Open section →",
+          "md": "Open section →"
+        },
+        {
+          "key": "index.map-h.span.90",
+          "label": "Label · Appendix B",
+          "md": "Appendix B"
+        },
+        {
+          "key": "index.map-h.h4.91",
+          "label": "Heading · What the numbers mean",
+          "md": "What the numbers mean"
+        },
+        {
+          "key": "index.map-h.p.92",
+          "label": "Paragraph · SDR, L1 frequency, SI-SDR, Aura STFT, bleedless, fullness — wha…",
+          "md": "SDR, L1 frequency, SI-SDR, Aura STFT, bleedless, fullness — what each metric measures and how to read them together instead of in isolation."
+        },
+        {
+          "key": "index.map-h.span.93",
+          "label": "Label · Open appendix →",
+          "md": "Open appendix →"
+        },
+        {
+          "key": "index.map-h.span.94",
+          "label": "Label · Chapter 12",
+          "md": "Chapter 12"
+        },
+        {
+          "key": "index.map-h.h4.95",
+          "label": "Heading · Cloud cheat sheet",
+          "md": "Cloud cheat sheet"
+        },
+        {
+          "key": "index.map-h.p.96",
+          "label": "Paragraph · Renting a GPU on vast.ai, wiring up Google Drive, the exact ter…",
+          "md": "Renting a GPU on vast.ai, wiring up Google Drive, the exact terminal sequence, the module rabbit hole, and the two fixes for the failed-wheel error."
+        },
+        {
+          "key": "index.map-h.span.97",
+          "label": "Label · Open chapter →",
+          "md": "Open chapter →"
+        }
+      ]
+    },
+    {
+      "id": "loc",
+      "label": "Local or cloud?",
+      "heading": {
+        "key": "index.loc.h2.98",
+        "label": "Chapter heading · Local or cloud?",
+        "md": "Local or cloud?"
+      },
+      "blocks": [
+        {
+          "key": "index.loc.p.99",
+          "label": "Paragraph · The only decision you have to make before you start. Both paths…",
+          "md": "The only decision you have to make before you start. Both paths use the same commands; they differ in cost, patience and how much you have to babysit."
+        },
+        {
+          "key": "index.loc.span.100",
+          "label": "Label · Local",
+          "md": "Local"
+        },
+        {
+          "key": "index.loc.h5.101",
+          "label": "Card title · Your own machine",
+          "md": "Your own machine"
+        },
+        {
+          "key": "index.loc.li.102",
+          "label": "List item · Zero rental cost, no upload time.",
+          "md": "Zero rental cost, no upload time."
+        },
+        {
+          "key": "index.loc.li.103",
+          "label": "List item · Free for pre-training and for shifting a model's target on a sm…",
+          "md": "Free for pre-training and for shifting a model's target on a smaller card."
+        },
+        {
+          "key": "index.loc.li.104",
+          "label": "List item · Your GPU is unusable for anything else while it runs — no games…",
+          "md": "Your GPU is unusable for anything else while it runs — no games, no renders."
+        },
+        {
+          "key": "index.loc.li.105",
+          "label": "List item · Large batch sizes and long runs are usually out of reach.",
+          "md": "Large batch sizes and long runs are usually out of reach."
+        },
+        {
+          "key": "index.loc.a.106",
+          "label": "Link text · Chapter 11 →",
+          "md": "Chapter 11 →"
+        },
+        {
+          "key": "index.loc.span.107",
+          "label": "Label · Cloud",
+          "md": "Cloud"
+        },
+        {
+          "key": "index.loc.h5.108",
+          "label": "Card title · A rented GPU",
+          "md": "A rented GPU"
+        },
+        {
+          "key": "index.loc.li.109",
+          "label": "List item · Fast cards with large VRAM; runs finish in hours instead of wee…",
+          "md": "Fast cards with large VRAM; runs finish in hours instead of weeks."
+        },
+        {
+          "key": "index.loc.li.110",
+          "label": "List item · Pay by the hour, so a stuck run costs real money.",
+          "md": "Pay by the hour, so a stuck run costs real money."
+        },
+        {
+          "key": "index.loc.li.111",
+          "label": "List item · Setup is fiddlier: drive sync, terminal sequence, missing modul…",
+          "md": "Setup is fiddlier: drive sync, terminal sequence, missing modules."
+        },
+        {
+          "key": "index.loc.li.112",
+          "label": "List item · Best paired with a small local test run so you know the command…",
+          "md": "Best paired with a small local test run so you know the command is right."
+        },
+        {
+          "key": "index.loc.a.113",
+          "label": "Link text · Chapter 12 →",
+          "md": "Chapter 12 →"
+        },
+        {
+          "key": "index.loc.div.114",
+          "label": "Label · Before you rent anything",
+          "md": "Before you rent anything"
+        },
+        {
+          "key": "index.loc.p.115",
+          "label": "Paragraph · Validate your command locally for a few hundred steps first. An…",
+          "md": "Validate your command locally for a few hundred steps first. An error in the config, a mismatched stem length or a wrong dataset type wastes cloud money at a much faster rate than it wastes local time."
+        }
+      ]
+    }
+  ]
+}

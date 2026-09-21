@@ -1,0 +1,543 @@
+<!doctype html>
+<!-- TEMPLATE — not served. Prose lives in content/pages/training.json; render the pages with: node tools/build.mjs -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Training runs — From scratch, focus shifting, local and cloud · MSST Guide</title>
+<meta name="description" content="Training from scratch, shifting a model's target stem, fullness models and fusion, local training, and a full vast.ai cloud walkthrough.">
+<meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1">
+<link rel="canonical" href="https://msst-guide.pages.dev/training.html">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="MSST Guide">
+<meta property="og:title" content="Training runs — From scratch, focus shifting, local and cloud">
+<meta property="og:description" content="Training from scratch, shifting a model's target stem, fullness models and fusion, local training, and a full vast.ai cloud walkthrough.">
+<meta property="og:url" content="https://msst-guide.pages.dev/training.html">
+<meta property="og:image" content="https://msst-guide.pages.dev/assets/img/og-image.png">
+<meta property="og:image:type" content="image/png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="MSST Guide waveform mark above the title Training Audio Source Separation Models">
+<meta property="article:section" content="Training runs">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Training runs — From scratch, focus shifting, local and cloud">
+<meta name="twitter:description" content="Chapters 08–12: training from scratch, redirecting a model's focus, fullness and fusion, local runs and a vast.ai walkthrough.">
+<meta name="twitter:image" content="https://msst-guide.pages.dev/assets/img/twitter-card.png">
+<meta name="twitter:image:alt" content="MSST Guide waveform mark above the title Training Audio Source Separation Models">
+<link rel="preload" href="assets/fonts/montserrat-latin.woff2" as="font" type="font/woff2" crossorigin>
+<meta name="color-scheme" content="dark light">
+<meta name="theme-color" content="#0e1013">
+<link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
+<link rel="alternate icon" href="assets/img/favicon-32.png" sizes="32x32" type="image/png">
+<link rel="apple-touch-icon" href="assets/img/apple-touch-icon.png">
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"TechArticle","@id":"https://msst-guide.pages.dev/training.html#article","headline":"Training runs — From scratch, focus shifting, local and cloud","description":"Training from scratch, shifting a model's target stem, fullness models and fusion, local training, and a full vast.ai cloud walkthrough.","articleSection":"Chapters 08–12 · Training runs","inLanguage":"en","proficiencyLevel":"Intermediate","dependencies":"Completed dataset and validation set, a trained checkpoint to fine-tune from, and a CUDA-capable GPU","isPartOf":{"@id":"https://msst-guide.pages.dev/#book"},"mainEntityOfPage":{"@id":"https://msst-guide.pages.dev/training.html#webpage"},"image":{"@id":"https://msst-guide.pages.dev/#card"},"author":{"@id":"https://msst-guide.pages.dev/#publisher"},"publisher":{"@id":"https://msst-guide.pages.dev/#publisher"},"dateModified":"2026-09-20"},{"@type":"WebPage","@id":"https://msst-guide.pages.dev/training.html#webpage","url":"https://msst-guide.pages.dev/training.html","name":"Training runs — From scratch, focus shifting, local and cloud · MSST Guide","description":"Training from scratch, shifting a model's target stem, fullness models and fusion, local training, and a full vast.ai cloud walkthrough.","isPartOf":{"@id":"https://msst-guide.pages.dev/#website"},"about":{"@id":"https://msst-guide.pages.dev/training.html#article"},"inLanguage":"en"},{"@type":"BreadcrumbList","@id":"https://msst-guide.pages.dev/training.html#breadcrumbs","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://msst-guide.pages.dev/"},{"@type":"ListItem","position":2,"name":"Training runs","item":"https://msst-guide.pages.dev/training.html"}]}]}</script>
+<script>/* apply the saved theme before first paint to avoid a flash */(function(){try{var t=localStorage.getItem("msst-theme");if(t!=="light"&&t!=="dark"){t=window.matchMedia&&window.matchMedia("(prefers-color-scheme: light)").matches?"light":"dark";}document.documentElement.setAttribute("data-theme",t);}catch(e){document.documentElement.setAttribute("data-theme","dark");}})();</script>
+<link rel="stylesheet" href="assets/css/site.css?v=61c969be">
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<div class="progress" aria-hidden="true"><span id="bar"></span></div>
+
+<header class="site-header">
+  <div class="inner">
+    <a class="brand" href="index.html">
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M2 14h2.2l1.6-6 1.8 10 2-14 2 16 1.8-9 1.6 4H22" stroke="url(#lg)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><defs><linearGradient id="lg" x1="2" y1="4" x2="22" y2="20"><stop stop-color="#0294be"/><stop offset="1" stop-color="#1468b2"/></linearGradient></defs></svg>
+      <b>MSST <i>Guide</i></b>
+    </a>
+    <nav class="site-nav" aria-label="Sections">
+      <a href="index.html">Home</a>
+      <a href="data.html">Before you train</a>
+      <a href="setup.html">Setup &amp; config</a>
+      <a href="training.html" aria-current="page">Training runs</a>
+      <a href="reference.html">Reference</a>
+    </nav>
+    <div class="header-actions">
+      <button class="btn btn-ghost btn-search" id="searchBtn" type="button" aria-haspopup="dialog" aria-expanded="false" aria-controls="searchOverlay" aria-label="Search the guide" title="Search all pages (press /)">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M16.4 16.4L21 21"/></svg>
+        <span class="search-lbl">Search</span>
+      </button>
+      <button class="switch" id="themeToggle" type="button" role="switch" aria-checked="true" aria-label="Switch to light theme" title="Switch to light theme">
+        <span class="track">
+          <span class="thumb" aria-hidden="true"></span>
+          <span class="ico ico-sun" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round"><circle cx="12" cy="12" r="4.3"/><path d="M12 1.8v2.6M12 19.6v2.6M1.8 12h2.6M19.6 12h2.6M4.8 4.8l1.9 1.9M17.3 17.3l1.9 1.9M19.2 4.8l-1.9 1.9M6.7 17.3l-1.9 1.9"/></svg></span>
+          <span class="ico ico-moon" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M20.6 14.3A8.7 8.7 0 0 1 9.7 3.4 8.9 8.9 0 1 0 20.6 14.3z"/></svg></span>
+        </span>
+      </button>
+      <button class="btn btn-ghost" type="button" data-print aria-label="Save as PDF" title="Save as PDF">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9V3h12v6"/><rect x="3" y="9" width="18" height="8" rx="2"/><path d="M6 17h12v4H6z"/></svg>
+        <span class="print-lbl">Save as PDF</span>
+      </button>
+      <button class="menu-btn" id="menuBtn" type="button" aria-expanded="false" aria-controls="drawer">Menu</button>
+    </div>
+  </div>
+</header>
+
+<div class="drawer" id="drawer">
+  <p class="dlabel">Sections</p>
+  <ul>
+    <li><a href="index.html">Home &amp; overview</a></li>
+    <li><a href="data.html">02–04 · Before you train</a></li>
+    <li><a href="setup.html">05–07 · Setup &amp; config</a></li>
+    <li><a href="training.html" aria-current="page">08–12 · Training runs</a></li>
+    <li><a href="reference.html">13 · Reference &amp; appendices</a></li>
+  </ul>
+</div>
+
+<main id="main">
+<div class="shell">
+
+  <div class="page-head">
+    <p class="crumbs"><a href="index.html">Guide</a><span>/</span>Part three</p>
+    <!--c:training.head.p.01:prose:p| class="eyebrow"-->
+    <h1><!--c:training.head.h1.02:inline--></h1>
+    <!--c:training.head.p.03:prose:p| class="lede"-->
+    <div class="chips">
+      <span>Ch 08 From scratch</span>
+      <span>Ch 09 Focus shifting</span>
+      <span>Ch 10 Fullness &amp; fusion</span>
+      <span>Ch 11 Local</span>
+      <span>Ch 12 Cloud</span>
+    </div>
+  </div>
+
+  <div class="with-toc">
+    <article>
+
+      <!-- ============ FROM SCRATCH ============ -->
+      <h2 id="scratch"><!--c:training.scratch.h2.04:inline--></h2>
+      <!--c:training.scratch.p.05:prose:p| class="lead-in"-->
+      <!--c:training.scratch.p.06:prose:p|-->
+
+      <div class="callout star">
+        <div class="ico"></div>
+        <div>
+          <div class="ttl"><!--c:training.scratch.div.07:inline--></div>
+          <!--c:training.scratch.p.08:prose:p|-->
+        </div>
+      </div>
+
+      <div class="callout warn">
+        <div class="ico"></div>
+        <div>
+          <div class="ttl"><!--c:training.scratch.div.09:inline--></div>
+          <!--c:training.scratch.p.10:prose:p|-->
+        </div>
+      </div>
+
+      <figure class="fig">
+        <div class="fig-bar"><span class="tag"><!--c:training.scratch.span.11:inline--></span></div>
+        <div class="fig-scroll">
+        <svg class="schematic" viewBox="0 0 620 200" role="img" aria-label="Sketch of two validation curves: fine-tuning rises quickly and plateaus high, training from scratch stays low for a long time before rising more slowly.">
+          <text class="hd" x="8" y="14">VALIDATION METRIC OVER TIME</text>
+          <path class="grid" d="M56 50h544M56 80h544M56 110h544M56 140h544"/>
+          <path class="axis" d="M56 24v146h544"/>
+          <text class="lbl" x="56" y="190">0</text>
+          <text class="lbl" x="520" y="190">epochs →</text>
+          <text class="lbl" x="8" y="30">metric ↑</text>
+          <path class="line-a" d="M56 142 C120 92 168 62 250 54 C360 45 470 50 600 47"/>
+          <path class="line-b" d="M56 166 C170 163 270 152 360 118 C450 92 520 76 600 66"/>
+          <text class="lbl-a" x="600" y="38" text-anchor="end">fine-tune</text>
+          <text class="lbl-b" x="600" y="60" text-anchor="end">from scratch</text>
+        </svg>
+        </div>
+        <!--c:training.scratch.caption.12:prose:figcaption|-->
+      </figure>
+
+      <div class="two-col">
+        <div class="card">
+          <span class="k"><!--c:training.scratch.span.13:inline--></span>
+          <h5><!--c:training.scratch.h5.14:inline--></h5>
+          <!--c:training.scratch.p.15:prose:p|-->
+        </div>
+        <div class="card">
+          <span class="k"><!--c:training.scratch.span.16:inline--></span>
+          <h5><!--c:training.scratch.h5.17:inline--></h5>
+          <!--c:training.scratch.p.18:prose:p|-->
+        </div>
+      </div>
+
+      <!-- ============ FOCUS SHIFT ============ -->
+      <h2 id="focus"><!--c:training.focus.h2.19:inline--></h2>
+      <!--c:training.focus.p.20:prose:p| class="lead-in"-->
+      <!--c:training.focus.p.21:prose:p|-->
+
+      <h3 id="the-patch"><!--c:training.focus.h3.22:inline--></h3>
+      <div class="code">
+        <div class="code-bar"><span class="tag">train.py · freeze everything except the mask estimators</span><button class="copy" type="button">Copy</button></div>
+<pre><span class="k">for</span> param <span class="k">in</span> model.parameters():
+    param.requires_grad <span class="eq">=</span> <span class="k">False</span>
+
+<span class="k">for</span> param <span class="k">in</span> model.mask_estimators.parameters():
+    param.requires_grad <span class="eq">=</span> <span class="k">True</span></pre>
+      </div>
+      <!--c:training.focus.p.23:prose:p|-->
+      <div class="code">
+        <div class="code-bar"><span class="tag">train.py · around line 203</span></div>
+<pre>optim_params <span class="eq">=</span> dict()</pre>
+      </div>
+
+      <figure class="fig">
+        <div class="fig-bar"><span class="tag"><!--c:training.focus.span.24:inline--></span></div>
+        <img src="assets/img/transfer-patch-code.png" alt="Code view showing the frozen parameters loop placed above the optimiser parameter dictionary in train.py">
+        <!--c:training.focus.caption.25:prose:figcaption|-->
+      </figure>
+
+      <h3 id="why-this-works"><!--c:training.focus.h3.26:inline--></h3>
+      <!--c:training.focus.p.27:prose:p|-->
+
+      <div class="layers">
+        <div class="layers-head">
+          <h6><!--c:training.focus.h6.28:inline--></h6>
+          <div class="legend">
+            <span><!--c:training.focus.span.29:inline--></span>
+            <span><!--c:training.focus.span.30:inline--></span>
+          </div>
+        </div>
+        <div class="layer-row">
+          <div class="layer frozen"><b><!--c:training.focus.b.31:inline--></b><span><!--c:training.focus.span.32:inline--></span></div>
+          <span class="arw" aria-hidden="true"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+          <div class="layer frozen"><b><!--c:training.focus.b.33:inline--></b><span><!--c:training.focus.span.34:inline--></span></div>
+          <span class="arw" aria-hidden="true"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+          <div class="layer frozen"><b><!--c:training.focus.b.35:inline--></b><span><!--c:training.focus.span.36:inline--></span></div>
+          <span class="arw" aria-hidden="true"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+          <div class="layer train"><b><!--c:training.focus.b.37:inline--></b><span><!--c:training.focus.span.38:inline--></span></div>
+          <span class="arw" aria-hidden="true"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+          <div class="layer train"><b><!--c:training.focus.b.39:inline--></b><span><!--c:training.focus.span.40:inline--></span></div>
+        </div>
+        <!--c:training.focus.p.41:prose:p| class="layers-foot"-->
+      </div>
+
+      <figure class="fig" id="fig-arch">
+        <div class="fig-bar"><span class="tag"><!--c:training.focus.span.42:inline--></span></div>
+        <img src="assets/img/mel-roformer-architecture.png" alt="Diagram of the Mel-Roformer: Mel-band projection, Roformer blocks at high and low frequencies, embedding projection and mask estimation">
+        <!--c:training.focus.caption.43:prose:figcaption|-->
+      </figure>
+
+      <div class="callout warn">
+        <div class="ico"></div>
+        <div>
+          <div class="ttl"><!--c:training.focus.div.44:inline--></div>
+          <ul style="margin-bottom:0">
+            <li><!--c:training.focus.li.45:inline--></li>
+            <li><!--c:training.focus.li.46:inline--></li>
+          </ul>
+        </div>
+      </div>
+
+      <h3 id="how-it-actually-went"><!--c:training.focus.h3.47:inline--></h3>
+      <!--c:training.focus.p.48:prose:p|-->
+
+      <div class="callout danger">
+        <div class="ico"></div>
+        <div>
+          <div class="ttl"><!--c:training.focus.div.49:inline--></div>
+          <!--c:training.focus.p.50:prose:p|-->
+        </div>
+      </div>
+
+      <figure class="fig">
+        <div class="fig-bar"><span class="tag"><!--c:training.focus.span.51:inline--></span></div>
+        <img src="assets/img/focus-before.png" alt="Waveform and spectrogram views of a separation with smeared, noisy energy across the spectrum">
+        <!--c:training.focus.caption.52:prose:figcaption|-->
+      </figure>
+
+      <figure class="fig">
+        <div class="fig-bar"><span class="tag"><!--c:training.focus.span.53:inline--></span></div>
+        <img src="assets/img/focus-after.png" alt="Waveform and spectrogram views of the same song after the target has settled, showing cleaner structure">
+        <!--c:training.focus.caption.54:prose:figcaption|-->
+      </figure>
+
+      <!-- ============ FULLNESS ============ -->
+      <h2 id="fullness"><!--c:training.fullness.h2.55:inline--></h2>
+      <!--c:training.fullness.p.56:prose:p| class="lead-in"-->
+
+      <ol class="steps">
+        <li>
+          <b><!--c:training.fullness.b.57:inline--></b>
+          <!--c:training.fullness.p.58:prose:p|-->
+        </li>
+        <li>
+          <b><!--c:training.fullness.b.59:inline--></b>
+          <!--c:training.fullness.p.60:prose:p|-->
+        </li>
+        <li>
+          <b><!--c:training.fullness.b.61:inline--></b>
+          <!--c:training.fullness.p.62:prose:p|-->
+        </li>
+      </ol>
+
+      <div class="code">
+        <div class="code-bar"><span class="tag">config.yaml · loss section</span><button class="copy" type="button">Copy</button></div>
+<pre><span class="f">loss_multistft</span><span class="eq">:</span>
+  <span class="f">fft_sizes</span><span class="eq">:</span>
+    - 1024
+    - 2048
+    - 4096
+  <span class="f">hop_sizes</span><span class="eq">:</span>
+    - 512
+    - 1024
+    - 2048
+  <span class="f">win_lengths</span><span class="eq">:</span>
+    - 1024
+    - 2048
+    - 4096
+  <span class="f">window</span><span class="eq">:</span> <span class="s">"hann_window"</span>
+  <span class="f">scale</span><span class="eq">:</span> <span class="s">"mel"</span>
+  <span class="f">n_bins</span><span class="eq">:</span> 128
+  <span class="f">sample_rate</span><span class="eq">:</span> 44100
+  <span class="f">perceptual_weighting</span><span class="eq">:</span> false
+  <span class="f">w_sc</span><span class="eq">:</span> 0.0
+  <span class="f">w_log_mag</span><span class="eq">:</span> 1.0
+  <span class="f">w_lin_mag</span><span class="eq">:</span> 0.0
+  <span class="f">w_phs</span><span class="eq">:</span> 0.0
+  <span class="f">mag_distance</span><span class="eq">:</span> <span class="s">"L1"</span></pre>
+      </div>
+
+      <div class="callout danger">
+        <div class="ico"></div>
+        <div>
+          <div class="ttl"><!--c:training.fullness.div.63:inline--></div>
+          <!--c:training.fullness.p.64:prose:p|-->
+        </div>
+      </div>
+
+      <h3 id="model-fusion-sucials-script"><!--c:training.fullness.h3.65:inline--></h3>
+      <!--c:training.fullness.p.66:prose:p|-->
+      <div class="callout warn">
+        <div class="ico"></div>
+        <div>
+          <div class="ttl"><!--c:training.fullness.div.67:inline--></div>
+          <ul style="margin-bottom:0">
+            <li><!--c:training.fullness.li.68:inline--></li>
+            <li><!--c:training.fullness.li.69:inline--></li>
+            <li><!--c:training.fullness.li.70:inline--></li>
+          </ul>
+        </div>
+      </div>
+      <!--c:training.fullness.p.71:prose:p|-->
+
+      <!-- ============ LOCAL ============ -->
+      <h2 id="local"><!--c:training.local.h2.72:inline--></h2>
+      <!--c:training.local.p.73:prose:p| class="lead-in"-->
+
+      <div class="code">
+        <div class="code-bar"><span class="tag">powershell · administrator</span><button class="copy" type="button">Copy</button></div>
+<pre><span class="cmd">cd</span> <span class="ph">C:\path\to\Music-Source-Separation-Training</span>
+<span class="cmd">python</span> train.py <span class="f">--model_type</span> <span class="ph">mel_band_roformer</span> <span class="f">--config_path</span> <span class="ph">config.yaml</span> <span class="f">--results_path</span> results/ <span class="f">--data_path</span> <span class="ph">C:\data\dataset</span> <span class="f">--dataset_type</span> <span class="ph">2</span> <span class="f">--num_workers</span> 4 <span class="f">--device_ids</span> 0 <span class="f">--start_check_point</span> results/<span class="ph">model.ckpt</span> <span class="f">--valid_path</span> <span class="ph">C:\data\validation</span> <span class="f">--metric_for_scheduler</span> <span class="ph">sdr</span> <span class="f">--metrics</span> <span class="ph">sdr fullness bleedless</span></pre>
+      </div>
+
+      <figure class="fig">
+        <div class="fig-bar"><span class="tag"><!--c:training.local.span.74:inline--></span></div>
+        <div class="fig-shot"><!--c:training.local.div.75:inline--></div>
+        <ol class="pin-list">
+          <li><span><!--c:training.local.span.76:inline--></span></li>
+          <li><span><!--c:training.local.span.77:inline--></span></li>
+          <li><span><!--c:training.local.span.78:inline--></span></li>
+          <li><span><!--c:training.local.span.79:inline--></span></li>
+          <li><span><!--c:training.local.span.80:inline--></span></li>
+          <li><span><!--c:training.local.span.81:inline--></span></li>
+        </ol>
+        <!--c:training.local.caption.82:prose:figcaption|-->
+      </figure>
+
+      <h3 id="how-to-read-the-log"><!--c:training.local.h3.83:inline--></h3>
+      <div class="table-scroll">
+        <table>
+          <thead><tr><th>Line</th><th>What it tells you</th></tr></thead>
+          <tbody>
+            <tr><td class="t-key">Train epoch</td><td>Which epoch is running now. It starts at <code>0</code> and continues as long as you let it.</td></tr>
+            <tr><td class="t-key">Learning rate</td><td>The rate in force for this epoch — a value such as <code>1.0e-04</code>, moved by the scheduler when the metric stalls.</td></tr>
+            <tr><td class="t-key">First progress bar</td><td>Progress through the <code>num_steps</code> of the epoch, with elapsed time versus estimated time, and seconds per iteration (how fast the run is).</td></tr>
+            <tr><td class="t-key">Training loss</td><td>How far the output is from the target — you want this trending down.</td></tr>
+            <tr><td class="t-key">avg_loss</td><td>The average training loss across recent steps; smoother than the instantaneous number.</td></tr>
+            <tr><td class="t-key">Second progress bar</td><td>Validation progress. It feels long on purpose if you validate with full tracks — and it reports <code>n/n</code>, how many validation tracks remain.</td></tr>
+            <tr><td class="t-key">l1_freq / sdr</td><td>Per-track separation quality for the stem being validated. In the example log, track 4 of epoch 3 sat around <code>13.4</code>.</td></tr>
+            <tr><td class="t-key">fullness / bleedless</td><td>The same per-track numbers for the target stem: how complete it is, and how much of the other stem leaked in.</td></tr>
+            <tr><td class="t-key">Num overlap</td><td>The inference overlap used to produce these results — <code>4</code> in the example. Set it to <code>1</code> to make everything much quicker.</td></tr>
+            <tr><td class="t-key">Elapsed time</td><td>Wall-clock seconds for the epoch, useful for working out what the rest of the run will cost.</td></tr>
+            <tr><td class="t-key">Instr other …</td><td>The averaged verdict for the instrumental stem with this checkpoint: fullness, bleedless, l1_freq and SDR. This is the number to compare against the previous epoch.</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="callout warn">
+        <div class="ico"></div>
+        <div>
+          <div class="ttl"><!--c:training.local.div.84:inline--></div>
+          <!--c:training.local.p.85:prose:p|-->
+        </div>
+      </div>
+
+      <h3 id="while-it-runs"><!--c:training.local.h3.86:inline--></h3>
+      <!--c:training.local.p.87:prose:p|-->
+
+      <!-- ============ CLOUD ============ -->
+      <h2 id="cloud"><!--c:training.cloud.h2.88:inline--></h2>
+      <!--c:training.cloud.p.89:prose:p| class="lead-in"-->
+
+      <ul class="flow">
+        <li>
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6.5 18.5l7-7-4-4-7 7v4z"/><path d="M14.5 3.5l6 6-3.5 3.5a4.2 4.2 0 0 1-6 0 4.2 4.2 0 0 1 0-6z"/></svg>
+          <span class="k"><!--c:training.cloud.span.90:inline--></span><b><!--c:training.cloud.b.91:inline--></b><span class="d"><!--c:training.cloud.span.92:inline--></span>
+        </li>
+        <li>
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13.5a4 4 0 0 0 5.7 0l2.8-2.8a4 4 0 0 0-5.7-5.7L11.5 6.3"/><path d="M14 10.5a4 4 0 0 0-5.7 0l-2.8 2.8a4 4 0 0 0 5.7 5.7l1.3-1.3"/></svg>
+          <span class="k"><!--c:training.cloud.span.93:inline--></span><b><!--c:training.cloud.b.94:inline--></b><span class="d"><!--c:training.cloud.span.95:inline--></span>
+        </li>
+        <li>
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7.5h16v9H4z"/><path d="M7 16.5v2.5M17 16.5v2.5M8 7.5V4h8v3.5"/></svg>
+          <span class="k"><!--c:training.cloud.span.96:inline--></span><b><!--c:training.cloud.b.97:inline--></b><span class="d"><!--c:training.cloud.span.98:inline--></span>
+        </li>
+        <li>
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 6.5h5.2l2 2.6H21v9.4H3z"/><path d="M12 12v5M9.5 14.5L12 17l2.5-2.5"/></svg>
+          <span class="k"><!--c:training.cloud.span.99:inline--></span><b><!--c:training.cloud.b.100:inline--></b><span class="d"><!--c:training.cloud.span.101:inline--></span>
+        </li>
+        <li>
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4.5" width="18" height="15" rx="2"/><path d="M7.5 9l3 3-3 3M13 15h4"/></svg>
+          <span class="k"><!--c:training.cloud.span.102:inline--></span><b><!--c:training.cloud.b.103:inline--></b><span class="d"><!--c:training.cloud.span.104:inline--></span>
+        </li>
+        <li class="accent">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="8.4"/><path d="M12 7.6V12l3.1 2"/></svg>
+          <span class="k"><!--c:training.cloud.span.105:inline--></span><b><!--c:training.cloud.b.106:inline--></b><span class="d"><!--c:training.cloud.span.107:inline--></span>
+        </li>
+      </ul>
+
+      <ol class="steps">
+        <li>
+          <b><!--c:training.cloud.b.108:inline--></b>
+          <!--c:training.cloud.p.109:prose:p|-->
+        </li>
+        <li>
+          <b><!--c:training.cloud.b.110:inline--></b>
+          <!--c:training.cloud.p.111:prose:p|-->
+        </li>
+        <li>
+          <b><!--c:training.cloud.b.112:inline--></b>
+          <!--c:training.cloud.p.113:prose:p|-->
+        </li>
+        <li>
+          <b><!--c:training.cloud.b.114:inline--></b>
+          <!--c:training.cloud.p.115:prose:p|-->
+          <div class="code">
+            <div class="code-bar"><span class="tag">path syntax on the instance</span><button class="copy" type="button">Copy</button></div>
+<pre><span class="f">--data_path</span> <span class="ph">/TRAINING_STUFF/DATA/2stem_metal_dataset/</span>
+<span class="f">--valid_path</span> <span class="ph">/TRAINING_STUFF/DATA/validation/</span></pre>
+          </div>
+          <!--c:training.cloud.p.116:prose:p|-->
+        </li>
+        <li>
+          <b><!--c:training.cloud.b.117:inline--></b>
+          <!--c:training.cloud.p.118:prose:p|-->
+          <ul>
+            <li><!--c:training.cloud.li.119:inline--></li>
+            <li><!--c:training.cloud.li.120:inline--></li>
+            <li><!--c:training.cloud.li.121:inline--></li>
+            <li><!--c:training.cloud.li.122:inline--></li>
+          </ul>
+        </li>
+        <li>
+          <b><!--c:training.cloud.b.123:inline--></b>
+          <!--c:training.cloud.p.124:prose:p|-->
+        </li>
+      </ol>
+
+      <div class="callout danger">
+        <div class="ico"></div>
+        <div>
+          <div class="ttl"><!--c:training.cloud.div.125:inline--></div>
+          <!--c:training.cloud.p.126:prose:p|-->
+          <div class="code" style="margin-bottom:0">
+            <div class="code-bar"><span class="tag">pip · wheel build error</span></div>
+<pre>ERROR: Failed to build installable wheels for some pyproject.toml
+based projects (wxpython, diffq, pesq)</pre>
+          </div>
+          <!--c:training.cloud.p.127:prose:p| style="margin-top:12px"-->
+          <ul style="margin-bottom:0">
+            <li><!--c:training.cloud.li.128:inline--></li>
+            <li><!--c:training.cloud.li.129:inline--></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="two-col">
+        <div class="card">
+          <span class="k"><!--c:training.cloud.span.130:inline--></span>
+          <h5><!--c:training.cloud.h5.131:inline--></h5>
+          <!--c:training.cloud.p.132:prose:p|-->
+        </div>
+        <div class="card">
+          <span class="k"><!--c:training.cloud.span.133:inline--></span>
+          <h5><!--c:training.cloud.h5.134:inline--></h5>
+          <!--c:training.cloud.p.135:prose:p|-->
+        </div>
+      </div>
+
+      <div class="pager">
+        <a href="setup.html">
+          <span class="lbl">Previous · Chapters 05–07</span>
+          <span class="ttl">← Setup &amp; configuration</span>
+        </a>
+        <a class="next" href="reference.html">
+          <span class="lbl">Next · Chapter 13 + appendices</span>
+          <span class="ttl">Reference →</span>
+        </a>
+      </div>
+
+    </article>
+
+    <aside class="toc" aria-label="On this page">
+      <h6>On this page</h6>
+      <ol>
+        <li><a href="#scratch">Training from scratch</a></li>
+        <li><a href="#focus">Shifting a model's focus</a></li>
+        <li><a href="#fullness">Fullness models &amp; fusion</a></li>
+        <li><a href="#local">Running locally</a></li>
+        <li><a href="#cloud">Running in the cloud</a></li>
+      </ol>
+      <div class="toc-foot">
+        <a class="btn btn-ghost" href="reference.html#errors" style="width:100%;justify-content:center">Error index →</a>
+      </div>
+    </aside>
+  </div>
+
+</div>
+</main>
+
+<footer class="site-footer">
+  <div class="inner">
+    <div>
+      <h6>About this guide</h6>
+      <p>A rewritten, restructured edition of Meskvlla33's community document on training audio source separation models, expanded with a troubleshooting index, a glossary and a metric reference.</p>
+    </div>
+    <div>
+      <h6>Read</h6>
+      <ul>
+        <li><a href="data.html">02–04 · Before you train</a></li>
+        <li><a href="setup.html">05–07 · Setup &amp; config</a></li>
+        <li><a href="training.html">08–12 · Training runs</a></li>
+        <li><a href="reference.html">13 · Reference &amp; appendices</a></li>
+      </ul>
+    </div>
+    <div>
+      <h6>Elsewhere</h6>
+      <ul>
+        <li><a href="https://github.com/ZFTurbo/Music-Source-Separation-Training" rel="noopener">Training repository</a></li>
+        <li><a href="https://www.pytorch.org" rel="noopener">PyTorch</a></li>
+        <li><a href="https://vast.ai" rel="noopener">vast.ai</a></li>
+        <li><a href="reference.html#credits">Credits</a></li>
+      </ul>
+    </div>
+    <div class="colophon">
+      <span>Edition 2.0 · 2026 · Community maintained</span>
+      <span>Original guide by Meskvlla33</span>
+    </div>
+  </div>
+</footer>
+
+<button class="backtop" id="backtop" type="button" aria-label="Back to top">
+  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
+</button>
+<script src="assets/js/search-index.js?v=d0ee56dd"></script>
+<script src="assets/js/site.js?v=aad2f860"></script>
+</body>
+</html>

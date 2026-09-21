@@ -1,0 +1,8 @@
+# MSST Guide — a community handbook for training audio source separation models.
+User-agent: *
+Allow: /
+
+# The content editor, not part of the guide.
+Disallow: /admin/
+
+Sitemap: https://msst-guide.pages.dev/sitemap.xml

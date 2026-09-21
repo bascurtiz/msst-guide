@@ -1,0 +1,568 @@
+{
+  "page": "reference",
+  "title": "Reference",
+  "source": "src/pages/reference.html",
+  "sections": [
+    {
+      "id": "head",
+      "label": "Page head",
+      "heading": {
+        "key": "reference.head.h1.02",
+        "label": "Page title · Reference",
+        "md": "Reference"
+      },
+      "blocks": [
+        {
+          "key": "reference.head.p.01",
+          "label": "Paragraph · Chapter 13 · Appendices A–D",
+          "md": "Chapter 13 · Appendices A–D"
+        },
+        {
+          "key": "reference.head.p.03",
+          "label": "Paragraph · The part you keep open in a second tab: what an error means, wh…",
+          "md": "The part you keep open in a second tab: what an error means, what the vocabulary means, what the metrics mean, and who made this possible."
+        }
+      ]
+    },
+    {
+      "id": "errors",
+      "label": "Troubleshooting index",
+      "heading": {
+        "key": "reference.errors.h2.04",
+        "label": "Chapter heading · Troubleshooting index",
+        "md": "Troubleshooting index"
+      },
+      "blocks": [
+        {
+          "key": "reference.errors.p.05",
+          "label": "Paragraph · Every failure described across this guide, in one table. Find y…",
+          "md": "Every failure described across this guide, in one table. Find your error text, read the cause, apply the fix."
+        },
+        {
+          "key": "reference.errors.h3.06",
+          "label": "Subheading · The missing-module list",
+          "md": "The missing-module list"
+        },
+        {
+          "key": "reference.errors.p.07",
+          "label": "Paragraph · Modules reported missing on a clean cloud instance, in the orde…",
+          "md": "Modules reported missing on a clean cloud instance, in the order they were encountered: `wandb`, `soundfile`, `auraloss`, `audiomentations`, `pedalboard`, `ml_collections`, `omegaconf`, `einops`, `beartype`, `rotary_embedding_torch`."
+        }
+      ]
+    },
+    {
+      "id": "glossary",
+      "label": "Appendix A · Glossary",
+      "heading": {
+        "key": "reference.glossary.h2.08",
+        "label": "Chapter heading · Appendix A · Glossary",
+        "md": "Appendix A · Glossary"
+      },
+      "blocks": [
+        {
+          "key": "reference.glossary.p.09",
+          "label": "Paragraph · The vocabulary used throughout the guide, in plain language.",
+          "md": "The vocabulary used throughout the guide, in plain language."
+        },
+        {
+          "key": "reference.glossary.dt.10",
+          "label": "Glossary term · Checkpoint (.ckpt)",
+          "md": "Checkpoint (.ckpt)"
+        },
+        {
+          "key": "reference.glossary.dd.11",
+          "label": "Definition · The trained model itself — its learned weights. You load it, tr…",
+          "md": "The trained model itself — its learned weights. You load it, train it further, and let the trainer write new ones into `results/`."
+        },
+        {
+          "key": "reference.glossary.dt.12",
+          "label": "Glossary term · Config (.yaml)",
+          "md": "Config (.yaml)"
+        },
+        {
+          "key": "reference.glossary.dd.13",
+          "label": "Definition · A text file describing the model and the run: architecture, chu…",
+          "md": "A text file describing the model and the run: architecture, chunk size, learning rate, epochs, target instrument. This is the file you edit."
+        },
+        {
+          "key": "reference.glossary.dt.14",
+          "label": "Glossary term · Stem",
+          "md": "Stem"
+        },
+        {
+          "key": "reference.glossary.dd.15",
+          "label": "Definition · A single isolated part of a mix — vocals, drums, bass, or the c…",
+          "md": "A single isolated part of a mix — vocals, drums, bass, or the catch-all `other` that holds everything else."
+        },
+        {
+          "key": "reference.glossary.dt.16",
+          "label": "Glossary term · Mixture",
+          "md": "Mixture"
+        },
+        {
+          "key": "reference.glossary.dd.17",
+          "label": "Definition · The sum of the stems, i.e. the song as you would normally hear…",
+          "md": "The sum of the stems, i.e. the song as you would normally hear it. The model's input during validation."
+        },
+        {
+          "key": "reference.glossary.dt.18",
+          "label": "Glossary term · Dataset type 1",
+          "md": "Dataset type 1"
+        },
+        {
+          "key": "reference.glossary.dd.19",
+          "label": "Definition · Layout with one folder per song and one file per stem (MUSDB18…",
+          "md": "Layout with one folder per song and one file per stem (MUSDB18 style). All stems must end at the same moment."
+        },
+        {
+          "key": "reference.glossary.dt.20",
+          "label": "Glossary term · Dataset type 2",
+          "md": "Dataset type 2"
+        },
+        {
+          "key": "reference.glossary.dd.21",
+          "label": "Definition · Layout with one folder per stem, containing every song of that…",
+          "md": "Layout with one folder per stem, containing every song of that stem. Random chunks are mixed on the fly, so track lengths need not match."
+        },
+        {
+          "key": "reference.glossary.dt.22",
+          "label": "Glossary term · dim_t",
+          "md": "dim\\_t"
+        },
+        {
+          "key": "reference.glossary.dd.23",
+          "label": "Definition · How many spectrogram frames the window divides into — the same…",
+          "md": "How many spectrogram frames the window divides into — the same fact as `chunk_size` in different units. Every STFT here pads with `center=True`, so `chunk_size = (dim_t − 1) × hop_length` exactly. In a Roformer config the `audio.dim_t` line is ignored; the frame count follows from `audio.chunk_size` and `model.stft_hop_length`."
+        },
+        {
+          "key": "reference.glossary.dt.24",
+          "label": "Glossary term · chunk_size",
+          "md": "chunk\\_size"
+        },
+        {
+          "key": "reference.glossary.dd.25",
+          "label": "Definition · The audio window in samples that the model is trained on — the…",
+          "md": "The audio window in samples that the model is trained on — the one key *every* architecture reads from the config. Your main lever for fitting a run into limited VRAM, and the window the frame count is derived from: frames = `chunk_size ÷ hop_length + 1`."
+        },
+        {
+          "key": "reference.glossary.dt.26",
+          "label": "Glossary term · hop_length",
+          "md": "hop\\_length"
+        },
+        {
+          "key": "reference.glossary.dd.27",
+          "label": "Definition · The step between spectrogram frames, in samples — a property of…",
+          "md": "The step between spectrogram frames, in samples — a property of the model's STFT rather than a free preference. Every published Roformer uses a hundredth of the sample rate (`441` at 44.1 kHz, so a frame is 10 ms); the MSST templates and DTTNet use `n_fft ÷ 4` (`512` at `n_fft: 2048`), and mdx23c uses `n_fft ÷ 8`. Which key counts depends on the architecture: `model.stft_hop_length` for the Roformer family, `audio.hop_length` for mdx23c and DTTNet, `model.hop_size` for SCNet. In a Roformer config the `audio` copy is ignored. It also sets the memory: at a fixed window, half the hop is twice the frames."
+        },
+        {
+          "key": "reference.glossary.dt.28",
+          "label": "Glossary term · n_fft",
+          "md": "n\\_fft"
+        },
+        {
+          "key": "reference.glossary.dd.29",
+          "label": "Definition · The STFT window length in samples — 2048 in every Roformer conf…",
+          "md": "The STFT window length in samples — `2048` in every Roformer config here. It sets the frequency resolution and, indirectly, the model's size: `dim_f`, the mel bands the transformer reads, is half of it, so `n_fft: 2048` means `dim_f: 1024`. Read it from `model.stft_n_fft` in a Roformer config and from `audio.n_fft` in mdx23c or DTTNet."
+        },
+        {
+          "key": "reference.glossary.dt.30",
+          "label": "Glossary term · sample rate",
+          "md": "sample rate"
+        },
+        {
+          "key": "reference.glossary.dd.31",
+          "label": "Definition · The rate the model's spectrogram is built from, and therefore t…",
+          "md": "The rate the model's spectrogram is built from, and therefore the highest frequency it can ever reproduce: half the rate, no more."
+        },
+        {
+          "key": "reference.glossary.dt.32",
+          "label": "Glossary term · Nyquist frequency",
+          "md": "Nyquist frequency"
+        },
+        {
+          "key": "reference.glossary.dd.33",
+          "label": "Definition · Half the sample rate — the ceiling on what that rate can repres…",
+          "md": "Half the sample rate — the ceiling on what that rate can represent. At 44 100 Hz it is 22 050 Hz; everything above it is discarded before training begins."
+        },
+        {
+          "key": "reference.glossary.dt.34",
+          "label": "Glossary term · Stereo / mono",
+          "md": "Stereo / mono"
+        },
+        {
+          "key": "reference.glossary.dd.35",
+          "label": "Definition · An architecture setting, not a file format. audio.num_channels…",
+          "md": "An architecture setting, not a file format. `audio.num_channels: 2` with `model.stereo: true` is what every published Roformer uses; a mono model is `num_channels: 1` with `stereo: false`, and its attention sequence — and so its memory — is about half."
+        },
+        {
+          "key": "reference.glossary.dt.36",
+          "label": "Glossary term · Epoch",
+          "md": "Epoch"
+        },
+        {
+          "key": "reference.glossary.dd.37",
+          "label": "Definition · One full pass through num_steps updates. The trainer validates…",
+          "md": "One full pass through `num_steps` updates. The trainer validates and stores weights at the end of each one."
+        },
+        {
+          "key": "reference.glossary.dt.38",
+          "label": "Glossary term · Step",
+          "md": "Step"
+        },
+        {
+          "key": "reference.glossary.dd.39",
+          "label": "Definition · One weight update. Validation happens every num_steps steps.",
+          "md": "One weight update. Validation happens every `num_steps` steps."
+        },
+        {
+          "key": "reference.glossary.dt.40",
+          "label": "Glossary term · Gradient accumulation",
+          "md": "Gradient accumulation"
+        },
+        {
+          "key": "reference.glossary.dd.41",
+          "label": "Definition · Accumulating several steps before updating, which simulates a l…",
+          "md": "Accumulating several steps before updating, which simulates a larger batch without the VRAM cost."
+        },
+        {
+          "key": "reference.glossary.dt.42",
+          "label": "Glossary term · AMP (mixed precision)",
+          "md": "AMP (mixed precision)"
+        },
+        {
+          "key": "reference.glossary.dd.43",
+          "label": "Definition · Training partly in float16. Much faster and lighter, and on by…",
+          "md": "Training partly in float16. Much faster and lighter, and on by default via `use_amp`."
+        },
+        {
+          "key": "reference.glossary.dt.44",
+          "label": "Glossary term · Gradient checkpointing",
+          "md": "Gradient checkpointing"
+        },
+        {
+          "key": "reference.glossary.dd.45",
+          "label": "Definition · Recomputing activations instead of storing them, trading a litt…",
+          "md": "Recomputing activations instead of storing them, trading a little speed for a large VRAM saving (`use_torch_checkpoint`)."
+        },
+        {
+          "key": "reference.glossary.dt.46",
+          "label": "Glossary term · EMA",
+          "md": "EMA"
+        },
+        {
+          "key": "reference.glossary.dd.47",
+          "label": "Definition · Exponential moving average of the weights — a smoothed copy of…",
+          "md": "Exponential moving average of the weights — a smoothed copy of the model that is usually more stable."
+        },
+        {
+          "key": "reference.glossary.dt.48",
+          "label": "Glossary term · LoRA",
+          "md": "LoRA"
+        },
+        {
+          "key": "reference.glossary.dd.49",
+          "label": "Definition · Low-Rank Adaptation: training a small set of added parameters i…",
+          "md": "Low-Rank Adaptation: training a small set of added parameters instead of the full model."
+        },
+        {
+          "key": "reference.glossary.dt.50",
+          "label": "Glossary term · target_instrument",
+          "md": "target\\_instrument"
+        },
+        {
+          "key": "reference.glossary.dd.51",
+          "label": "Definition · The stem the model is being taught to produce. Set to null when…",
+          "md": "The stem the model is being taught to produce. Set to `null` when you enumerate instruments explicitly."
+        },
+        {
+          "key": "reference.glossary.dt.52",
+          "label": "Glossary term · num_overlap",
+          "md": "num\\_overlap"
+        },
+        {
+          "key": "reference.glossary.dd.53",
+          "label": "Definition · How many inference passes are averaged when producing audio. Ke…",
+          "md": "How many inference passes are averaged when producing audio. Keep it at `1` during training."
+        },
+        {
+          "key": "reference.glossary.dt.54",
+          "label": "Glossary term · TTA",
+          "md": "TTA"
+        },
+        {
+          "key": "reference.glossary.dd.55",
+          "label": "Definition · Test-time augmentation: running the input several ways and comb…",
+          "md": "Test-time augmentation: running the input several ways and combining the results. Slower, slightly cleaner."
+        },
+        {
+          "key": "reference.glossary.dt.56",
+          "label": "Glossary term · Fine-tuning",
+          "md": "Fine-tuning"
+        },
+        {
+          "key": "reference.glossary.dd.57",
+          "label": "Definition · Continuing training from an existing checkpoint so the model ad…",
+          "md": "Continuing training from an existing checkpoint so the model adapts to your material. The recommended first move."
+        },
+        {
+          "key": "reference.glossary.dt.58",
+          "label": "Glossary term · Training from scratch",
+          "md": "Training from scratch"
+        },
+        {
+          "key": "reference.glossary.dd.59",
+          "label": "Definition · Starting with no checkpoint at all. Slowest, and early metrics…",
+          "md": "Starting with no checkpoint at all. Slowest, and early metrics look bad by definition."
+        }
+      ]
+    },
+    {
+      "id": "metrics",
+      "label": "Appendix B · Metric reference",
+      "heading": {
+        "key": "reference.metrics.h2.60",
+        "label": "Chapter heading · Appendix B · Metric reference",
+        "md": "Appendix B · Metric reference"
+      },
+      "blocks": [
+        {
+          "key": "reference.metrics.p.61",
+          "label": "Paragraph · The numbers the trainer prints. They exist to tell you which di…",
+          "md": "The numbers the trainer prints. They exist to tell you which direction a run is moving — not to declare a model finished."
+        },
+        {
+          "key": "reference.metrics.div.62",
+          "label": "Label · The trade-off you will meet first",
+          "md": "The trade-off you will meet first"
+        },
+        {
+          "key": "reference.metrics.p.63",
+          "label": "Paragraph · Fullness and bleedless move against each other. Push the target…",
+          "md": "**Fullness and bleedless move against each other.** Push the target stem to sound fuller and more of the other stem tends to leak in; push bleed down and the target starts sounding thin. Pick the end of that scale your material needs — an instrumental for a karaoke track wants bleedless, a stem for remixing may prefer fullness."
+        },
+        {
+          "key": "reference.metrics.b.64",
+          "label": "Bold label · ↑ Fullness",
+          "md": "↑ Fullness"
+        },
+        {
+          "key": "reference.metrics.span.65",
+          "label": "Label · The target sounds complete and nothing feels missing — at the c…",
+          "md": "The target sounds complete and nothing feels missing — at the cost of more bleed from the other stem."
+        },
+        {
+          "key": "reference.metrics.b.66",
+          "label": "Bold label · ↑ Bleedless",
+          "md": "↑ Bleedless"
+        },
+        {
+          "key": "reference.metrics.span.67",
+          "label": "Label · The leak from the other stem disappears — but the target can st…",
+          "md": "The leak from the other stem disappears — but the target can start sounding thin or hollow."
+        },
+        {
+          "key": "reference.metrics.p.68",
+          "label": "Paragraph · A checkpoint sits somewhere on this line, not at the end of it…",
+          "md": "A checkpoint sits somewhere on this line, not at the end of it. Decide which way your material leans *before* you chase a number."
+        },
+        {
+          "key": "reference.metrics.h3.69",
+          "label": "Subheading · Choosing the scheduler metric",
+          "md": "Choosing the scheduler metric"
+        },
+        {
+          "key": "reference.metrics.p.70",
+          "label": "Paragraph · --metric_for_scheduler decides which of these numbers drives th…",
+          "md": "`--metric_for_scheduler` decides which of these numbers drives the learning-rate scheduler: while the chosen metric keeps improving, the rate holds; when it stalls for `patience` epochs, the rate is multiplied by `reduce_factor`. `sdr` is the usual choice, with `fullness` or `bleedless` as alternatives when you care about one specific behaviour."
+        },
+        {
+          "key": "reference.metrics.div.71",
+          "label": "Label · Metrics are numbers — listen to the audio",
+          "md": "Metrics are numbers — listen to the audio"
+        },
+        {
+          "key": "reference.metrics.p.72",
+          "label": "Paragraph · Use metrics for a quick evaluation and for spotting trend chang…",
+          "md": "Use metrics for a quick evaluation and for spotting trend changes. They will not tell you whether a song sounds good. Export a few tracks with the checkpoint, listen on the material you actually care about, and treat the numbers as a smoke detector rather than a verdict."
+        }
+      ]
+    },
+    {
+      "id": "edition",
+      "label": "Appendix C · Notes on this edition",
+      "heading": {
+        "key": "reference.edition.h2.73",
+        "label": "Chapter heading · Appendix C · Notes on this edition",
+        "md": "Appendix C · Notes on this edition"
+      },
+      "blocks": [
+        {
+          "key": "reference.edition.p.74",
+          "label": "Paragraph · This is a rewritten edition of the original PDF, not a re-uploa…",
+          "md": "This is a rewritten edition of the original PDF, not a re-upload. Every technical instruction is preserved; the structure, the language and the references were rebuilt, and a few known errors were corrected."
+        },
+        {
+          "key": "reference.edition.h3.75",
+          "label": "Subheading · What changed",
+          "md": "What changed"
+        },
+        {
+          "key": "reference.edition.li.76",
+          "label": "List item · Structure. The original's loosely numbered sections were reorga…",
+          "md": "**Structure.** The original's loosely numbered sections were reorganised into 13 chapters and 4 appendices, each with a consistent shape: overview, steps, caveats, cross-references."
+        },
+        {
+          "key": "reference.edition.li.77",
+          "label": "List item · Navigation. One page per stage of the workflow, a table of cont…",
+          "md": "**Navigation.** One page per stage of the workflow, a table of contents per page, a searchable error index, and cross-links between chapters."
+        },
+        {
+          "key": "reference.edition.li.78",
+          "label": "List item · Reference material. Arguments, metrics and configuration keys a…",
+          "md": "**Reference material.** Arguments, metrics and configuration keys are now tables you can scan instead of prose you have to read."
+        },
+        {
+          "key": "reference.edition.li.79",
+          "label": "List item · Error index. All failure modes were collected into a single cau…",
+          "md": "**Error index.** All failure modes were collected into a single cause-and-fix table ([Chapter 13](#errors)), including the ones originally buried inside unrelated chapters."
+        },
+        {
+          "key": "reference.edition.li.80",
+          "label": "List item · Figures. Screenshots from the original document were reproduced…",
+          "md": "**Figures.** Screenshots from the original document were reproduced with numbered captions explaining what to look at."
+        },
+        {
+          "key": "reference.edition.li.81",
+          "label": "List item · Language. Typos and unclear sentences were corrected (for examp…",
+          "md": "**Language.** Typos and unclear sentences were corrected (for example “weary” → “wary”), and the tone made consistent throughout."
+        },
+        {
+          "key": "reference.edition.h3.82",
+          "label": "Subheading · Corrections and flagged claims",
+          "md": "Corrections and flagged claims"
+        },
+        {
+          "key": "reference.edition.div.83",
+          "label": "Label · Contributions",
+          "md": "Contributions"
+        },
+        {
+          "key": "reference.edition.p.84",
+          "label": "Paragraph · The original document invites more experienced users to modify…",
+          "md": "The original document invites more experienced users to modify it as they see fit. That invitation still stands: if something here is wrong or outdated, correct it rather than working around it."
+        }
+      ]
+    },
+    {
+      "id": "credits",
+      "label": "Appendix D · Credits & links",
+      "heading": {
+        "key": "reference.credits.h2.85",
+        "label": "Chapter heading · Appendix D · Credits &amp; links",
+        "md": "Appendix D · Credits & links"
+      },
+      "blocks": [
+        {
+          "key": "reference.credits.p.86",
+          "label": "Paragraph · Nobody learns this alone. The original guide exists because sev…",
+          "md": "Nobody learns this alone. The original guide exists because several people answered questions they did not have to answer."
+        },
+        {
+          "key": "reference.credits.span.87",
+          "label": "Label · Dataset & groundwork",
+          "md": "Dataset & groundwork"
+        },
+        {
+          "key": "reference.credits.h5.88",
+          "label": "Card title · Bas Curtiz",
+          "md": "Bas Curtiz"
+        },
+        {
+          "key": "reference.credits.p.89",
+          "label": "Paragraph · Helped with the metal dataset from the very start, and wrote th…",
+          "md": "Helped with the metal dataset from the very start, and wrote the dataset-creation guide linked from Chapter 03."
+        },
+        {
+          "key": "reference.credits.span.90",
+          "label": "Label · Repository setup & methods",
+          "md": "Repository setup & methods"
+        },
+        {
+          "key": "reference.credits.h5.91",
+          "label": "Card title · unwa",
+          "md": "unwa"
+        },
+        {
+          "key": "reference.credits.p.92",
+          "label": "Paragraph · Aided the repository setup on Bas's advice, diagnosed that the…",
+          "md": "Aided the repository setup on Bas's advice, diagnosed that the MaskEstimator is what changes when the target changes, and provided the transfer-learning patch in Chapter 09."
+        },
+        {
+          "key": "reference.credits.span.93",
+          "label": "Label · The tooling itself",
+          "md": "The tooling itself"
+        },
+        {
+          "key": "reference.credits.h5.94",
+          "label": "Card title · ZFTurbo",
+          "md": "ZFTurbo"
+        },
+        {
+          "key": "reference.credits.p.95",
+          "label": "Paragraph · Author of Music-Source-Separation-Training — without it there w…",
+          "md": "Author of Music-Source-Separation-Training — without it there would be nothing to train — and a source of help on validation datasets."
+        },
+        {
+          "key": "reference.credits.span.96",
+          "label": "Label · Base models & cloud",
+          "md": "Base models & cloud"
+        },
+        {
+          "key": "reference.credits.h5.97",
+          "label": "Card title · Kimberley Jensen",
+          "md": "Kimberley Jensen"
+        },
+        {
+          "key": "reference.credits.p.98",
+          "label": "Paragraph · Provided the best base Roformer to fine-tune, and helped work o…",
+          "md": "Provided the best base Roformer to fine-tune, and helped work out the cloud training process."
+        },
+        {
+          "key": "reference.credits.span.99",
+          "label": "Label · Troubleshooting",
+          "md": "Troubleshooting"
+        },
+        {
+          "key": "reference.credits.h5.100",
+          "label": "Card title · jarredou &amp; becruily",
+          "md": "jarredou & becruily"
+        },
+        {
+          "key": "reference.credits.p.101",
+          "label": "Paragraph · Additional help with errors — becruily supplied the cloud insta…",
+          "md": "Additional help with errors — becruily supplied the cloud install commands, jarredou the note about `wx-python` breaking requirements installs."
+        },
+        {
+          "key": "reference.credits.span.102",
+          "label": "Label · And you",
+          "md": "And you"
+        },
+        {
+          "key": "reference.credits.h5.103",
+          "label": "Card title · Whoever is reading this",
+          "md": "Whoever is reading this"
+        },
+        {
+          "key": "reference.credits.p.104",
+          "label": "Paragraph · The original document ends by thanking the newbie reading it. T…",
+          "md": "The original document ends by thanking the newbie reading it. That is still the point: this guide exists to shorten someone else's learning curve."
+        },
+        {
+          "key": "reference.credits.h3.105",
+          "label": "Subheading · All links in one place",
+          "md": "All links in one place"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,479 @@
+<!doctype html>
+<!-- TEMPLATE — not served. Prose lives in content/pages/data.json; render the pages with: node tools/build.mjs -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Before you train — Requirements, datasets and validation · MSST Guide</title>
+<meta name="description" content="Hardware and software requirements, the two dataset layouts, file counts and how to build a validation set that will not throw errors.">
+<meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1">
+<link rel="canonical" href="https://msst-guide.pages.dev/data.html">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="MSST Guide">
+<meta property="og:title" content="Before you train — Requirements, datasets and validation">
+<meta property="og:description" content="Hardware and software requirements, the two dataset layouts, file counts and how to build a validation set that will not throw errors.">
+<meta property="og:url" content="https://msst-guide.pages.dev/data.html">
+<meta property="og:image" content="https://msst-guide.pages.dev/assets/img/og-image.png">
+<meta property="og:image:type" content="image/png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="MSST Guide waveform mark above the title Training Audio Source Separation Models">
+<meta property="article:section" content="Requirements and datasets">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Before you train — Requirements, datasets and validation">
+<meta name="twitter:description" content="Chapters 02–04: VRAM requirements, the Type 1 and Type 2 dataset layouts, and a validation set that will not throw errors.">
+<meta name="twitter:image" content="https://msst-guide.pages.dev/assets/img/twitter-card.png">
+<meta name="twitter:image:alt" content="MSST Guide waveform mark above the title Training Audio Source Separation Models">
+<link rel="preload" href="assets/fonts/montserrat-latin.woff2" as="font" type="font/woff2" crossorigin>
+<meta name="color-scheme" content="dark light">
+<meta name="theme-color" content="#0e1013">
+<link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
+<link rel="alternate icon" href="assets/img/favicon-32.png" sizes="32x32" type="image/png">
+<link rel="apple-touch-icon" href="assets/img/apple-touch-icon.png">
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"TechArticle","@id":"https://msst-guide.pages.dev/data.html#article","headline":"Before you train — Requirements, datasets and validation","description":"Hardware and software requirements, the two dataset layouts, file counts and how to build a validation set that will not throw errors.","articleSection":"Chapters 02–04 · Before you train","inLanguage":"en","proficiencyLevel":"Beginner","dependencies":"An NVIDIA GPU with 8 GB or more of VRAM, Python, and official FLAC or WAV stems","isPartOf":{"@id":"https://msst-guide.pages.dev/#book"},"mainEntityOfPage":{"@id":"https://msst-guide.pages.dev/data.html#webpage"},"image":{"@id":"https://msst-guide.pages.dev/#card"},"author":{"@id":"https://msst-guide.pages.dev/#publisher"},"publisher":{"@id":"https://msst-guide.pages.dev/#publisher"},"dateModified":"2026-09-20"},{"@type":"WebPage","@id":"https://msst-guide.pages.dev/data.html#webpage","url":"https://msst-guide.pages.dev/data.html","name":"Before you train — Requirements, datasets and validation · MSST Guide","description":"Hardware and software requirements, the two dataset layouts, file counts and how to build a validation set that will not throw errors.","isPartOf":{"@id":"https://msst-guide.pages.dev/#website"},"about":{"@id":"https://msst-guide.pages.dev/data.html#article"},"inLanguage":"en"},{"@type":"BreadcrumbList","@id":"https://msst-guide.pages.dev/data.html#breadcrumbs","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://msst-guide.pages.dev/"},{"@type":"ListItem","position":2,"name":"Before you train","item":"https://msst-guide.pages.dev/data.html"}]}]}</script>
+<script>/* apply the saved theme before first paint to avoid a flash */(function(){try{var t=localStorage.getItem("msst-theme");if(t!=="light"&&t!=="dark"){t=window.matchMedia&&window.matchMedia("(prefers-color-scheme: light)").matches?"light":"dark";}document.documentElement.setAttribute("data-theme",t);}catch(e){document.documentElement.setAttribute("data-theme","dark");}})();</script>
+<link rel="stylesheet" href="assets/css/site.css?v=61c969be">
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<div class="progress" aria-hidden="true"><span id="bar"></span></div>
+
+<header class="site-header">
+  <div class="inner">
+    <a class="brand" href="index.html">
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M2 14h2.2l1.6-6 1.8 10 2-14 2 16 1.8-9 1.6 4H22" stroke="url(#lg)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><defs><linearGradient id="lg" x1="2" y1="4" x2="22" y2="20"><stop stop-color="#0294be"/><stop offset="1" stop-color="#1468b2"/></linearGradient></defs></svg>
+      <b>MSST <i>Guide</i></b>
+    </a>
+    <nav class="site-nav" aria-label="Sections">
+      <a href="index.html">Home</a>
+      <a href="data.html" aria-current="page">Before you train</a>
+      <a href="setup.html">Setup &amp; config</a>
+      <a href="training.html">Training runs</a>
+      <a href="reference.html">Reference</a>
+    </nav>
+    <div class="header-actions">
+      <button class="btn btn-ghost btn-search" id="searchBtn" type="button" aria-haspopup="dialog" aria-expanded="false" aria-controls="searchOverlay" aria-label="Search the guide" title="Search all pages (press /)">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M16.4 16.4L21 21"/></svg>
+        <span class="search-lbl">Search</span>
+      </button>
+      <button class="switch" id="themeToggle" type="button" role="switch" aria-checked="true" aria-label="Switch to light theme" title="Switch to light theme">
+        <span class="track">
+          <span class="thumb" aria-hidden="true"></span>
+          <span class="ico ico-sun" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round"><circle cx="12" cy="12" r="4.3"/><path d="M12 1.8v2.6M12 19.6v2.6M1.8 12h2.6M19.6 12h2.6M4.8 4.8l1.9 1.9M17.3 17.3l1.9 1.9M19.2 4.8l-1.9 1.9M6.7 17.3l-1.9 1.9"/></svg></span>
+          <span class="ico ico-moon" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M20.6 14.3A8.7 8.7 0 0 1 9.7 3.4 8.9 8.9 0 1 0 20.6 14.3z"/></svg></span>
+        </span>
+      </button>
+      <button class="btn btn-ghost" type="button" data-print aria-label="Save as PDF" title="Save as PDF">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9V3h12v6"/><rect x="3" y="9" width="18" height="8" rx="2"/><path d="M6 17h12v4H6z"/></svg>
+        <span class="print-lbl">Save as PDF</span>
+      </button>
+      <button class="menu-btn" id="menuBtn" type="button" aria-expanded="false" aria-controls="drawer">Menu</button>
+    </div>
+  </div>
+</header>
+
+<div class="drawer" id="drawer">
+  <p class="dlabel">Sections</p>
+  <ul>
+    <li><a href="index.html">Home &amp; overview</a></li>
+    <li><a href="data.html" aria-current="page">02–04 · Before you train</a></li>
+    <li><a href="setup.html">05–07 · Setup &amp; config</a></li>
+    <li><a href="training.html">08–12 · Training runs</a></li>
+    <li><a href="reference.html">13 · Reference &amp; appendices</a></li>
+  </ul>
+</div>
+
+<main id="main">
+<div class="shell">
+
+  <div class="page-head">
+    <p class="crumbs"><a href="index.html">Guide</a><span>/</span>Part one</p>
+    <!--c:data.head.p.01:prose:p| class="eyebrow"-->
+    <h1><!--c:data.head.h1.02:inline--></h1>
+    <!--c:data.head.p.03:prose:p| class="lede"-->
+    <div class="chips">
+      <span>Ch 02 Requirements</span>
+      <span>Ch 03 Dataset</span>
+      <span>Ch 04 Validation</span>
+      <span>~10 min read</span>
+    </div>
+  </div>
+
+  <div class="with-toc">
+    <article>
+
+      <!-- ============ REQUIREMENTS ============ -->
+      <h2 id="requirements"><!--c:data.requirements.h2.04:inline--></h2>
+      <!--c:data.requirements.p.05:prose:p| class="lead-in"-->
+
+      <h3 id="what-you-need"><!--c:data.requirements.h3.06:inline--></h3>
+      <ul>
+        <li><!--c:data.requirements.li.07:inline--></li>
+        <li><!--c:data.requirements.li.08:inline--></li>
+        <li><!--c:data.requirements.li.09:inline--></li>
+        <li><!--c:data.requirements.li.10:inline--></li>
+      </ul>
+
+      <h3 id="hardware-and-software-honestly"><!--c:data.requirements.h3.11:inline--></h3>
+      <div class="table-scroll">
+        <table>
+          <thead>
+            <tr><th>Item</th><th>Minimum</th><th>Comfortable</th><th>Notes</th></tr>
+          </thead>
+          <tbody>
+            <tr class="hi">
+              <td class="t-key"><code>GPU</code></td>
+              <td>NVIDIA, 8 GB VRAM</td>
+              <td>24 GB+ VRAM</td>
+              <td>Required — AMD and Apple GPUs are not supported by this training stack.</td>
+            </tr>
+            <tr>
+              <td class="t-key"><code>Use case</code></td>
+              <td>Pre-training, shifting a target</td>
+              <td>Full training runs</td>
+              <td>An 8 GB card is fine for prototyping; real training belongs on rented hardware.</td>
+            </tr>
+            <tr>
+              <td class="t-key"><code>Python</code></td>
+              <td>3.10+</td>
+              <td>Latest stable</td>
+              <td>Needed to run the training scripts locally. Not required if you only ever use a cloud notebook image.</td>
+            </tr>
+            <tr>
+              <td class="t-key"><code>Disk</code></td>
+              <td>~100 GB free</td>
+              <td>250 GB+</td>
+              <td>Datasets, checkpoints written every epoch, and cached tensors add up quickly.</td>
+            </tr>
+            <tr>
+              <td class="t-key"><code>Audio tools</code></td>
+              <td>Any DAW or converter</td>
+              <td>A stem-aware editor</td>
+              <td>You will trim, align and export stems by hand at some point.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="meters">
+        <h6><!--c:data.requirements.h6.12:inline--></h6>
+        <div class="meter"><span class="lbl"><!--c:data.requirements.span.13:inline--></span><div class="track"><i style="--v:6%"></i></div><span class="val"><!--c:data.requirements.span.14:inline--></span></div>
+        <div class="meter"><span class="lbl"><!--c:data.requirements.span.15:inline--></span><div class="track"><i style="--v:17%"></i></div><span class="val"><!--c:data.requirements.span.16:inline--></span></div>
+        <div class="meter warn"><span class="lbl"><!--c:data.requirements.span.17:inline--></span><div class="track"><i style="--v:100%"></i></div><span class="val"><!--c:data.requirements.span.18:inline--></span></div>
+        <!--c:data.requirements.p.19:prose:p| class="foot"-->
+      </div>
+
+      <div class="callout">
+        <div class="ico"></div>
+        <div>
+          <div class="ttl"><!--c:data.requirements.div.20:inline--></div>
+          <!--c:data.requirements.p.21:prose:p|-->
+        </div>
+      </div>
+
+      <!-- ============ DATASET ============ -->
+      <h2 id="dataset"><!--c:data.dataset.h2.22:inline--></h2>
+      <!--c:data.dataset.p.23:prose:p| class="lead-in"-->
+
+      <div class="callout warn">
+        <div class="ico"></div>
+        <div>
+          <div class="ttl"><!--c:data.dataset.div.24:inline--></div>
+          <!--c:data.dataset.p.25:prose:p|-->
+        </div>
+      </div>
+
+      <h3 id="if-you-have-no-dataset-yet"><!--c:data.dataset.h3.26:inline--></h3>
+      <!--c:data.dataset.p.27:prose:p|-->
+
+      <h3 id="type-1-one-folder-per-song-one-file-per-stem"><!--c:data.dataset.h3.28:inline--></h3>
+      <div class="tree">
+        <div class="tree-bar">Type 1 layout · modelled on MUSDB18 · 4-stem models</div>
+<pre><span class="d">MAIN_DATASET/</span>
+├── <span class="d">song name 1/</span>
+│   ├── bass.flac
+│   ├── drums.flac
+│   ├── other.flac
+│   └── vocals.flac
+└── <span class="d">song name 2/</span>
+    ├── bass.flac
+    ├── drums.flac
+    ├── other.flac
+    └── vocals.flac</pre>
+      </div>
+      <!--c:data.dataset.p.29:prose:p|-->
+
+      <div class="callout danger">
+        <div class="ico"></div>
+        <div>
+          <div class="ttl"><!--c:data.dataset.div.30:inline--></div>
+          <!--c:data.dataset.p.31:prose:p|-->
+          <div class="code" style="margin-bottom:0">
+            <div class="code-bar"><span class="tag">Error · dataset_type 1</span></div>
+<pre>Warning: lengths of stems are different for path:
+  [C:\PATH_TO_DATASET\SONG_FOLDER].  (25666810 != 28057480)</pre>
+          </div>
+          <!--c:data.dataset.p.32:prose:p| style="margin-top:12px"-->
+        </div>
+      </div>
+
+      <h3 id="type-2-one-folder-per-stem-all-songs-inside"><!--c:data.dataset.h3.33:inline--></h3>
+      <div class="tree">
+        <div class="tree-bar">Type 2 layout · 2-stem models · drums/bass merged into “other”</div>
+<pre><span class="d">MAIN_DATASET/</span>
+├── <span class="d">other/</span>
+│   ├── song 1 (Instrumental).flac
+│   ├── song 2 (Instrumental).flac
+│   ├── song 3 (Instrumental).flac
+│   └── song 4 (Instrumental).flac
+└── <span class="d">vocals/</span>
+    ├── song 1 (Vocals).flac
+    ├── song 2 (Vocals).flac
+    ├── song 3 (Vocals).flac
+    └── song 4 (Vocals).flac</pre>
+      </div>
+      <!--c:data.dataset.p.34:prose:p|-->
+
+      <figure class="fig">
+        <div class="fig-bar"><span class="tag"><!--c:data.dataset.span.35:inline--></span></div>
+        <div class="fig-scroll">
+        <svg class="schematic" viewBox="0 0 620 240" role="img" aria-label="Type 1 keeps all stems aligned to the same length; Type 2 cuts each stem folder into random fixed-length chunks that are mixed at load time.">
+          <text class="hd" x="8" y="16">TYPE 1 · ALIGNED STEMS</text>
+          <rect class="track" x="8" y="28" width="496" height="11" rx="3"/><rect class="band" x="8" y="28" width="496" height="11" rx="3"/>
+          <rect class="track" x="8" y="44" width="496" height="11" rx="3"/><rect class="band" x="8" y="44" width="496" height="11" rx="3"/>
+          <rect class="track" x="8" y="60" width="496" height="11" rx="3"/><rect class="band" x="8" y="60" width="496" height="11" rx="3"/>
+          <rect class="track" x="8" y="76" width="496" height="11" rx="3"/><rect class="band" x="8" y="76" width="496" height="11" rx="3"/>
+          <path class="axis" d="M510 22V95" stroke-dasharray="4 4"/>
+          <text class="lbl" x="520" y="54">all stems</text>
+          <text class="lbl" x="520" y="68">end together</text>
+
+          <text class="hd" x="8" y="128">TYPE 2 · CHUNKED AT LOAD TIME</text>
+          <rect class="track" x="8" y="140" width="496" height="15" rx="3"/>
+          <rect class="win" x="136" y="140" width="58" height="15" rx="3"/>
+          <rect class="win" x="378" y="140" width="58" height="15" rx="3"/>
+          <rect class="track" x="8" y="166" width="496" height="15" rx="3"/>
+          <rect class="band-b" x="252" y="166" width="58" height="15" rx="3"/>
+          <rect class="band-b" x="438" y="166" width="58" height="15" rx="3"/>
+          <text class="lbl" x="520" y="150">random</text>
+          <text class="lbl" x="520" y="164">chunks</text>
+          <text class="lbl" x="520" y="178">mixed</text>
+          <text class="lbl" x="8" y="206">Instrumental and vocal folders stay separate; one fixed-length window</text>
+          <text class="lbl" x="8" y="222">(= chunk_size) is drawn from each and summed into a single training example.</text>
+        </svg>
+        </div>
+        <!--c:data.dataset.caption.36:prose:figcaption|-->
+      </figure>
+
+      <h3 id="how-many-files"><!--c:data.dataset.h3.37:inline--></h3>
+      <!--c:data.dataset.p.38:prose:p|-->
+      <div class="two-col">
+        <div class="card">
+          <span class="k"><!--c:data.dataset.span.39:inline--></span>
+          <h5><!--c:data.dataset.h5.40:inline--></h5>
+          <!--c:data.dataset.p.41:prose:p|-->
+        </div>
+        <div class="card">
+          <span class="k"><!--c:data.dataset.span.42:inline--></span>
+          <h5><!--c:data.dataset.h5.43:inline--></h5>
+          <!--c:data.dataset.p.44:prose:p|-->
+        </div>
+      </div>
+
+      <h3 id="where-the-audio-should-come-from"><!--c:data.dataset.h3.45:inline--></h3>
+      <!--c:data.dataset.p.46:prose:p|-->
+
+      <div class="callout danger">
+        <div class="ico"></div>
+        <div>
+          <div class="ttl"><!--c:data.dataset.div.47:inline--></div>
+          <!--c:data.dataset.p.48:prose:p|-->
+          <div class="code" style="margin-bottom:0">
+            <div class="code-bar"><span class="tag">config.yaml</span></div>
+<pre><span class="f">target_instrument</span><span class="eq">:</span> <span class="k">null</span>
+<span class="f">instruments</span><span class="eq">:</span>
+  - vocals
+  - other</pre>
+          </div>
+          <!--c:data.dataset.p.49:prose:p| style="margin-top:12px"-->
+          <div class="code" style="margin-bottom:0">
+            <div class="code-bar"><span class="tag">RuntimeError</span></div>
+<pre>output with shape [1, 2, {chunk size}] doesn't match with
+  the broadcast shape [2, 2, {chunk size}]</pre>
+          </div>
+        </div>
+      </div>
+
+      <div class="callout quiet time">
+        <div class="ico"></div>
+        <div>
+          <div class="ttl"><!--c:data.dataset.div.50:inline--></div>
+          <!--c:data.dataset.p.51:prose:p|-->
+        </div>
+      </div>
+
+      <!-- ============ VALIDATION ============ -->
+      <h2 id="validation"><!--c:data.validation.h2.52:inline--></h2>
+      <!--c:data.validation.p.53:prose:p| class="lead-in"-->
+
+      <div class="tree">
+        <div class="tree-bar">Validation layout · 2-stem example</div>
+<pre><span class="d">validation_dataset/</span>
+├── <span class="d">song name 1/</span>
+│   ├── mixture.wav   <span class="c">← stem 1 + stem 2 summed</span>
+│   ├── other.wav
+│   └── vocals.wav
+└── <span class="d">song name 2/</span>
+    ├── mixture.wav
+    ├── other.wav
+    └── vocals.wav</pre>
+      </div>
+      <!--c:data.validation.p.54:prose:p|-->
+
+      <figure class="fig">
+        <div class="fig-bar"><span class="tag"><!--c:data.validation.span.55:inline--></span></div>
+        <div class="fig-scroll">
+        <svg class="schematic" viewBox="0 0 620 250" role="img" aria-label="Three waveforms: mixture.wav on top, vocals.wav and other.wav below it; the mixture is the sum of the two stems.">
+          <text class="lbl" x="8" y="30">mixture.wav</text><path class="axis" d="M8 58h600" stroke-dasharray="3 5"/>
+          <path class="line-a" d="M8 58 Q28 34 48 58 Q68 82 88 58 Q108 38 128 58 Q148 78 168 58 Q188 36 208 58 Q228 80 248 58 Q268 38 288 58 Q308 78 328 58 Q348 36 368 58 Q388 82 408 58 Q428 40 448 58 Q468 76 488 58 Q508 38 528 58 Q548 80 568 58 Q588 42 608 58"/>
+          <text class="lbl" x="8" y="112">vocals.wav</text><path class="axis" d="M8 138h600" stroke-dasharray="3 5"/>
+          <path class="line-b" d="M8 138 Q28 126 48 138 Q68 150 88 138 Q108 122 128 138 Q148 152 168 138 Q188 128 208 138 Q228 148 248 138 Q268 124 288 138 Q308 150 328 138 Q348 130 368 138 Q388 146 408 138 Q428 126 448 138 Q468 148 488 138 Q508 132 528 138 Q548 144 568 138 Q588 130 608 138"/>
+          <text class="lbl" x="8" y="192">other.wav</text><path class="axis" d="M8 218h600" stroke-dasharray="3 5"/>
+          <path class="line-a" d="M8 218 Q28 198 48 218 Q68 238 88 218 Q108 200 128 218 Q148 234 168 218 Q188 198 208 218 Q228 238 248 218 Q268 202 288 218 Q308 234 328 218 Q348 198 368 218 Q388 238 408 218 Q428 200 448 218 Q468 234 488 218 Q508 198 528 218 Q548 236 568 218 Q588 202 608 218"/>
+          <text class="lbl" x="8" y="244">mixture = vocals + other · every file the same length</text>
+        </svg>
+        </div>
+        <!--c:data.validation.caption.56:prose:figcaption|-->
+      </figure>
+
+      <div class="callout warn">
+        <div class="ico"></div>
+        <div>
+          <div class="ttl"><!--c:data.validation.div.57:inline--></div>
+          <!--c:data.validation.p.58:prose:p|-->
+        </div>
+      </div>
+
+      <h3 id="choose-your-tracks-wisely"><!--c:data.validation.h3.59:inline--></h3>
+      <ul>
+        <li><!--c:data.validation.li.60:inline--></li>
+        <li><!--c:data.validation.li.61:inline--></li>
+        <li><!--c:data.validation.li.62:inline--></li>
+      </ul>
+
+      <div class="table-scroll">
+        <table>
+          <thead>
+            <tr><th>Validation source</th><th>Speed</th><th>Reported metrics</th><th>Use it when</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Full tracks</td>
+              <td><span class="chip down">slower</span></td>
+              <td><span class="chip up">higher, more honest</span></td>
+              <td>You are judging the final quality of a run.</td>
+            </tr>
+            <tr>
+              <td>30 s – 1 min clips</td>
+              <td><span class="chip up">faster</span></td>
+              <td><span class="chip down">lower</span></td>
+              <td>You are iterating on config, or your GPU is small.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="callout danger">
+        <div class="ico"></div>
+        <div>
+          <div class="ttl"><!--c:data.validation.div.63:inline--></div>
+          <!--c:data.validation.p.64:prose:p|-->
+          <div class="code" style="margin-bottom:0">
+            <div class="code-bar"><span class="tag">ValueError · validation stage</span></div>
+<pre>ValueError: operands could not be broadcast together with shapes</pre>
+          </div>
+          <!--c:data.validation.p.65:prose:p| style="margin-top:12px"-->
+        </div>
+      </div>
+
+      <h3 id="sanity-checklist"><!--c:data.validation.h3.66:inline--></h3>
+      <div class="callout check">
+        <div class="ico"></div>
+        <div>
+          <div class="ttl"><!--c:data.validation.div.67:inline--></div>
+          <ul style="margin-bottom:0">
+            <li><!--c:data.validation.li.68:inline--></li>
+            <li><!--c:data.validation.li.69:inline--></li>
+            <li><!--c:data.validation.li.70:inline--></li>
+            <li><!--c:data.validation.li.71:inline--></li>
+            <li><!--c:data.validation.li.72:inline--></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="pager">
+        <a href="index.html">
+          <span class="lbl">Previous · Chapter 01</span>
+          <span class="ttl">← Overview</span>
+        </a>
+        <a class="next" href="setup.html">
+          <span class="lbl">Next · Chapters 05–07</span>
+          <span class="ttl">Setup &amp; configuration →</span>
+        </a>
+      </div>
+
+    </article>
+
+    <aside class="toc" aria-label="On this page">
+      <h6>On this page</h6>
+      <ol>
+        <li><a href="#requirements">Requirements</a></li>
+        <li><a href="#dataset">Building a dataset</a></li>
+        <li><a href="#validation">Building a validation set</a></li>
+      </ol>
+      <div class="toc-foot">
+        <a class="btn btn-ghost" href="index.html" style="width:100%;justify-content:center">← Back to overview</a>
+      </div>
+    </aside>
+  </div>
+
+</div>
+</main>
+
+<footer class="site-footer">
+  <div class="inner">
+    <div>
+      <h6>About this guide</h6>
+      <p>A rewritten, restructured edition of Meskvlla33's community document on training audio source separation models, expanded with a troubleshooting index, a glossary and a metric reference.</p>
+    </div>
+    <div>
+      <h6>Read</h6>
+      <ul>
+        <li><a href="data.html">02–04 · Before you train</a></li>
+        <li><a href="setup.html">05–07 · Setup &amp; config</a></li>
+        <li><a href="training.html">08–12 · Training runs</a></li>
+        <li><a href="reference.html">13 · Reference &amp; appendices</a></li>
+      </ul>
+    </div>
+    <div>
+      <h6>Elsewhere</h6>
+      <ul>
+        <li><a href="https://github.com/ZFTurbo/Music-Source-Separation-Training" rel="noopener">Training repository</a></li>
+        <li><a href="https://www.pytorch.org" rel="noopener">PyTorch</a></li>
+        <li><a href="https://vast.ai" rel="noopener">vast.ai</a></li>
+        <li><a href="reference.html#credits">Credits</a></li>
+      </ul>
+    </div>
+    <div class="colophon">
+      <span>Edition 2.0 · 2026 · Community maintained</span>
+      <span>Original guide by Meskvlla33</span>
+    </div>
+  </div>
+</footer>
+
+<button class="backtop" id="backtop" type="button" aria-label="Back to top">
+  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
+</button>
+<script src="assets/js/search-index.js?v=d0ee56dd"></script>
+<script src="assets/js/site.js?v=aad2f860"></script>
+</body>
+</html>

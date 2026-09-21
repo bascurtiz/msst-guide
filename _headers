@@ -1,0 +1,38 @@
+# Cloudflare Pages response headers.
+#
+# This file is read by Pages itself and is not served as an asset. It only has an
+# effect on a Pages deployment — GitHub Pages, `python -m http.server` and every
+# other host ignore it, so it is safe to keep in the repository and in the
+# upload bundle.
+#
+# Note how it is written: when several rules match one request, Pages *merges*
+# their headers, and a header set twice is joined with a comma rather than
+# overridden. So each path is given a `Cache-Control` exactly once — putting a
+# broad `/assets/*` cache rule next to the fonts rule below would emit
+# `public, max-age=604800, public, max-age=31536000, immutable`, which is not
+# what either rule means.
+
+/*
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+  Permissions-Policy: geolocation=(), microphone=(), camera=()
+
+# The content editor (Sveltia CMS). It is a real page on this site, so it is kept
+# out of search twice over: `Disallow` in robots.txt for well-behaved crawlers,
+# and this header for the ones that ignore it. `no-store` as well, because a
+# cached editor page is a stale editor.
+/admin
+  X-Robots-Tag: noindex, nofollow
+  Cache-Control: no-store
+
+/admin/*
+  X-Robots-Tag: noindex, nofollow
+  Cache-Control: no-store
+
+# Montserrat, self-hosted. The files are named by weight and version-controlled,
+# so they never change under a stable URL — the one thing here worth caching
+# forever. Everything else under /assets is either version-stamped (`?v=…` on
+# the CSS and JS, refreshed by tools/stamp-assets.py) or small enough not to
+# matter, so it keeps the default caching.
+/assets/fonts/*
+  Cache-Control: public, max-age=31536000, immutable
