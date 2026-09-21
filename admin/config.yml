@@ -21,7 +21,7 @@ backend:
   # instead: an unconfigured button falls back to Netlify's OAuth client, which
   # knows nothing about this site, so it is the comment that keeps the sign-in
   # screen honest.
-  base_url: https://sveltia-cms-auth.YOUR-SUBDOMAIN.workers.dev
+  base_url: https://sveltia-cms-auth.multimedia.workers.dev
 
   # How much the sign-in asks GitHub for on the author's behalf. The Worker's own
   # default is `repo,user`, which GitHub presents to the signer as *full control of
