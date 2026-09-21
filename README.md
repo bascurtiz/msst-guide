@@ -288,6 +288,31 @@ changing the path in the SVG:
 python tools/make-favicon.py
 ```
 
+## The repository
+
+The site lives at **<https://github.com/bascurtiz/msst-guide>** (public, default
+branch `main`), and that is what `admin/config.yml` points the editor at.
+
+What is committed is the source *and* the output: the five rendered pages, plus
+`src/`, `content/`, `tools/`, `assets/` and `admin/`. `dist/` and
+`training-guide.zip` are the only things ignored, because `tools/package-site.mjs`
+rebuilds them. Committing the rendered pages is what keeps the root servable by
+anything, with no build step and no output directory to configure.
+
+`.github/workflows/build.yml` runs on a push that touches `content/`, `src/`,
+`tools/`, `assets/css/` or `assets/js/site.js` — that is, on an editor's save. It
+tests the renderer, re-renders the pages and commits them if they changed, so
+the repository is always current even for someone browsing it. A save that
+changes nothing produces no commit: a re-render of the committed pages is
+byte-identical, on Linux as well as Windows.
+
+Publishing is the one thing left to configure, and it depends on how the Pages
+project was made. **`admin/SETUP.md` §4** covers both routes: connect the project
+to this repository and it publishes on every push, or keep uploading by hand and
+add two repository secrets so the workflow publishes for you. The live site is
+currently behind the repository — its `robots.txt` has no `Disallow: /admin/`,
+so it was deployed before the editor existed.
+
 ## Editing
 
 ### The text — by the guide's author, in a browser
