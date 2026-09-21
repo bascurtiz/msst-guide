@@ -76,7 +76,8 @@ node tools/build.mjs             # render the pages, rebuild the search index, r
 node tools/build.mjs --check     # report whether the committed pages are current (exit 1 if not)
 node tools/package-site.mjs      # render, stage dist/, zip the upload bundle (also: --no-build, --no-zip, --out)
 node tools/extract-content.mjs   # one-time: split hand-written pages into templates + content
-node tools/lib/md.test.mjs       # unit tests for the renderer: node --test tools/lib/md.test.mjs
+node --test tools/lib/*.test.mjs # unit tests: the renderer, and the reference check
+                                 # (bash expands the glob; list the files if yours will not)
 
 python tools/seo.py              # regenerate sitemap.xml + robots.txt
 python tools/make-og-image.py    # re-render the social cards (needs Pillow)
@@ -89,11 +90,17 @@ python tools/add-heading-ids.py  # give a hand-added heading an anchor id (templ
 build does both, so the ordering rule they needed (rebuild the index, *then*
 stamp) no longer exists. They are kept only for reference.
 
-If the build reports a problem, it exits non-zero and names the file: a slot in a
-template with no text behind it, or text with no slot to go in. Both mean the
-template and the content file have drifted apart, and both are worth stopping
-for — a warning here is a paragraph that would otherwise silently disappear from
-the site.
+If the build reports a problem, it exits non-zero and names the file. There are
+three kinds, and all of them are worth stopping for:
+
+- **A slot with no text behind it, or text with no slot to go in.** The template
+  and the content file have drifted apart — otherwise a paragraph silently
+  disappears from the site.
+- **A reference to a file that does not exist.** This is the one the author can
+  cause without touching markup: he inserts an image through the editor, and a
+  mistyped filename, or an upload he never saved, is a 404 that nobody sees until
+  a reader does. `tools/lib/refs.mjs` classifies the references and resolves them,
+  and the packager applies the same check to the staged bundle.
 
 ## Asset caching
 
@@ -317,14 +324,20 @@ so it was deployed before the editor existed.
 
 ### The text — by the guide's author, in a browser
 
-`/admin/` is a content editor. Sign in with GitHub, pick a chapter, edit the
-paragraphs, save: the CMS commits `content/pages/<page>.json`, the build renders
-the pages, and the site is live about a minute later. `admin/SETUP.md` has the
-one-time login setup (a personal access token, or a "sign in with GitHub" button
-via a small Cloudflare Worker) and the deploy notes — including the one thing
-that decides whether saving publishes at all: on a Git-connected Pages project
-the host renders and republishes itself, while a project filled by direct upload
+`/admin/` is a content editor. Sign in, pick a chapter, edit the paragraphs,
+save: the CMS commits `content/pages/<page>.json`, the build renders the pages,
+and the site is live about a minute later. `admin/SETUP.md` has the one-time
+login setup (a personal access token, or a "sign in with GitHub" button via a
+small Cloudflare Worker) and the deploy notes — including the one thing that
+decides whether saving publishes at all: on a Git-connected Pages project the
+host renders and republishes itself, while a project filled by direct upload
 needs the repository's workflow to do it.
+
+`admin/GUIDE-FOR-AUTHOR.md` is the version of all this written for the guide's
+author rather than for a developer — forward it to him as it stands, or link him
+to it on GitHub. It covers only what he needs: the invite, signing in with a
+token, finding his text, editing and saving, what is deliberately out of reach,
+and the house style.
 
 What the editor can reach: every paragraph, list item, sub-heading, card title,
 label and figure caption, on all five pages. What it deliberately cannot: the SVG
@@ -335,6 +348,22 @@ editor cannot represent safely, so they stay in the templates and change in code
 Two rules the build enforces rather than trusts: a block's **key** ties the text
 to its slot in the template (rename it and the build stops), and a block's
 **styling comes from the slot** (an intro line stays an intro line).
+
+### Images — by the guide's author, through the media library
+
+The editor inserts images. The toolbar's image button (the `image` editor
+component, on by default) opens the media library; an upload is written to
+`assets/uploads/` and committed in the same save as the text that references it.
+What lands in the content file is ordinary markdown —
+`![alt text](/assets/uploads/name.png)` — which the renderer turns into an
+`<img>`, so a picture in an article behaves like any other paragraph.
+
+The path is checked rather than trusted: if the file is not there, the build
+fails and names the page and the reference, so the edit is rejected instead of
+being published with a broken image. `media_folder` and `public_folder` in
+`admin/config.yml` decide where an upload is written and what path is written
+into the text, and `tools/package-site.mjs` publishes `assets/uploads/` with the
+rest of the site.
 
 ### The layout — in the templates
 

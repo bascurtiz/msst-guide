@@ -39,10 +39,11 @@ No infrastructure, works immediately, and it is the right choice if the author
 is the only person who will ever edit.
 
 He opens `https://<site>/admin/`, picks **Sign in with Token**, and follows the
-link the dialog offers — GitHub creates a token with the right permissions
-pre-filled (a fine-grained token needs **Contents: read and write**; a classic
-token needs the `repo` scope). He pastes it in. The token is stored in his
-browser and reused from then on.
+link the dialog offers. That link opens GitHub's new fine-grained token form with
+the name and **Contents: Read and write** already set; he still chooses
+*Only select repositories → msst-guide* and an expiration, generates it, and
+pastes the value in. The token is stored in his browser and reused from then on.
+(The alternative is a classic token with the `repo` scope, if he prefers.)
 
 Until step 3 is done, tell him to use **Sign in with a token** and *not* the
 "Sign in with GitHub" button next to it: with no authenticator configured, that
@@ -147,10 +148,38 @@ rule that applies `X-Robots-Tag: noindex` to `*.pages.dev`, to keep preview URLs
 out of search results. Do **not** add it here — this site's live URL *is* a
 `pages.dev` address, so that rule would deindex the guide itself.
 
+## 5. Forward the steps to the author
+
+Once the three things above are true, give him these — **`GUIDE-FOR-AUTHOR.md`**,
+which is written for him rather than for a developer, or a link to it on GitHub:
+
+<https://github.com/bascurtiz/msst-guide/blob/main/admin/GUIDE-FOR-AUTHOR.md>
+
+A checklist for you beforehand:
+
+1. **Publish once** (see §4) so `/admin/` exists on the live site. Until then the
+   editor URL shows the guide itself, because the host falls back to the home page
+   for a path it does not have — and the deployed bundle currently predates the
+   editor.
+2. **Add him as a collaborator with write access**: the repository page →
+   *Settings* → *Collaborators and teams* → *Add people* → his GitHub username or
+   email → role **Write**. A public repository grants read, not write, so this is
+   required for a save to be accepted.
+3. **Send the editor URL**, <https://msst-guide.pages.dev/admin/>, and tell him to
+   use *Sign in with a token* — that is step 2 of his guide, and it needs nothing
+   from you. Do the OAuth worker in §3 only if you want him on the button instead.
+
+Neither of the two guides in this folder is published: the packager stages only
+`admin/index.html` and `admin/config.yml` from `admin/`, so `/admin/` on the live
+site is the editor and nothing else.
+
 ## What the author can and cannot change
 
 Editable: every paragraph, list item, sub-heading, card title, label and
-figure caption on all five pages.
+figure caption on all five pages, plus **images** — the editor's media library
+writes an upload to `assets/uploads/` and the rendered path is verified by the
+build, so a mistyped filename fails the save instead of publishing a broken
+image.
 
 Not editable, by design: the SVG diagrams, code samples and command blocks, the
 tables, the chunk-size calculator, the sidebar, the table of contents, the
