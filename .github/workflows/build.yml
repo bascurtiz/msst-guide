@@ -5,8 +5,9 @@ name: Render the pages
 # renders them back into the pages and commits that, and Cloudflare Pages
 # republishes. No build step on the host, no output directory to configure.
 #
-# The generated pages are deliberately absent from `paths` below, so this
-# workflow's own commit does not trigger another run.
+# The generated pages are deliberately absent from `paths` below — as is the
+# generated search index — so this workflow's own commit does not trigger
+# another run.
 
 on:
   push:
@@ -17,6 +18,12 @@ on:
       - "tools/**"
       - "assets/css/**"
       - "assets/js/site.js"
+      # An image the author uploads, or a figure replaced with a corrected
+      # screenshot. `assets/js/search-index.js` is deliberately not listed —
+      # this workflow generates it, so listing it would have the run trigger
+      # itself.
+      - "assets/uploads/**"
+      - "assets/img/**"
   workflow_dispatch:
 
 permissions:
@@ -36,9 +43,11 @@ jobs:
         with:
           node-version: "20"
 
-      # A renderer bug would otherwise publish silently mangled pages.
-      - name: Test the markdown renderer
-        run: node --test tools/lib/md.test.mjs
+      # A renderer bug would otherwise publish silently mangled pages, and a
+      # broken reference check would either wave through a 404 or refuse a good
+      # edit. Both suites are cheap; the shell expands the glob.
+      - name: Test the renderer and the reference check
+        run: node --test tools/lib/*.test.mjs
 
       - name: Render the pages
         run: node tools/build.mjs

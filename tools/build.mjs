@@ -26,6 +26,7 @@ import { fileURLToPath } from "node:url";
 
 import { detectEol } from "./lib/html.mjs";
 import { mdToHtmlBlocks, mdToHtmlInlineBlock } from "./lib/md.mjs";
+import { localRefs, resolveInRoot } from "./lib/refs.mjs";
 import { PAGES, buildSearchIndex } from "./lib/search-index.mjs";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
@@ -113,6 +114,31 @@ function stamp(html, stamps) {
   return out;
 }
 
+/* ------------------------------------------------------ referenced files --- */
+
+/**
+ * The repository root *is* the site, so every local file a page points at has
+ * to be in it. A wrong path in the sidebar or the pager is markup's problem and
+ * markup is reviewed; a wrong path in *prose* is the author's, and he cannot see
+ * it — he uploads in a browser, and a mistyped filename, or an upload he never
+ * committed, is a 404 that nobody notices until a reader does. So the build
+ * fails the save and names the file, rather than leaving it to the packager (on
+ * a connected Pages project, that would surface as a failed deploy instead).
+ *
+ * Fragments are deliberately not checked: `#dataset` staying in step with
+ * `id="dataset"` is a property of the templates, and those ids are baked into
+ * markup the author never touches. Which references are local, and where one
+ * resolves, lives in ./lib/refs.mjs — unit tested, and shared in spirit with the
+ * packager, which runs the same idea over the staged bundle.
+ */
+function auditRefs(file, html, problems) {
+  for (const { url, target } of localRefs(html)) {
+    if (!resolveInRoot(ROOT, target)) {
+      problems.push(`${file}: ${url} points at a file that does not exist`);
+    }
+  }
+}
+
 function build({ write }) {
   const problems = [];
   const rendered = new Map();
@@ -145,6 +171,8 @@ function build({ write }) {
   for (const { file } of PAGES) {
     const page = file.replace(/\.html$/, "");
     const html = stamp(rendered.get(page).html, stamps);
+    // audit exactly the bytes destined for disk, not the pre-stamp markup
+    auditRefs(file, html, problems);
     const target = path.join(ROOT, file);
     const before = fs.existsSync(target) ? fs.readFileSync(target, "utf8") : null;
     if (write) {

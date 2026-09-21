@@ -54,13 +54,23 @@ const ADMIN = ["admin/index.html", "admin/config.yml"];
  * handled by the allowlist above, which only ever copies the two named files.
  */
 const FORBIDDEN = ["/src/", "/content/", "/tools/", "/.github/", "/.freebuff/", "/dist/", "/node_modules/"];
-const FORBIDDEN_FILES = new Set(["readme.md", "admin/setup.md", "package.json", "package-lock.json"]);
+const FORBIDDEN_FILES = new Set([
+  "readme.md",
+  "admin/setup.md",
+  "admin/guide-for-author.md",
+  "package.json",
+  "package-lock.json",
+]);
 
 // ---------------------------------------------------------------- staging ---
 
 function walk(dir, rel = "") {
   const out = [];
   for (const entry of readdirSync(dir, { withFileTypes: true }).sort((a, b) => a.name.localeCompare(b.name))) {
+    // A dotfile is working material, not site content: `assets/uploads/.gitkeep`
+    // exists to keep the empty media folder in the repository, and publishing it
+    // would only put a zero-byte marker on the host.
+    if (entry.name.startsWith(".")) continue;
     const abs = join(dir, entry.name);
     const name = rel ? `${rel}/${entry.name}` : entry.name;
     if (entry.isDirectory()) out.push(...walk(abs, name));
