@@ -13,10 +13,25 @@ backend:
   # makes is a commit to this repository.
   repo: bascurtiz/msst-guide
   branch: main
-  # REPLACE: the URL of your Sveltia CMS Authenticator Worker (see SETUP.md).
-  # Until that exists you can leave the line commented out and sign in with a
-  # GitHub personal access token instead.
+  # The OAuth client that gives the author a "Sign in with GitHub" button instead
+  # of a pasted personal access token. Deploy Sveltia's authenticator Worker
+  # (SETUP.md §3), then set this to its URL — no trailing slash, the editor
+  # appends `/auth` and the OAuth app's callback is `/callback` — and delete the
+  # leading `#`. Until then leave it commented out and sign in with a token
+  # instead: an unconfigured button falls back to Netlify's OAuth client, which
+  # knows nothing about this site, so it is the comment that keeps the sign-in
+  # screen honest.
   # base_url: https://sveltia-cms-auth.YOUR-SUBDOMAIN.workers.dev
+
+  # How much the sign-in asks GitHub for on the author's behalf. The Worker's own
+  # default is `repo,user`, which GitHub presents to the signer as *full control of
+  # private repositories* — far more than one public repository needs. This narrows
+  # it to public repositories; the editor appends `user` itself, so the request it
+  # actually makes is `public_repo,user`. It accepts exactly one of two values,
+  # `repo` or `public_repo` — anything else and the editor refuses to load rather
+  # than quietly widening what it asks for. If this repository ever becomes private,
+  # change it to `repo`. See SETUP.md §3.
+  auth_scope: public_repo
   commit_messages:
     update: "content: edit {{collection}} {{slug}}"
 

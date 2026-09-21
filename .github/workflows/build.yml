@@ -24,6 +24,10 @@ on:
       # itself.
       - "assets/uploads/**"
       - "assets/img/**"
+      # The editor itself is part of the deployed bundle — its page, and the CMS
+      # configuration that decides how the author signs in — so a change to it has
+      # to publish. Neither file is generated, so this cannot trigger itself.
+      - "admin/**"
   workflow_dispatch:
 
 permissions:

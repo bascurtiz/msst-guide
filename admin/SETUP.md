@@ -57,25 +57,109 @@ single trusted editor that is usually an acceptable trade for the setup cost.
 
 ## 3. The nicer login: sign in with GitHub
 
-This gives the author an ordinary **Sign in with GitHub** button, and the token
-never leaves the OAuth exchange.
+This replaces the pasted token with an ordinary **Sign in with GitHub** button,
+so the author never creates or renews a credential. It is optional, and it is
+about half an hour of your time once, most of it waiting for a deploy.
 
-1. **Deploy the authenticator.** Sveltia publishes one:
-   <https://github.com/sveltia/sveltia-cms-auth>. Follow its README — it runs on
-   Cloudflare Workers, and its one-click deploy button gives you a URL like
-   `https://sveltia-cms-auth.your-subdomain.workers.dev`.
-2. **Register a GitHub OAuth app** at <https://github.com/settings/developers>
-   ("New OAuth App"), with the authorization callback URL set to
-   `<your worker url>/callback`.
-3. **Give the worker the credentials** from that app (its `GITHUB_CLIENT_ID` and
-   `GITHUB_CLIENT_SECRET`).
-4. **Point the CMS at the worker**: in `admin/config.yml`, uncomment
-   `base_url` and set it to your worker URL.
+Worth knowing before you start: **Sveltia cannot do this by itself for GitHub.**
+The exchange needs a client secret, and a static page cannot keep one. GitHub has
+no client-side PKCE flow for OAuth apps yet — Sveltia's own documentation marks it
+*unimplemented*, waiting on GitHub — so an OAuth client of your own really is the
+only way to get the button. That is the whole reason this step exists.
 
-One set-up step, then it behaves like any other "sign in with GitHub" button.
-Note that the author still needs a GitHub account with write access — that is
-unavoidable for a CMS that edits a repository, and it is the price of having no
-server to run.
+### Step 1 — deploy the authenticator
+
+Sveltia publishes a small Cloudflare Worker that performs the exchange:
+<https://github.com/sveltia/sveltia-cms-auth>. Deploy it with its own button:
+
+<https://deploy.workers.cloudflare.com/?url=https://github.com/sveltia/sveltia-cms-auth>
+
+That creates a Worker in your Cloudflare account named `sveltia-cms-auth`. Open it
+in the dashboard and note its URL —
+`https://sveltia-cms-auth.<your-workers-subdomain>.workers.dev`. You need it in
+steps 2 and 4.
+
+### Step 2 — register the Worker as an OAuth app
+
+GitHub → **Settings** → **Developer settings** → **OAuth Apps** → **New OAuth
+App** (<https://github.com/settings/applications/new>):
+
+| Field | Value |
+| --- | --- |
+| Application name | `Sveltia CMS Authenticator` (anything) |
+| Homepage URL | `https://msst-guide.pages.dev/` |
+| Authorization callback URL | `<YOUR WORKER URL>/callback` |
+
+That callback has to match exactly, `/callback` included, or GitHub refuses the
+sign-in with a redirect-URI error. Then **Generate a new client secret** and keep
+both values for the next step.
+
+### Step 3 — give the Worker the credentials
+
+The Worker's dashboard page → **Settings** → **Variables and secrets** → add:
+
+| Name | Value |
+| --- | --- |
+| `GITHUB_CLIENT_ID` | the app's Client ID |
+| `GITHUB_CLIENT_SECRET` | the app's secret — mark it **Encrypt** |
+| `ALLOWED_DOMAINS` | `msst-guide.pages.dev` |
+
+`ALLOWED_DOMAINS` is optional in the Worker's own documentation and worth setting
+regardless: it stops anyone else pointing their CMS at your Worker at your
+expense, and the Worker only releases a token to a page served from a hostname on
+that list. It checks twice — once on the incoming request, once on the origin of
+the reply — so it holds even if the first check is bypassed.
+
+It is worth being precise about *which* hostname, because the check is against the
+page the editor is running on, not against the repository. The editor sends its
+own hostname, so `msst-guide.pages.dev` is the value that matters in production.
+Two consequences: a **branch preview** deployment (`<hash>.msst-guide.pages.dev`)
+and a **local** `python -m http.server` on `127.0.0.1` will both be refused with
+*your domain is not allowed* — correct behaviour, and the reason the author should
+be given the production URL rather than a preview one; and if you ever add a
+custom domain, add it here too, or the button will stop working on it.
+
+### Step 4 — point the CMS at the Worker
+
+In `admin/config.yml`, under `backend`, set `base_url` to the Worker URL from step
+1 — **with no trailing slash**, because the editor appends `/auth` and the OAuth
+app's callback is `/callback`, and `…workers.dev//auth` is a path the Worker does
+not answer — then delete the leading `#`:
+
+```diff
+ backend:
+   name: github
+   repo: bascurtiz/msst-guide
+   branch: main
++  base_url: https://sveltia-cms-auth.<your-subdomain>.workers.dev
+```
+
+The line is already in the file, commented, with that same instruction next to it.
+Commit it, and the button works from then on.
+
+### What permissions GitHub will show the author
+
+The authenticator asks GitHub for a scope on the author's behalf, and its default
+is `repo,user` — which GitHub presents to the signer as *full control of private
+repositories*, a startling thing to ask of someone who edits one public
+repository. So `admin/config.yml` sets `auth_scope: public_repo` instead.
+
+The editor appends `user` by itself, so the request that actually goes out is
+`public_repo,user` — public repositories plus basic profile, which is everything
+this site needs and nothing more. `auth_scope` accepts **exactly one** of two
+values, `repo` or `public_repo`; a list like `public_repo,user` is rejected and
+the editor refuses to load at all rather than quietly widening the request, which
+is the right way round but a confusing failure if you hit it.
+
+Two consequences worth knowing. If this repository ever becomes **private**,
+change that value to `repo` — the narrow scope would be wrong, and the author's
+sign-in would start failing on API calls rather than at the consent screen. And if
+GitHub's consent screen ever mentions *private* repositories, the value has been
+lost or misspelled: the Worker falls back to its own wider default for anything it
+doesn't recognize, and writes that to its console log.
+
+The author still needs a GitHub account with write access — that is unavoidable
+for a CMS that edits a repository, and it is the price of having no server to run.
 
 ## 4. Publishing (a `pages.dev` host is static, and that is fine)
 

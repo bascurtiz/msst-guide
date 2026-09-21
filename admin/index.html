@@ -10,12 +10,18 @@
 <body>
 <!--
   The content editor. Sveltia CMS is a single page app loaded from a CDN, so
-  there is nothing to build or install and nothing to keep up to date here.
+  there is nothing to build or install here.
 
   Sign in with GitHub (see SETUP.md in this folder), pick a chapter, and edit
   the text. Saving commits content/pages/*.json; the build then renders the
   pages, which is what the site serves.
+
+  The version is pinned deliberately. Unpinned, unpkg serves whatever was
+  published most recently, which would put a CMS upgrade — including a change in
+  how it validates the configuration in admin/config.yml — in front of the author
+  without anyone choosing it. Bumping this line is how to take an upgrade on
+  purpose.
 -->
-<script src="https://unpkg.com/@sveltia/cms/dist/sveltia-cms.js"></script>
+<script src="https://unpkg.com/@sveltia/cms@0.217.0/dist/sveltia-cms.js"></script>
 </body>
 </html>

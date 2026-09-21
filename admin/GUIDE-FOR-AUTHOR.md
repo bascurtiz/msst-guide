@@ -33,30 +33,37 @@ published yet — tell the site owner.
 
 ## 2. Sign in
 
-Choose **Sign in with a token**. (Do *not* use the “Sign in with GitHub” button
-next to it unless the owner tells you he has set it up — it needs extra work on
-his side, and until then it will not connect.)
+Click **Sign in with GitHub**, then approve what GitHub asks you for. It will
+introduce the request as coming from *Sveltia CMS Authenticator* and ask for
+access to your **public** repositories and your basic profile — which is all this
+needs, since the site is a public repository. GitHub may ask for your password or
+a two-factor code; that is GitHub checking it is really you, and it never reaches
+the editor.
 
-The dialog links to GitHub's token page, and that link opens the *new token* form
-with two things already filled in for you: the name (`Sveltia CMS`) and the
-**Contents: Read and write** permission. Two boxes are left for you:
+You do this once. The sign-in then keeps working until you sign out.
 
-- **Repository access** → *Only select repositories* → **`msst-guide`**. Do not
-  pick “All repositories” — this token only ever needs this one project.
-- **Expiration** → 90 days is fine. GitHub requires a date.
+### If that button does not work
 
-Press **Generate token**, copy the value it shows you (that is the only time it is
-visible), and paste it into the editor's box.
+It needs a piece on the site owner's side that he may not have finished setting
+up, and a button that is not set up shows an error rather than an explanation. In
+that case use **Sign in with a token** instead — it always works, and needs
+nothing from him:
 
-If you would rather create it by hand, it is: your picture → **Settings** →
-**Developer settings** → **Personal access tokens** → **Fine-grained tokens** →
-**Generate new token**, with the same two settings above plus *Contents: Read and
-write*.
+1. In the dialog, follow the link to GitHub's token page. It opens the *new
+   token* form with two things already filled in: the name (`Sveltia CMS`) and
+   **Contents: Read and write**.
+2. Fill in the two boxes it leaves you:
 
-The token is a password — do not share it, and do not paste it anywhere else.
+   - **Repository access** → *Only select repositories* → **`msst-guide`**. Do not
+     pick “All repositories” — this token only ever needs this one project.
+   - **Expiration** → 90 days is fine. GitHub requires a date.
 
-The token is remembered in that browser, so you only do this once. When it
-expires, the editor stops saving and you repeat this step with a new one.
+3. Press **Generate token**, copy the value it shows you — that is the only time
+   it is visible — and paste it into the editor's box.
+
+The token is a password: do not share it, and do not paste it anywhere else. The
+editor remembers it, so you only do this once; when it expires the editor stops
+saving and you repeat these three steps with a new one.
 
 ## 3. Find the text you want to change
 
