@@ -86,55 +86,130 @@ step 3 — which the personal-access-token route does not need at all.
 
 The one thing a static host *does* decide is **who renders the pages after a
 save**. The author saves, the CMS commits `content/pages/*.json`, and something
-has to turn that back into HTML. There are two ways to have that happen; pick one.
+has to turn that back into HTML. There are two ways to arrange that, and the one
+that sounds obvious turns out to be the wrong choice here — which is worth
+knowing before you click anything.
 
-### Option A — connect the repository to Pages (recommended)
+### Why the obvious route is the wrong one
 
-If the Pages project is connected to the GitHub repository, Pages builds on every
-push, so a save publishes itself. Its build image has Node, which is all this
-needs:
+Cloudflare's documentation is explicit: *"If you choose Direct Upload, you cannot
+switch to Git integration later. You will have to create a new project."* So if
+`msst-guide` was filled by dropping a zip into the dashboard — which is what this
+project has done so far — then connecting the repository to Git means a **new
+project**, and a new project cannot have a name that is taken. It would come back
+as something like `msst-guide-a1b2.pages.dev`.
 
-| Setting | Value |
-| --- | --- |
-| Framework preset | None |
-| Build command | `node tools/package-site.mjs --no-zip` |
-| Build output directory | `dist` |
-| Environment variable | `NODE_VERSION` = `20` or newer, if the default is lower |
+That is not cosmetic. The live URL is written down in several places: `site_url`
+and `logo_url` in `admin/config.yml`, the canonical and Open Graph tags on every
+page, `sitemap.xml`, `robots.txt` and the JSON-LD. A new URL means editing all of
+them. (Deleting the old project first does free the name, and costs its
+deployment history.) For one editor, that is a lot of churn to avoid two secrets.
+
+### Option A (recommended) — keep the Direct Upload project, let the workflow publish
+
+The project stays exactly as it is, served at `https://msst-guide.pages.dev`. Two
+repository secrets let the included workflow deploy into it after every content
+change. This is the same path Cloudflare documents for CI.
+
+1. **Create the API token.** In the dashboard's left sidebar, **Manage account**
+   (at the bottom) → **API Tokens** → **Create Token**. Name it
+   (`msst-guide deploy`).
+
+   The grid of cards you are then shown is a list of *templates*, not the limit of
+   what a token can do, and **Cloudflare Pages is not one of the cards**. Choose
+   the last one instead — **Start from scratch** — and set the permission by hand
+   to **Account** · **Cloudflare Pages** · **Edit**. (Pages is marked compatible
+   with account tokens in Cloudflare's own compatibility matrix; the permission is
+   simply absent from the shortcut list.) Then   *Continue to summary* →
+   *Create Token*, and copy the value, because it is shown once.
+
+   This is the token this project deploys with, so the combination is known to
+   work rather than merely documented: `wrangler` does accept an *account* token
+   for Pages. Note the builder calls the level **Write** where the API reference
+   calls the same permission **Edit**.
+
+   For expiration, this is an unattended CI token: *No expiration* or a year is
+   reasonable. If you date it, note the date somewhere — when it lapses the site
+   stops updating (the workflow fails, so you get an email, but the guide quietly
+   goes stale).
+
+   *My Profile → API Tokens*, the older location, is the *user* token menu and is
+   no longer in the sidebar; it is still reachable directly at
+   <https://dash.cloudflare.com/profile/api-tokens>, and either kind of token
+   works here with the same permission. Cloudflare's documentation for this exact
+   CI setup points at the account one.
+2. **Find the account ID**, by any of these: a zone's **Overview** page, in the
+   **API** section of the right-hand menu; the 32-character hex string in the
+   dashboard's own URL, right after `dash.cloudflare.com/`; or `npx wrangler
+   whoami` on your machine, which prints it next to the account name.
+3. **Add both to the repository.** GitHub → the repository → **Settings** →
+   **Secrets and variables** → **Actions** → **New repository secret**:
+   `CLOUDFLARE_API_TOKEN`, then `CLOUDFLARE_ACCOUNT_ID`. Those are the names the
+   workflow reads (Cloudflare's own documentation uses the same two).
+4. **Only if the project is not called `msst-guide`**: on the **Variables** tab,
+   add `CLOUDFLARE_PROJECT_NAME` with the real name.
+5. **Run it.** **Actions** → *Render the pages* → **Run workflow**. It renders,
+   commits if anything changed, and deploys with
+   `npx wrangler pages deploy dist --project-name msst-guide --branch main`.
+
+Then open <https://msst-guide.pages.dev/admin/>. A sign-in screen means the
+deployment reached production, and the editor is live. If the site is unchanged,
+the deploy went to a preview branch instead — see the note below.
+
+Without the two secrets the publish step prints a notice and exits cleanly, so
+the workflow is safe to leave in place either way. And you can still do it by
+hand, as today: `node tools/package-site.mjs`, upload the zip. That path always
+works, but a save will not publish itself through it.
+
+#### The production-branch trap
+
+`--branch main` deploys to production only if `main` is the project's *production
+branch*. On a Direct Upload project that value is not editable in the dashboard —
+only through the API. Ask what it is:
+
+```bash
+curl -s "https://api.cloudflare.com/client/v4/accounts/$CLOUDFLARE_ACCOUNT_ID/pages/projects/msst-guide" \
+  -H "Authorization: Bearer $CLOUDFLARE_API_TOKEN" \
+  | grep -o '"production_branch":"[^"]*"'
+```
+
+If it is not `main`, either point the workflow's `--branch` at what it is, or set
+it — the one API call Cloudflare's documentation gives for exactly this:
+
+```bash
+curl -X PATCH "https://api.cloudflare.com/client/v4/accounts/$CLOUDFLARE_ACCOUNT_ID/pages/projects/msst-guide" \
+  -H "Authorization: Bearer $CLOUDFLARE_API_TOKEN" \
+  -H "Content-Type: application/json" \
+  --data '{"production_branch":"main"}'
+```
+
+### Option B — connect the repository to a *new* Pages project
+
+Pick this only if a URL change is acceptable, or if you would rather have no
+secrets and no upload ritual at all: Pages builds on every push, so a save
+publishes itself.
+
+1. Dashboard → **Workers & Pages** → **Create application** → **Pages** →
+   **Connect to Git**; authorise the Cloudflare GitHub App for
+   `bascurtiz/msst-guide` when it asks.
+2. Choose the repository, and branch `main`.
+3. Build settings: **Framework preset** *None*, **Build command**
+   `node tools/package-site.mjs --no-zip`, **Build output directory** `dist`,
+   **Root directory** left empty.
+4. Add an environment variable `NODE_VERSION` = `20`, unless the build image's
+   default is already that or newer.
+5. **Save and Deploy**, then deal with the URL as described above.
 
 The build command is the packager, so Pages publishes the site-only subset (the
 five pages, `assets/`, `admin/`) rather than the whole repository — the same
-bundle the direct upload uses, minus the zip. The output directory is `dist` for
-exactly that reason: pointing it at the repository root would also publish
-`src/`, `content/`, `tools/` and the source fonts.
+bundle a direct upload produces, minus the zip. Pointing the output directory at
+the repository root instead would also publish `src/`, `content/`, `tools/` and
+the source fonts.
 
-With this in place a save is live in about a minute, and the GitHub Action's own
-render-and-commit becomes redundant — it renders identical pages into the
-repository. Harmless, and still useful as a check and for anyone browsing the
-repository; delete its "Commit the rendered pages" step if you would rather not
-have a bot commit per edit.
-
-### Option B — keep uploading the folder yourself
-
-If you fill the project by direct upload (a zip, or `wrangler pages deploy`), the
-repository is *not* connected to it, so **a save does not change the live site by
-itself** — not the CMS's commit and not the Action's. Two ways to close that gap:
-
-- **Automate it.** Add two repository secrets and the included workflow will
-  publish for you after every content change:
-
-  | Secret | Where to get it |
-  | --- | --- |
-  | `CLOUDFLARE_API_TOKEN` | Cloudflare dashboard → My Profile → API Tokens → *Cloudflare Pages: Edit* |
-  | `CLOUDFLARE_ACCOUNT_ID` | The dashboard URL, or `npx wrangler whoami` |
-
-  Optionally also a `CLOUDFLARE_PROJECT_NAME` repository *variable* if the Pages
-  project is not called `msst-guide`. Without the two secrets the step prints a
-  notice and exits cleanly, so the workflow works either way.
-
-- **Or do it by hand.** `node tools/package-site.mjs`, then upload the zip (or
-  `dist/`) again. The packager always includes `admin/` and refuses to emit a
-  bundle with a broken reference in it, so the editor cannot be left behind by a
-  forgotten folder.
+With this route the Action's render-and-commit becomes redundant — it renders
+identical pages into the repository. Harmless, and still useful as a check and
+for anyone browsing the repository; delete its "Commit the rendered pages" step
+if you would rather not have a bot commit per edit.
 
 ### Keeping the editor out of search
 

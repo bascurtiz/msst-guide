@@ -313,12 +313,17 @@ the repository is always current even for someone browsing it. A save that
 changes nothing produces no commit: a re-render of the committed pages is
 byte-identical, on Linux as well as Windows.
 
-Publishing is the one thing left to configure, and it depends on how the Pages
-project was made. **`admin/SETUP.md` §4** covers both routes: connect the project
-to this repository and it publishes on every push, or keep uploading by hand and
-add two repository secrets so the workflow publishes for you. The live site is
-currently behind the repository — its `robots.txt` has no `Disallow: /admin/`,
-so it was deployed before the editor existed.
+Publishing is the one thing left to configure. **`admin/SETUP.md` §4** covers
+both routes, and why the one you would reach for first is a trap: a Direct Upload
+Pages project cannot be converted to Git integration, so connecting this
+repository means a *new* project, and a new project cannot reuse the name — which
+would move the site's URL, that being written into the canonical tags, the
+sitemap and the CMS config. Two repository secrets are the recommended route
+instead: the workflow deploys into the existing project and the URL never moves.
+
+The live site is currently behind the repository — its `robots.txt` has no
+`Disallow: /admin/`, so it was deployed before the editor existed, and `/admin/`
+still falls back to the home page.
 
 ## Editing
 
