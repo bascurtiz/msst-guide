@@ -697,6 +697,32 @@
       idxNote.textContent = "index · " + idx.blocks.length + " blocks · " + idx.generated;
     }
 
+    /* The index stores repository filenames (`data.html`). That is right for a
+       host that serves the files themselves, and wrong for one that serves
+       clean routes — the published page links already follow whichever it is,
+       so the search results ask the page rather than assume. */
+    var linksAsFiles = null;
+    function usesFileNames() {
+      if (linksAsFiles !== null) return linksAsFiles;
+      /* Every link the page came with — but not the ones this overlay renders,
+         since those are the thing being decided here. */
+      var links = document.querySelectorAll("a[href]");
+      linksAsFiles = false;
+      for (var i = 0; i < links.length; i++) {
+        if (panel.contains(links[i])) continue;
+        if (/^[^:]*\.html?(#|$)/.test(links[i].getAttribute("href") || "")) { linksAsFiles = true; break; }
+      }
+      return linksAsFiles;
+    }
+    function hitHref(file, id) {
+      var base = file;
+      if (!usesFileNames()) {
+        var dir = window.location.pathname.replace(/[^/]*$/, "") || "/";
+        base = /^index\.html$/.test(file) ? dir : dir + file.replace(/\.html$/, "");
+      }
+      return base + (id ? "#" + id : "");
+    }
+
     /* flat, lower-cased copy of the index, built on first open */
     var flat = null;
     function prepare() {
@@ -758,7 +784,11 @@
 
     function run() {
       prepare();
-      if (!flat) return;
+      if (!flat) {
+        status.innerHTML = "No index on this page";
+        results.innerHTML = '<p class="search-empty">The search index did not load.</p>';
+        return;
+      }
       var raw = input.value.trim();
       var terms = raw.toLowerCase().split(/\s+/).filter(function (t) { return t.length > 0; });
 
@@ -834,7 +864,7 @@
         var title = g.sec || page.title;
         var ctx = b.ctx && b.ctx.toLowerCase() !== title.toLowerCase()
           ? '<span class="hit-ctx">' + esc(b.ctx) + "</span>" : "";
-        return '<a class="hit" href="' + page.file + (g.id ? "#" + g.id : "") + '">' +
+        return '<a class="hit" href="' + hitHref(page.file, g.id) + '">' +
           '<span class="hit-top"><span class="hit-title">' + highlight(title, terms) + "</span>" +
           '<span class="hit-meta">' + esc(page.short) + "<b>" + g.hits + (g.hits === 1 ? " hit" : " hits") + "</b></span></span>" +
           ctx + '<span class="hit-snip">' + excerpt(b, terms) + "</span></a>";
