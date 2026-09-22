@@ -58,6 +58,8 @@ const FORBIDDEN_FILES = new Set([
   "readme.md",
   "admin/setup.md",
   "admin/guide-for-author.md",
+  "admin/instatic-pilot.md",
+  "do-not-upload.txt",
   "package.json",
   "package-lock.json",
 ]);

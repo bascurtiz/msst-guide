@@ -1,7 +1,12 @@
 # The packager's output. Both are rebuilt from the repository by
 # `node tools/package-site.mjs`, so they are artifacts, not source.
 dist/
+dist-instatic/
 training-guide.zip
+
+# Local credentials. Listed by name so a stray `git add -A` cannot publish
+# them: this repository is public.
+DO-NOT-UPLOAD.txt
 
 # Editor/agent scratch and any local installs.
 .freebuff/
