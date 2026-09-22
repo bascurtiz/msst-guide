@@ -31,12 +31,13 @@ const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 
 /**
  * Dropped on purpose. `admin/` is the CMS editor — importing it would create an
- * "admin" page on the new site. The other three are host-level files InStatic
- * owns itself (its publisher writes its own robots/sitemap, and `_headers` is a
- * Cloudflare Pages directive with no equivalent there).
+ * "admin" page on the new site. The others are host-level files InStatic owns
+ * itself (its publisher writes its own robots/sitemap, and `_headers` and
+ * `_worker.js` are Cloudflare Pages directives with no equivalent there —
+ * importing the Function would only file it as a page called "_worker").
  */
 const SKIP = ["admin"];
-const SKIP_META = ["_headers", "robots.txt", "sitemap.xml"];
+const SKIP_META = ["_headers", "_worker.js", "robots.txt", "sitemap.xml"];
 
 /** `href="assets/css/site.css?v=61c969be"` → `href="assets/css/site.css"` */
 const STAMPED = /((?:href|src)="[^"]+?)\?v=[A-Za-z0-9._-]+"/g;

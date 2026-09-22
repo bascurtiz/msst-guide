@@ -2,7 +2,8 @@
 User-agent: *
 Allow: /
 
-# The content editor, not part of the guide.
+# The content editor, not part of the guide. It lives on another host and
+# refuses to be indexed there, but the redirect starts here.
 Disallow: /admin/
 
 Sitemap: https://msst-guide.pages.dev/sitemap.xml

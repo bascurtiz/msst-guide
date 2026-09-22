@@ -21,6 +21,11 @@
  * the staged tree first, and a path that would not exist on the host is a hard
  * error rather than a 404 discovered by a reader.
  *
+ * `_worker.js` is the Pages Function that relays this project to the InStatic
+ * install, so the site is served from `msst-guide.pages.dev` — see its own
+ * header comment. It is staged from the repository root like `_headers`, and
+ * Pages picks it up as the entry point rather than uploading it as an asset.
+ *
  * No dependencies. The zip is written directly.
  */
 
@@ -44,7 +49,7 @@ const DIST = join(ROOT, "dist");
 
 /** What actually goes on the host. Everything else is working material. */
 const PAGES = ["index.html", "data.html", "setup.html", "training.html", "reference.html"];
-const ROOT_FILES = ["robots.txt", "sitemap.xml", "_headers"];
+const ROOT_FILES = ["robots.txt", "sitemap.xml", "_headers", "_worker.js"];
 const TREES = ["assets"];
 const ADMIN = ["admin/index.html", "admin/config.yml"];
 

@@ -28,6 +28,14 @@ on:
       # configuration that decides how the author signs in — so a change to it has
       # to publish. Neither file is generated, so this cannot trigger itself.
       - "admin/**"
+      # The host-level files the deployment owns: the Pages Function that relays
+      # the site to the CMS, the response headers, and the two metadata files it
+      # answers itself. A change to any of them is a change to what readers get,
+      # and none of them is generated, so this cannot trigger itself either.
+      - "_worker.js"
+      - "_headers"
+      - "robots.txt"
+      - "sitemap.xml"
   workflow_dispatch:
 
 permissions:

@@ -17,12 +17,16 @@ import pathlib
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 SITE = "https://msst-guide.pages.dev"
 
+# The routes the published site answers on, not the `.html` filenames this
+# repository renders: since the content moved into the CMS, `_worker.js` relays
+# these paths to it and sends `/data.html` on to `/data`. A sitemap listing the
+# filenames would advertise five redirects instead of five pages.
 PAGES = [
     ("", "1.0", "weekly"),
-    ("data.html", "0.9", "monthly"),
-    ("setup.html", "0.9", "monthly"),
-    ("training.html", "0.9", "monthly"),
-    ("reference.html", "0.8", "monthly"),
+    ("data", "0.9", "monthly"),
+    ("setup", "0.9", "monthly"),
+    ("training", "0.9", "monthly"),
+    ("reference", "0.8", "monthly"),
 ]
 
 
@@ -50,6 +54,10 @@ def main():
         "# MSST Guide — a community handbook for training audio source separation models.\n"
         "User-agent: *\n"
         "Allow: /\n"
+        "\n"
+        "# The content editor, not part of the guide. It lives on another host and\n"
+        "# refuses to be indexed there, but the redirect starts here.\n"
+        "Disallow: /admin/\n"
         "\n"
         f"Sitemap: {SITE}/sitemap.xml\n",
         encoding="utf-8",
