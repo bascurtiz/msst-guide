@@ -327,7 +327,12 @@ This is the step that gets skipped, and a stale default is a trap that waits:
 
 ## Where this sits
 
-As of 23 September 2026 the CMS runs on Railway (Trial, ending) and the reader
-path is `msst-guide.pages.dev` → relay → that host. The move to the Google
-always-free VM is planned and not yet done; when it is, update the topology in
-`admin/INSTATIC-HOSTING.md` and this section.
+Done on 26 October 2026. The CMS runs on a Google Compute Engine `e2-micro` at
+`https://34-171-14-163.sslip.io` (the sslip.io name for `34.171.14.163`), and the
+reader path is `msst-guide.pages.dev` → relay → that host. The Pages project's
+`INSTATIC_ORIGIN` and `_worker.js`'s `DEFAULT_ORIGIN` both name it, the site
+bundle was imported and published there, and Railway's trial expired — its
+volume is the rollback until Railway reclaims it after 30 days.
+
+The topology in `admin/INSTATIC-HOSTING.md` says the same, so a host move starts
+with both documents.

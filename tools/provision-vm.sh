@@ -880,7 +880,8 @@ install_backup_timer() {
 summary() {
   step "Done — the host for $IMAGE is up at $ORIGIN"
   ok "the CMS is at $ORIGIN/admin (the editor), and /health answers"
-  ok "the relay still points at Railway; nothing a reader sees has changed"
+  note "readers are unaffected: the relay follows the Pages project's INSTATIC_ORIGIN,"
+  note "so nothing points here until step 3 of the runbook changes that value."
   printf '\n'
   printf '  %sStill to do, by hand — none of it can be done from this box:%s\n' "$B" "$N"
   printf '  %s1.%s Open 80 and 443 at the VPC firewall, from your laptop:\n' "$D" "$N"

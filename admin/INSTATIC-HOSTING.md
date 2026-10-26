@@ -12,6 +12,11 @@ reader → https://msst-guide.pages.dev    Cloudflare Pages
          readers get files
 ```
 
+- **The CMS runs on a Google Compute Engine `e2-micro`** at
+  `https://34-171-14-163.sslip.io` — the sslip.io name for `34.171.14.163`, which
+  is what gives it a certificate without a domain of its own. `tools/provision-vm.sh`
+  built it; that address is also `_worker.js`'s `DEFAULT_ORIGIN` and the Pages
+  project's `INSTATIC_ORIGIN`. Both must be changed together when it moves.
 - **The guide's content, layout and pages live in the CMS.** Nothing in this
   repository renders the site any more. Editing a file here does not change what
   a reader sees, and adding a page here does not add a page to the guide.
