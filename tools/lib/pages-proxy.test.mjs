@@ -20,7 +20,10 @@ const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..", ".
 const source = fs.readFileSync(path.join(ROOT, "_worker.js"), "utf8");
 const worker = (await import(`data:text/javascript;base64,${Buffer.from(source).toString("base64")}`)).default;
 
-const ORIGIN = "https://msst-guide.up.railway.app";
+// The same host as `_worker.js`'s DEFAULT_ORIGIN: these tests assert that a
+// redirect the container issues is rewritten to our own host, so the two must
+// agree. A host move changes this line too.
+const ORIGIN = "https://34-171-14-163.sslip.io";
 const HOST = "https://msst-guide.pages.dev";
 
 const html = (body = "<!doctype html><title>MSST Guide</title>") =>
@@ -146,9 +149,9 @@ test("the files that belong to this address are answered here, not relayed", asy
 test("the editor is sent to its own hostname, where its session and CSRF origin live", async () => {
   const host = runtime(() => html());
   try {
-    const response = await host.get("/admin/config.yml");
+    const response = await host.get("/admin/pages/index");
     assert.equal(response.status, 302);
-    assert.equal(response.headers.get("location"), `${ORIGIN}/admin/config.yml`);
+    assert.equal(response.headers.get("location"), `${ORIGIN}/admin/pages/index`);
     assert.equal(host.calls.length, 0);
 
     const bare = await host.get("/admin");

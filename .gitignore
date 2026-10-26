@@ -1,16 +1,18 @@
-# The packager's output. Both are rebuilt from the repository by
-# `node tools/package-site.mjs`, so they are artifacts, not source.
+# The stager's output. Rebuilt from the repository by
+# `node tools/deploy-pages.mjs`, so it is an artifact, not source.
 dist/
-dist-instatic/
-training-guide.zip
 
 # Local credentials. Listed by name so a stray `git add -A` cannot publish
 # them: this repository is public.
 DO-NOT-UPLOAD.txt
 
+# Site bundles exported from the CMS (Data workspace → Export site). One of these
+# is the guide's whole content and media in a single zip, it is public-repo-sized,
+# and it is only ever a way to carry the site to a host — so keep it out of git.
+# admin/MOVING-THE-CMS.md is where it goes instead.
+export/
+site-bundle-*.zip
+
 # Editor/agent scratch and any local installs.
 .freebuff/
 node_modules/
-
-# The rendered pages at the root are NOT ignored, deliberately: they are
-# committed so the repository deploys anywhere with no build step. See README.

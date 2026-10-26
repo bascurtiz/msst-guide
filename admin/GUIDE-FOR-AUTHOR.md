@@ -1,128 +1,89 @@
 # Editing the guide — a few steps
 
 This is for the original author of *“Training vocal removers locally and on the
-cloud”*. The guide was rewritten as a website, and you can change its **words**
-yourself, in a browser, without touching any code. Nothing to install.
+cloud”*. The guide was rewritten as a website, and you can change it yourself, in
+a browser, without touching any code. Nothing to install.
 
-If something below does not work, it is almost always the one-time setup on the
-site owner's side rather than something you did — tell him rather than fight it.
+If something below does not work, it is almost always a setting on the site
+owner's side rather than something you did — tell him rather than fight it.
 
 ## What you need
 
-1. **Accept the invitation.** The site owner adds your GitHub account to the
-   site's repository, and GitHub emails you. Open that email and accept, or use
-   <https://github.com/bascurtiz/msst-guide/invitations>. Two things go wrong if
-   you skip this: the editor may sign you in and then fail — on the first save, or
-   earlier, when it reads the content — and the invitation quietly **expires after
-   seven days**. If no email arrives (check your spam folder), ask him to send you
-   the invitation link instead; he can copy it from the repository's
-   *Collaborators* page.
-2. A **GitHub account** — which the invitation needs and which you may already
-   have. If you do not, creating one is free: <https://github.com/signup>. It is
-   needed because each change you save is stored as a commit, which is what keeps
-   a full history of who changed what.
-3. A **browser** (Chrome, Edge, Firefox or Safari). The editor works on a phone
-   but it is far easier on a computer.
+1. **Your account on the site's editor.** The site owner creates it and sends you
+   the address and a password. There is no GitHub account, no invitation and no
+   token any more — the editor is part of the site itself.
+2. A **browser** (Chrome, Edge, Firefox or Safari). It works on a phone, but it is
+   far easier on a computer.
 
 ## 1. Open the editor
 
-<https://msst-guide.pages.dev/admin/>
-
-If you see the guide itself instead of a sign-in screen, the editor is not
-published yet — tell the site owner.
+The site owner will give you the address; it looks like
+`https://<the site's own address>/admin`. Reaching `/admin` on the guide's public
+address also ends up there — it redirects.
 
 ## 2. Sign in
 
-Click **Sign in with GitHub**, then approve what GitHub asks you for. It will
-introduce the request as coming from *Sveltia CMS Authenticator* and ask for
-access to your **public** repositories and your basic profile — which is all this
-needs, since the site is a public repository. GitHub may ask for your password or
-a two-factor code; that is GitHub checking it is really you, and it never reaches
-the editor.
+Enter the email and password he set up for you, and press **Sign in**. If he
+switched on two-factor authentication, it will then ask for the six-digit code
+from your authenticator app.
 
-You do this once. The sign-in then keeps working until you sign out.
+You stay signed in afterwards, so this is a once-a-session step.
 
-### If that button does not work
+### If you are locked out
 
-It needs a piece on the site owner's side that he may not have finished setting
-up, and a button that is not set up shows an error rather than an explanation. In
-that case use **Sign in with a token** instead — it always works, and needs
-nothing from him:
-
-1. In the dialog, follow the link to GitHub's token page. It opens the *new
-   token* form with two things already filled in: the name (`Sveltia CMS`) and
-   **Contents: Read and write**.
-2. Fill in the two boxes it leaves you:
-
-   - **Repository access** → *Only select repositories* → **`msst-guide`**. Do not
-     pick “All repositories” — this token only ever needs this one project.
-   - **Expiration** → 90 days is fine. GitHub requires a date.
-
-3. Press **Generate token**, copy the value it shows you — that is the only time
-   it is visible — and paste it into the editor's box.
-
-The token is a password: do not share it, and do not paste it anywhere else. The
-editor remembers it, so you only do this once; when it expires the editor stops
-saving and you repeat these three steps with a new one.
+- **Wrong password, or five tries and it locks.** It locks deliberately and backs
+  off, so wait a few minutes rather than trying again immediately. If it still
+  refuses, ask him to reset it — nothing you can do from your side fixes it.
+- **The code is rejected.** The code changes every thirty seconds; wait for the
+  next one and check your device's clock is set automatically.
 
 ## 3. Find the text you want to change
 
-The left-hand list holds five chapters: the home page, **Before you train**,
-**Setup & configuration**, **Training runs**, and **Reference**.
+The editor opens on the site as a canvas, one page at a time, and the whole admin
+has a command palette: press **⌘K** (or **Ctrl+K**) and start typing — a page
+name, a chapter title, a phrase you remember. It jumps you there without hunting
+through menus.
 
-Open one and you get its **sections** — the headings you see on the page, in
-order. Inside a section is the list of **text blocks**: every paragraph, list
-item, small heading and label, again in page order.
-
-The label on each block (“Paragraph · The dataset is the part that takes
-longest…”) is only there to help you find your way around the editor. It is never
-shown on the site.
+The guide has five pages: the home page, **Before you train**, **Setup &
+configuration**, **Training runs** and **Reference**.
 
 ## 4. Edit
 
-Type in the block. The toolbar covers **bold**, *italic*, `code`, links and
-images. To add a picture, use the image button or simply drag it in — it is
-uploaded to the site automatically and referenced where you dropped it.
+Click the text you want to change and type. **Live mode** works on the real
+full-size page, which is the best way to change words: you see the page as a
+reader does rather than as a document. The toolbar covers **bold**, *italic*,
+`code`, links and images.
 
-There is a **raw** mode you can switch to at the top of a block if you want to see
-or edit the underlying markdown. A handful of spots contain a raw HTML fragment
-(usually a small `<i>` or `<span>`); leave those tags alone unless you know what
-you are doing, or ask.
+To add a picture, use the image button, or drag it in. It is uploaded to the site
+automatically, resized for phones and laptops from that one file, and referenced
+where you dropped it.
 
-## 5. Save
+## 5. Publish
 
-Press **Save**. That stores your change, and the site rebuilds itself and is live
-a minute or two later. Reload the page you edited to see it.
+Two different things, and the difference matters:
 
-Small, separate saves are better than one big one — a change is easier to check
-and easier to undo when it stands alone.
+- **Saving** stores your edit as a draft. Readers cannot see a draft — what you
+  have not published, nobody sees.
+- **Publishing** makes it live. It goes live immediately: there is no rebuild to
+  wait for and no "check back in a minute".
 
-## What you can change, and what you cannot
+Small, separate publishes are better than one big one — a change is easier to
+check and easier to undo when it stands alone.
 
-**Yours:** every paragraph, bullet, small sub-heading, card title, figure caption
-and label, on all five pages — plus the command, config and error blocks, and
-images you want to add.
+## What you can change, and what to ask about
 
-**Not editable here, on purpose:** the diagrams, the tables, the chunk-size
-calculator, the sidebar, the on-page contents, the “next chapter” links and the
-footer. Those carry layout and data that a text editor cannot safely express, so
-they live in the site's template files. Ask the site owner for a change there.
+Almost everything is yours now — prose, headings, lists, images, the order of
+sections, and the layout around them.
 
-Two consequences worth knowing:
+Two things are worth a note rather than a guess:
 
-- **Renaming a chapter does not rename it in the sidebar** or in the “next”
-  link at the bottom of a page. Those are template files: if a chapter really
-  needs a new name, ask for it.
-- **A paragraph keeps its styling.** Each block is tied to a styled place on the
-  page, so an intro line stays an intro line. You cannot invent new styling from
-  the editor.
-- **A code block comes with its colouring markup still in it.** You edit the
-  whole block — the `<pre>` tag, the words, and the little `<span>` wrappers in
-  between. Those wrappers are what colour it: `<span class="cmd">` is a command,
-  `<span class="f">` a flag, `<span class="ph">` a placeholder to replace, and a
-  line starting with `#` is a comment. So change the words and leave the tags
-  alone. If you want a block with no colour in it, paste the plain text and ask
-  the site owner to run it through the highlighter.
+- **The interactive parts** — the chunk-size and VRAM calculator, the search
+  panel, the dark/light switch, the copy buttons on command blocks. They are
+  built pieces of the site, not text. If one of them looks or behaves wrong, say
+  so rather than editing around it.
+- **Command and config blocks** keep their colouring, which is markup rather than
+  plain text. Change the words freely; if you need a block to look structurally
+  different, ask, because that part is not a text edit.
 
 ## House style
 
@@ -140,18 +101,15 @@ Matching it makes an edit look native:
 
 ## If something goes wrong
 
-- **You saved, but the page still shows the old text.** The editor accepts a save
-  because a save is only text; the checking happens afterwards, when the site
-  rebuilds. Two causes, and the site owner can tell which one from the rebuild
-  that failed:
-  - **An image path pointing at nothing** — usually a picture that was not
-    uploaded, or a filename that was typed rather than inserted. Re-insert the
-    picture with the image button, save again, and reload the page.
-  - **Publishing not wired up yet** — his side, not yours.
-- **Save refused with a permissions error**: your invitation has not been
-  accepted yet, or it was sent as *read* rather than *write*. Tell the site
-  owner — nothing you can do in the editor fixes that one.
-- **The token stopped working**: it expired. Repeat step 2.
+- **You published, but the page still shows the old text.** Reload the page in a
+  new tab first — a cached copy is the usual answer. If it is genuinely unchanged,
+  check you pressed **Publish** and not only **Save**; a draft looks exactly like a
+  published page while you are signed in.
+- **An image does not appear.** It was probably not uploaded — the file was
+  referenced rather than added. Insert it again with the image button and publish
+  the page again.
+- **You changed something and want it back.** Ask the site owner: every edit is
+  logged with who made it and when, and an earlier version can be restored.
 
 Your credit as the original author is on the site's **Reference** page, under
 *Credits*; if the wording there should change, that is an edit you can make.

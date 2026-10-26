@@ -27,7 +27,7 @@
  * `INSTATIC_ORIGIN`, without editing this file.
  */
 
-const DEFAULT_ORIGIN = "https://msst-guide.up.railway.app";
+const DEFAULT_ORIGIN = "https://34-171-14-163.sslip.io";
 
 /**
  * The pages the guide publishes. Old inbound links — and whatever Google has

@@ -1,0 +1,86 @@
+name: Deploy the Pages relay
+
+# This repository no longer renders the guide — the CMS does that — so there is
+# nothing here to build. What deploys is the relay and the host-level files:
+# `_worker.js`, `_headers`, `robots.txt` and `sitemap.xml`, staged and checked by
+# `tools/deploy-pages.mjs`, and then checked again as the live site by
+# `tools/check-live.mjs`. See admin/INSTATIC-HOSTING.md.
+#
+# The paths below are the only things here that change what a reader gets, so a
+# push that touches none of them has nothing to deploy.
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "_worker.js"
+      - "_headers"
+      - "robots.txt"
+      - "sitemap.xml"
+      - "tools/deploy-pages.mjs"
+      - "tools/check-live.mjs"
+      - "tools/seo.py"
+      - ".github/workflows/deploy-pages.yml"
+  workflow_dispatch:
+
+# Reading the repository is all this needs: the deploy goes out over Cloudflare's
+# API, and nothing is ever committed back.
+permissions:
+  contents: read
+
+concurrency:
+  group: deploy-pages
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      # The relay is the only thing between a reader and the CMS, so its tests —
+      # the header hygiene, the redirect rewriting, the bundle checks — run
+      # before anything ships.
+      - name: Test the relay and the stager
+        run: node --test tools/lib/*.test.mjs
+
+      # Deploying into a Pages project set up as "Direct Upload". Such a project
+      # is not connected to this repository, so a commit does not go live by
+      # itself — this step is what publishes.
+      #
+      # It is skipped unless both secrets exist, so the repository stays
+      # deployable by hand and nothing changes until you add them:
+      #
+      #   CLOUDFLARE_API_TOKEN   a token with "Account · Cloudflare Pages · Edit"
+      #   CLOUDFLARE_ACCOUNT_ID  from the dashboard URL, or `npx wrangler whoami`
+      #
+      # Optionally set a CLOUDFLARE_PROJECT_NAME repository *variable* if the
+      # Pages project is not called msst-guide.
+      - name: Deploy the relay
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          CLOUDFLARE_PROJECT_NAME: ${{ vars.CLOUDFLARE_PROJECT_NAME }}
+        run: |
+          if [ -z "$CLOUDFLARE_API_TOKEN" ] || [ -z "$CLOUDFLARE_ACCOUNT_ID" ]; then
+            echo "::notice::No Cloudflare secrets — staging the bundle only."
+            echo "Add CLOUDFLARE_API_TOKEN and CLOUDFLARE_ACCOUNT_ID to publish,"
+            echo "or deploy by hand. See admin/INSTATIC-HOSTING.md."
+            node tools/deploy-pages.mjs --no-deploy
+            exit 0
+          fi
+          node tools/deploy-pages.mjs
+          echo "DEPLOYED=true" >> "$GITHUB_ENV"
+
+      # What was deployed is checked where a reader meets it, not where we
+      # wrote it: Cloudflare serves whatever it has, happily, so a relay that
+      # never made it — or a CMS that is down — otherwise looks like success.
+      # Only after a real deploy: against an older deployment this says nothing
+      # about the commit being tested.
+      - name: Smoke-test the live site
+        if: env.DEPLOYED == 'true'
+        run: node tools/check-live.mjs

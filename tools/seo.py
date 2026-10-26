@@ -2,13 +2,17 @@
 """
 Generate sitemap.xml and robots.txt.
 
-The site URL lives here in one place. If you deploy this guide somewhere other
-than the domain below, change SITE and rerun:
+Both files belong to the address rather than to the content, which is why
+_worker.js serves them from this Pages project instead of relaying them. The
+site URL lives here in one place. If the guide moves somewhere other than the
+domain below, change SITE and rerun:
 
     python tools/seo.py
 
-(You will also need to update the canonical / Open Graph URLs in the five
-<head> blocks — they are plain links, so a find-and-replace is enough.)
+The canonical, Open Graph and Twitter URLs are *not* here any more: the CMS
+emits them, and its SEO plugin takes the domain from the site's own settings. So
+a domain change is this file plus that setting — and `tools/deploy-pages.mjs`
+will refuse to deploy the two files while they disagree about the host.
 """
 
 import datetime
@@ -55,8 +59,8 @@ def main():
         "User-agent: *\n"
         "Allow: /\n"
         "\n"
-        "# The content editor, not part of the guide. It lives on another host and\n"
-        "# refuses to be indexed there, but the redirect starts here.\n"
+        "# The content editor, not part of the guide. It lives on the CMS's own\n"
+        "# address and refuses to be indexed there; what starts here is a redirect.\n"
         "Disallow: /admin/\n"
         "\n"
         f"Sitemap: {SITE}/sitemap.xml\n",
